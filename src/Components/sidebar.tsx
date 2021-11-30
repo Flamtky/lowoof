@@ -4,9 +4,11 @@ import { StyleSheet, View, Text, useWindowDimensions, ScrollView} from 'react-na
 import SearchBar from './searchbar';
 
 const Drawer = createDrawerNavigator();
+//TODO: Move colors to own file?
 const BACKGROUNDCOLOR = '#9fc8f9';
 const MAINCOLOR = '#cae0f8';
 
+//TODO: Move to -> src\Screens
 function PageOne() {
     const dimensions = useWindowDimensions();
     return (
@@ -23,7 +25,9 @@ function PageOne() {
     );
 }
   
+//TODO: Move to -> src\Screens
 function PageTwo() {
+    //TODO: Is this right? Currently we have to use this line in every function. (duplicate code)
     const dimensions = useWindowDimensions();
     return (
         <View style={[styles.item, styles.container, dimensions.width >= 768 ? {width: '60%'} : {width: "100%"}]}>
@@ -39,6 +43,7 @@ function PageTwo() {
     );
 }
 
+//TODO: Create constants for large screen (dimensions.width >= 768 ), maybe constant folder?
 export default function Sidebar() {
     const dimensions = useWindowDimensions();
     return (

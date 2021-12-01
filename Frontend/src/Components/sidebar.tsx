@@ -1,47 +1,12 @@
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import React from 'react';
-import { StyleSheet, View, Text, useWindowDimensions, ScrollView} from 'react-native';
+import { useWindowDimensions} from 'react-native';
 import SearchBar from './searchbar';
+import PageOne from '../Screens/PageOne';
+import PageTwo from '../Screens/PageTwo';
+import { BACKGROUNDCOLOR } from '../Constants/colors';
 
 const Drawer = createDrawerNavigator();
-//TODO: Move colors to own file?
-const BACKGROUNDCOLOR = '#9fc8f9';
-const MAINCOLOR = '#cae0f8';
-
-//TODO: Move to -> src\Screens
-function PageOne() {
-    const dimensions = useWindowDimensions();
-    return (
-        <View style={[styles.item, styles.container, dimensions.width >= 768 ? {width: '60%'} : {width: "100%"}]}>
-            <ScrollView style={{width: '100%'}}
-            contentContainerStyle = {styles.item}
-            keyboardDismissMode = "on-drag"
-            >
-                <View>
-                    <Text>PageOne Screen</Text>
-                </View>
-            </ScrollView>
-        </View>
-    );
-}
-  
-//TODO: Move to -> src\Screens
-function PageTwo() {
-    //TODO: Is this right? Currently we have to use this line in every function. (duplicate code)
-    const dimensions = useWindowDimensions();
-    return (
-        <View style={[styles.item, styles.container, dimensions.width >= 768 ? {width: '60%'} : {width: "100%"}]}>
-            <ScrollView style={{width: '100%'}}
-            contentContainerStyle = {styles.item}
-            keyboardDismissMode = "on-drag"
-            >
-                <View>
-                    <Text>PageTwo Screen</Text>
-                </View>
-            </ScrollView>
-        </View>
-    );
-}
 
 //TODO: Create constants for large screen (dimensions.width >= 768 ), maybe constant folder?
 export default function Sidebar() {
@@ -82,16 +47,3 @@ export default function Sidebar() {
         </Drawer.Navigator>
     );
 }
-
-
-const styles = StyleSheet.create({
-    container: {
-      backgroundColor: MAINCOLOR,
-    },
-    item: {
-       justifyContent: 'center',
-       alignItems: 'center',
-       flex:1,
-    }
-  });
-  

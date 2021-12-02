@@ -8,7 +8,7 @@ import Matches from '../Screens/Matches';
 import Freunde from '../Screens/Freunde';
 import Chats from '../Screens/Chats';
 import Einstellungen from '../Screens/Einstellungen';
-import { BACKGROUNDCOLOR, TITLECOLOR } from '../Constants/colors';
+import { BACKGROUNDCOLOR, BLACK, TITLECOLOR, WHITE } from '../Constants/colors';
 
 const Drawer = createDrawerNavigator();
 
@@ -24,8 +24,8 @@ export default function Sidebar() {
                     marginEnd: 0,
                     marginRight: 0,
                 },
-                drawerActiveTintColor: '#fff',
-                drawerInactiveTintColor: '#000',
+                drawerActiveTintColor: WHITE,
+                drawerInactiveTintColor: BLACK,
                 drawerStyle: {
                     paddingLeft: isLargeScreen ? '20%' : 0,
                     width: isLargeScreen ? "auto" : "80%",
@@ -35,6 +35,9 @@ export default function Sidebar() {
                 headerRight: () => (
                     <SearchBar />
                 ),
+                headerRightContainerStyle: {
+                    right: isLargeScreen ? "40%": "0%",
+                },
                 headerStyle: {
                     backgroundColor: BACKGROUNDCOLOR,
                 },

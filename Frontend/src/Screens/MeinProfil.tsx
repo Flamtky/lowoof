@@ -6,7 +6,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { TextBlock } from '../Components/styledText';
 import { BLACK, GRAY, MAINCOLOR, TITLECOLOR } from '../Constants/colors';
 import Seperator from '../Components/seperator';
-import OwnButton from '../Components/OwnButton';
+import OwnButton from '../Components/ownButton';
 
 export default function MeinProfil() {
     const dimensions = useWindowDimensions();

@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import { StyleSheet, useWindowDimensions } from "react-native";
 import { View, TextInput } from "react-native";
+import { BLACK, GRAY, LIGHTGRAY } from '../Constants/colors';
 
 export default function SearchBar() {
     const dimensions = useWindowDimensions();
     const isLargeScreen = dimensions.width >= 768;
     const [isFocused, setIsFocused] = useState(false);
     return (
-        <View style={[styles.container, !isLargeScreen ? { right: '0%' } : { right: '42.5%' },
-        !isLargeScreen && isFocused ? { width: dimensions.width - 42 } : null]}>
+        <View style={[styles.container, !isLargeScreen && isFocused ? { width: "100%", height: "60%" } : null]}>
             <TextInput
                 style={styles.input}
                 placeholder={"Suchen..."}
-                placeholderTextColor="#666"
+                placeholderTextColor={GRAY}
                 returnKeyType="search"
                 onBlur={() => setIsFocused(false)}
                 onFocus={() => setIsFocused(true)}
@@ -24,22 +24,16 @@ export default function SearchBar() {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#F5F5F5',
-        paddingTop: 2,
-        paddingBottom: 2,
+        backgroundColor: LIGHTGRAY,
+        paddingVertical: 2,
         borderRadius: 5,
         flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
         height: '50%',
     },
     input: {
-        flex: 1,
+        width: '100%',
         fontSize: 16,
-        color: '#000',
-        backgroundColor: 'transparent',
-        padding: 0,
-        paddingLeft: 10,
-        paddingRight: 10,
+        color: BLACK,
+        paddingHorizontal: 10,
     },
 });

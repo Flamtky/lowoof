@@ -11,17 +11,17 @@ export default function MeinProfil() {
     const dimensions = useWindowDimensions();
     const isLargeScreen = dimensions.width >= 768;
     return (
-        <View style={[styles.item, styles.container, isLargeScreen ? {width: '60%'} : {width: "100%"}]}>
-            <ScrollView style={{width: '100%'}}
-            keyboardDismissMode = "on-drag"
+        <View style={[styles.item, styles.container, isLargeScreen ? { width: '60%' } : { width: "100%" }]}>
+            <ScrollView style={{ width: '100%' }}
+                keyboardDismissMode="on-drag"
             >
                 <View style={styles.innerContainer}>
                     <View style={styles.row}>
                         <Image style={styles.profilepicture}
-                        source={{uri: "https://puu.sh/IsTPQ/5d69029437.png"}}
+                            source={{ uri: "https://puu.sh/IsTPQ/5d69029437.png" }}
                         />
-                        <TouchableOpacity onPress = {() => {/*TODO: Show Edit page*/}} style={{marginLeft: 30}}>
-                            <FontAwesomeIcon icon = {faUserEdit} size = {40}/>
+                        <TouchableOpacity onPress={() => {/*TODO: Show Edit page*/ }} style={{ marginLeft: 30 }}>
+                            <FontAwesomeIcon icon={faUserEdit} size={40} />
                         </TouchableOpacity>
                     </View>
                     <View style={styles.column}>
@@ -29,41 +29,41 @@ export default function MeinProfil() {
                         <TextBlock>Nachname, Vorname: </TextBlock>
                     </View>
                     <View style={styles.row}>
-                        <View style={{width: "50%"}}>
+                        <View style={{ width: "50%" }}>
                             <TextBlock>PLZ, Ort: </TextBlock>
                             <TextBlock>Geschlecht: </TextBlock>
                             <TextBlock>Geburtsdatum: </TextBlock>
                         </View>
-                        <View style={{width: "50%"}}>
+                        <View style={{ width: "50%" }}>
                             <TextBlock>Email: </TextBlock>
                             <TextBlock>Telefonnummer: </TextBlock>
                         </View>
                     </View>
-                    <Seperator/>
-                    <TextBlock style={{fontSize: 24, color: TITLECOLOR, fontWeight: "bold", alignSelf: "center"}}>Eigene Haustiere</TextBlock>
-                    <Seperator/>
-                    <View style = {styles.row}>
-                        <TouchableOpacity onPress = {() => {/*TODO: Show Tierprofil*/}} >
+                    <Seperator />
+                    <TextBlock style={styles.title}>Eigene Haustiere</TextBlock>
+                    <Seperator />
+                    <View style={styles.row}>
+                        <TouchableOpacity onPress={() => {/*TODO: Show Tierprofil*/ }} >
                             <Image style={styles.petpicture}
-                            source={{uri: "https://puu.sh/IsTPQ/5d69029437.png"}}
+                                source={{ uri: "https://puu.sh/IsTPQ/5d69029437.png" }}
                             />
                         </TouchableOpacity>
-                        <View style = {{marginLeft: 10}}>
+                        <View style={{ marginLeft: 10 }}>
                             <TextBlock>Matches: </TextBlock>
                             <TextBlock>Rufname: </TextBlock>
                             <TextBlock>Art: </TextBlock>
                             <TextBlock>Rasse: </TextBlock>
                         </View>
-                        <TouchableOpacity onPress = {() => {/*TODO: Show Edit page*/}} style = {{marginLeft: 30}}>
-                            <FontAwesomeIcon icon = {faUserEdit} size = {40}/>
+                        <TouchableOpacity onPress={() => {/*TODO: Show Edit page*/ }} style={{ marginLeft: 30 }}>
+                            <FontAwesomeIcon icon={faUserEdit} size={40} />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress = {() => {/*TODO: Delete*/}} style = {{marginLeft: 10}}>
-                            <FontAwesomeIcon icon = {faTrashAlt} size = {40}/>
+                        <TouchableOpacity onPress={() => {/*TODO: Delete*/ }} style={{ marginLeft: 10 }}>
+                            <FontAwesomeIcon icon={faTrashAlt} size={40} />
                         </TouchableOpacity>
                     </View>
-                    <Seperator/>
-                    <View style={{width: 200, alignSelf: "center", marginTop: 20}}>
-                        <Button title="Neues Tierprofil anlegen" onPress = {() => {/*Tierprofil anlegen*/}}/>
+                    <Seperator />
+                    <View style={{ width: 200, alignSelf: "center", marginTop: 20 }}>
+                        <Button title="Neues Tierprofil anlegen" onPress={() => {/*Tierprofil anlegen*/ }} />
                     </View>
                 </View>
             </ScrollView>
@@ -73,16 +73,16 @@ export default function MeinProfil() {
 
 const styles = StyleSheet.create({
     container: {
-      backgroundColor: MAINCOLOR,
+        backgroundColor: MAINCOLOR,
     },
     innerContainer: {
         margin: 32,
         flex: 1,
     },
     item: {
-       justifyContent: 'center',
-       alignItems: 'center',
-       flex:1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        flex: 1,
     },
     profilepicture: {
         width: 128,
@@ -111,4 +111,10 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         alignItems: "flex-start",
     },
+    title: {
+        fontSize: 24,
+        color: TITLECOLOR,
+        fontWeight: "bold",
+        alignSelf: "center"
+    }
 });

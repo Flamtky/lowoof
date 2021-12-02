@@ -1,11 +1,12 @@
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faEdit, faTrashAlt, faUserEdit } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt, faUserEdit } from '@fortawesome/free-solid-svg-icons';
 import React from 'react';
 import { StyleSheet, View, useWindowDimensions, ScrollView, Image } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { TextBlock } from '../Components/styledText';
-import { MAINCOLOR, TITLECOLOR } from '../Constants/colors';
+import { BLACK, GRAY, MAINCOLOR, TITLECOLOR } from '../Constants/colors';
 import Seperator from '../Components/seperator';
+import OwnButton from '../Components/OwnButton';
 
 export default function MeinProfil() {
     const dimensions = useWindowDimensions();
@@ -66,11 +67,7 @@ export default function MeinProfil() {
                         </View>
                     </View>
                     <Seperator />
-                    <View style={{ width: 200, alignSelf: "center", marginTop: 20 }}>
-                        <TouchableOpacity onPress={() => {/*Tierprofil anlegen*/ }}>
-                            <TextBlock style={styles.button}>Neues Tierprofil anlegen</TextBlock>
-                        </TouchableOpacity>
-                    </View>
+                    <OwnButton title="Neues Tier hinzufügen" />
                 </View>
             </ScrollView>
         </View>
@@ -96,15 +93,15 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderRadius: 10,
         borderColor: "#000",
-        backgroundColor: "#fff"
+        backgroundColor: BLACK
     },
     petpicture: {
         width: 64,
         height: 64,
         borderWidth: 1.5,
         borderRadius: 10,
-        borderColor: "#333",
-        backgroundColor: "#fff"
+        borderColor: GRAY,
+        backgroundColor: BLACK
     },
     row: {
         marginTop: 10,
@@ -122,16 +119,4 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         alignSelf: "center"
     },
-    button: {
-        fontSize: 18,
-        color: "#fff",
-        fontWeight: "bold",
-        alignSelf: "center",
-        textAlign: "center",
-        padding: 10,
-        backgroundColor: "#0F70E6",
-        borderRadius: 10,
-        borderWidth: 1,
-        borderColor: "#fff"
-    }
 });

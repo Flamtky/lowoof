@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, useWindowDimensions, ScrollView} from 'react-native';
+import { StyleSheet, View, Text, useWindowDimensions, ScrollView } from 'react-native';
 import { MAINCOLOR } from '../Constants/colors';
 
 export default function Einstellungen() {
@@ -7,10 +7,10 @@ export default function Einstellungen() {
     const dimensions = useWindowDimensions();
     const isLargeScreen = dimensions.width >= 768;
     return (
-        <View style={[styles.item, styles.container, isLargeScreen ? {width: '60%'} : {width: "100%"}]}>
-            <ScrollView style={{width: '100%'}}
-            contentContainerStyle = {styles.item}
-            keyboardDismissMode = "on-drag"
+        <View style={[styles.item, styles.container, isLargeScreen ? { width: '60%' } : { width: "100%" }]}>
+            <ScrollView style={{ width: '100%' }}
+                contentContainerStyle={styles.item}
+                keyboardDismissMode="on-drag"
             >
                 <View>
                     <Text>Einstellungen</Text>
@@ -22,11 +22,11 @@ export default function Einstellungen() {
 
 const styles = StyleSheet.create({
     container: {
-      backgroundColor: MAINCOLOR,
+        backgroundColor: MAINCOLOR,
     },
     item: {
-       justifyContent: 'center',
-       alignItems: 'center',
-       flex:1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        flex: 1,
     }
 });

@@ -21,7 +21,7 @@ export default function MeinProfil() {
                         <Image style={styles.profilepicture}
                             source={{ uri: "https://puu.sh/IsTPQ/5d69029437.png" }}
                         />
-                        <View style={{ position: "absolute", right: "10%"}}>
+                        <View style={{ position: "absolute", right: "10%" }}>
                             <TouchableOpacity onPress={() => {/*TODO: Show Edit page*/ }} >
                                 <FontAwesomeIcon icon={faUserEdit} size={40} />
                             </TouchableOpacity>
@@ -57,7 +57,7 @@ export default function MeinProfil() {
                             <TextBlock>Art: </TextBlock>
                             <TextBlock>Rasse: </TextBlock>
                         </View>
-                        <View style={[styles.row, {marginLeft:"auto", right: "10%"}]}>
+                        <View style={[styles.row, { marginLeft: "auto", right: "10%" }]}>
                             <TouchableOpacity onPress={() => {/*TODO: Show Edit page*/ }}>
                                 <FontAwesomeIcon icon={faUserEdit} size={40} />
                             </TouchableOpacity>

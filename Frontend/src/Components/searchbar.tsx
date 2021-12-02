@@ -7,8 +7,8 @@ export default function SearchBar() {
     const isLargeScreen = dimensions.width >= 768;
     const [isFocused, setIsFocused] = useState(false);
     return (
-        <View style={[styles.container, !isLargeScreen ? {right: '0%'} : {right: '42.5%'},
-        !isLargeScreen && isFocused ? {width: dimensions.width-42} : null]}>
+        <View style={[styles.container, !isLargeScreen ? { right: '0%' } : { right: '42.5%' },
+        !isLargeScreen && isFocused ? { width: dimensions.width - 42 } : null]}>
             <TextInput
                 style={styles.input}
                 placeholder={"Suchen..."}

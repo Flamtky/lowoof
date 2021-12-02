@@ -1,6 +1,6 @@
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import React from 'react';
-import { useWindowDimensions} from 'react-native';
+import { useWindowDimensions } from 'react-native';
 import SearchBar from './searchbar';
 import MeinProfil from '../Screens/MeinProfil';
 import Tierprofil from '../Screens/Tierprofil';
@@ -27,13 +27,13 @@ export default function Sidebar() {
                 drawerActiveTintColor: '#fff',
                 drawerInactiveTintColor: '#000',
                 drawerStyle: {
-                    paddingLeft: isLargeScreen ? '20%': 0,
-                    width: isLargeScreen ? "auto": "80%",
+                    paddingLeft: isLargeScreen ? '20%' : 0,
+                    width: isLargeScreen ? "auto" : "80%",
                     backgroundColor: BACKGROUNDCOLOR,
                 },
                 swipeEdgeWidth: dimensions.width,
                 headerRight: () => (
-                    <SearchBar/>
+                    <SearchBar />
                 ),
                 headerStyle: {
                     backgroundColor: BACKGROUNDCOLOR,
@@ -52,13 +52,13 @@ export default function Sidebar() {
                 } : {},
             }}
             backBehavior='history'
-            >
-            <Drawer.Screen name="Mein Profil" component={MeinProfil}/>
-            <Drawer.Screen name="Tierprofil" component={Tierprofil}/>
-            <Drawer.Screen name="Matches" component={Matches}/>
-            <Drawer.Screen name="Freunde" component={Freunde}/>
-            <Drawer.Screen name="Chats" component={Chats}/>
-            <Drawer.Screen name="Einstellungen" component={Einstellungen}/>
+        >
+            <Drawer.Screen name="Mein Profil" component={MeinProfil} />
+            <Drawer.Screen name="Tierprofil" component={Tierprofil} />
+            <Drawer.Screen name="Matches" component={Matches} />
+            <Drawer.Screen name="Freunde" component={Freunde} />
+            <Drawer.Screen name="Chats" component={Chats} />
+            <Drawer.Screen name="Einstellungen" component={Einstellungen} />
         </Drawer.Navigator>
     );
 }

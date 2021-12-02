@@ -2,20 +2,24 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import React from 'react';
 import { useWindowDimensions} from 'react-native';
 import SearchBar from './searchbar';
-import PageOne from '../Screens/PageOne';
-import PageTwo from '../Screens/PageTwo';
-import { BACKGROUNDCOLOR } from '../Constants/colors';
+import MeinProfil from '../Screens/MeinProfil';
+import Tierprofil from '../Screens/Tierprofil';
+import Matches from '../Screens/Matches';
+import Freunde from '../Screens/Freunde';
+import Chats from '../Screens/Chats';
+import Einstellungen from '../Screens/Einstellungen';
+import { BACKGROUNDCOLOR, TITLECOLOR } from '../Constants/colors';
 
 const Drawer = createDrawerNavigator();
 
-//TODO: Create constants for large screen (dimensions.width >= 768 ), maybe constant folder?
 export default function Sidebar() {
     const dimensions = useWindowDimensions();
+    const isLargeScreen = dimensions.width >= 768;
     return (
         <Drawer.Navigator
-            initialRouteName="PageOne"
+            initialRouteName="Mein Profil"
             screenOptions={{
-                drawerType: dimensions.width >= 768 ? 'permanent' : 'front',
+                drawerType: isLargeScreen ? 'permanent' : 'front',
                 drawerLabelStyle: {
                     marginEnd: 0,
                     marginRight: 0,
@@ -23,27 +27,38 @@ export default function Sidebar() {
                 drawerActiveTintColor: '#fff',
                 drawerInactiveTintColor: '#000',
                 drawerStyle: {
-                    paddingLeft: dimensions.width >= 768 ? '20%': 0,
-                    width: dimensions.width >= 768 ? "auto": "80%",
+                    paddingLeft: isLargeScreen ? '20%': 0,
+                    width: isLargeScreen ? "auto": "80%",
                     backgroundColor: BACKGROUNDCOLOR,
                 },
+                swipeEdgeWidth: dimensions.width,
                 headerRight: () => (
                     <SearchBar/>
                 ),
                 headerStyle: {
                     backgroundColor: BACKGROUNDCOLOR,
                 },
+                headerTitleStyle: {
+                    fontSize: 24,
+                    color: TITLECOLOR,
+                    fontWeight: "bold"
+                },
                 sceneContainerStyle: {
                     backgroundColor: BACKGROUNDCOLOR,
                 },
                 // Hide hamburger icon if drawer is permanent
-                headerLeftContainerStyle: dimensions.width >= 768 ? {
+                headerLeftContainerStyle: isLargeScreen ? {
                     display: 'none',
                 } : {},
             }}
+            backBehavior='history'
             >
-            <Drawer.Screen name="PageOne" component={PageOne}/>
-            <Drawer.Screen name="PageTwo" component={PageTwo}/>
+            <Drawer.Screen name="Mein Profil" component={MeinProfil}/>
+            <Drawer.Screen name="Tierprofil" component={Tierprofil}/>
+            <Drawer.Screen name="Matches" component={Matches}/>
+            <Drawer.Screen name="Freunde" component={Freunde}/>
+            <Drawer.Screen name="Chats" component={Chats}/>
+            <Drawer.Screen name="Einstellungen" component={Einstellungen}/>
         </Drawer.Navigator>
     );
 }

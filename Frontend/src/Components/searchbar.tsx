@@ -4,9 +4,11 @@ import { View, TextInput } from "react-native";
 
 export default function SearchBar() {
     const dimensions = useWindowDimensions();
+    const isLargeScreen = dimensions.width >= 768;
     const [isFocused, setIsFocused] = useState(false);
     return (
-        <View style={[styles.container, dimensions.width < 768 ? {right: '0%'} : {right: '42.5%'}, dimensions.width < 768 && isFocused ? {width: dimensions.width-42} : null]}>
+        <View style={[styles.container, !isLargeScreen ? {right: '0%'} : {right: '42.5%'},
+        !isLargeScreen && isFocused ? {width: dimensions.width-42} : null]}>
             <TextInput
                 style={styles.input}
                 placeholder={"Suchen..."}

@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faEdit, faTrashAlt, faUserEdit } from '@fortawesome/free-solid-svg-icons';
 import React from 'react';
-import { StyleSheet, View, useWindowDimensions, ScrollView, Image, Button } from 'react-native';
+import { StyleSheet, View, useWindowDimensions, ScrollView, Image } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { TextBlock } from '../Components/styledText';
 import { MAINCOLOR, TITLECOLOR } from '../Constants/colors';
@@ -20,9 +20,11 @@ export default function MeinProfil() {
                         <Image style={styles.profilepicture}
                             source={{ uri: "https://puu.sh/IsTPQ/5d69029437.png" }}
                         />
-                        <TouchableOpacity onPress={() => {/*TODO: Show Edit page*/ }} style={{ marginLeft: 30 }}>
-                            <FontAwesomeIcon icon={faUserEdit} size={40} />
-                        </TouchableOpacity>
+                        <View style={{ position: "absolute", right: "10%"}}>
+                            <TouchableOpacity onPress={() => {/*TODO: Show Edit page*/ }} >
+                                <FontAwesomeIcon icon={faUserEdit} size={40} />
+                            </TouchableOpacity>
+                        </View>
                     </View>
                     <View style={styles.column}>
                         <TextBlock>Benutzername: </TextBlock>
@@ -54,16 +56,20 @@ export default function MeinProfil() {
                             <TextBlock>Art: </TextBlock>
                             <TextBlock>Rasse: </TextBlock>
                         </View>
-                        <TouchableOpacity onPress={() => {/*TODO: Show Edit page*/ }} style={{ marginLeft: 30 }}>
-                            <FontAwesomeIcon icon={faUserEdit} size={40} />
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => {/*TODO: Delete*/ }} style={{ marginLeft: 10 }}>
-                            <FontAwesomeIcon icon={faTrashAlt} size={40} />
-                        </TouchableOpacity>
+                        <View style={[styles.row, {marginLeft:"auto", right: "10%"}]}>
+                            <TouchableOpacity onPress={() => {/*TODO: Show Edit page*/ }}>
+                                <FontAwesomeIcon icon={faUserEdit} size={40} />
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => {/*TODO: Delete*/ }}>
+                                <FontAwesomeIcon icon={faTrashAlt} size={40} />
+                            </TouchableOpacity>
+                        </View>
                     </View>
                     <Seperator />
                     <View style={{ width: 200, alignSelf: "center", marginTop: 20 }}>
-                        <Button title="Neues Tierprofil anlegen" onPress={() => {/*Tierprofil anlegen*/ }} />
+                        <TouchableOpacity onPress={() => {/*Tierprofil anlegen*/ }}>
+                            <TextBlock style={styles.button}>Neues Tierprofil anlegen</TextBlock>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </ScrollView>
@@ -103,7 +109,6 @@ const styles = StyleSheet.create({
     row: {
         marginTop: 10,
         flexDirection: "row",
-        width: "100%",
         alignItems: "flex-start",
     },
     column: {
@@ -116,5 +121,17 @@ const styles = StyleSheet.create({
         color: TITLECOLOR,
         fontWeight: "bold",
         alignSelf: "center"
+    },
+    button: {
+        fontSize: 18,
+        color: "#fff",
+        fontWeight: "bold",
+        alignSelf: "center",
+        textAlign: "center",
+        padding: 10,
+        backgroundColor: "#0F70E6",
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: "#fff"
     }
 });

@@ -65,9 +65,9 @@ export default function MeinProfil() {
                         <OwnButton title="Chats" style={{ width: "20%", marginTop: 0, position: "absolute", left: "70%" }} />
                     </View>
                     <Seperator />
-                    <OwnButton title="Zurück" style={{ position: "absolute", top: dimensions.height-200, left: 0 }}/>
-                </View>
-            </ScrollView>
+                    </View>
+                </ScrollView>
+            <OwnButton title="Zurück" style={{ margin: 32, alignSelf: "flex-start" }}/>
         </View>
     );
 }

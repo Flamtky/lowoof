@@ -4,6 +4,10 @@
       "module": "commonjs",
       "rootDir": "./",
       "outDir": "./build",
+      "typeRoots": [
+        "./@types",
+        "./node_modules/@types",
+      ],  
       "esModuleInterop": true,
       "strict": true
     }

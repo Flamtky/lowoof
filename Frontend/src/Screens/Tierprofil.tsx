@@ -22,10 +22,10 @@ export default function MeinProfil({ navigation }: any) {
                             source={{ uri: "https://puu.sh/IsTPQ/5d69029437.png" }}
                         />
                         <View style={[styles.row, { position: "absolute", right: "10%" }]}>
-                            <TouchableOpacity onPress={() => {/*TODO: Show Edit page*/ }} >
+                            <TouchableOpacity onPress={() => {navigation.navigate('EditAnimal')}} >
                                 <FontAwesomeIcon icon={faUserEdit} size={40} />
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={() => {/*TODO: Delete*/ }} >
+                            <TouchableOpacity onPress={() => {alert("Tier gelöscht!")/*TODO: Delete*/ }} >
                                 <FontAwesomeIcon icon={faTrashAlt} size={40} />
                             </TouchableOpacity>
                         </View>
@@ -60,9 +60,15 @@ export default function MeinProfil({ navigation }: any) {
                     </View>
                     <Seperator />
                     <View style={[styles.row, { marginVertical: 10, justifyContent: "space-around" }]}>
-                        <OwnButton title="Matches" />
-                        <OwnButton title="Freunde" />
-                        <OwnButton title="Chats" />
+                        <OwnButton title="Matches" onPress={() => {
+                            navigation.navigate('Matches');
+                        }}/>
+                        <OwnButton title="Freunde" onPress={() => {
+                            navigation.navigate('Freunde');
+                        }} />
+                        <OwnButton title="Chats" onPress={() => {
+                            navigation.navigate('Chats');
+                        }}/>
                     </View>
                     <Seperator />
                 </View>

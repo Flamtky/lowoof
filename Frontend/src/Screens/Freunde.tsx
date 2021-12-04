@@ -3,7 +3,6 @@ import { StyleSheet, View, Text, useWindowDimensions, ScrollView } from 'react-n
 import { MAINCOLOR } from '../Constants/colors';
 
 export default function Freunde() {
-    //TODO: Is this right? Currently we have to use this line in every function. (duplicate code)
     const dimensions = useWindowDimensions();
     const isLargeScreen = dimensions.width >= 768;
     return (

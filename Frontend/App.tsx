@@ -5,6 +5,7 @@ import { StyleSheet } from 'react-native';
 import Sidebar from './src/Components/sidebar';
 import { EditProfile, EditAnimal } from './src/Screens/EditProfile';
 import { BACKGROUNDCOLOR, TITLECOLOR } from './src/Constants/colors';
+import { Chat } from './src/Screens/Chat';
 
 const Stack = createNativeStackNavigator<any>();
 
@@ -27,6 +28,17 @@ export default function App() {
 					}} />
 					<Stack.Screen name="EditAnimal" component={EditAnimal} options={{
 						title: 'Tier bearbeiten',
+						headerStyle: {
+							backgroundColor: BACKGROUNDCOLOR,
+						},
+						headerTitleStyle: {
+							fontSize: 24,
+							color: TITLECOLOR,
+							fontWeight: "bold",
+						},
+					}} />
+					<Stack.Screen name="Chat" component={Chat} options={{
+						title: 'Chat mit XY',
 						headerStyle: {
 							backgroundColor: BACKGROUNDCOLOR,
 						},

@@ -7,7 +7,6 @@ import { TextBlock } from '../Components/styledText';
 import Seperator from '../Components/seperator';
 
 export default function Matches({navigation}:any) {
-    //TODO: Is this right? Currently we have to use this line in every function. (duplicate code)
     const dimensions = useWindowDimensions();
     const isLargeScreen = dimensions.width >= 768;
     return (

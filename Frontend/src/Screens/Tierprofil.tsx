@@ -8,7 +8,7 @@ import { BLACK, GRAY, MAINCOLOR, TITLECOLOR } from '../Constants/colors';
 import Seperator from '../Components/seperator';
 import OwnButton from '../Components/ownButton';
 
-export default function MeinProfil() {
+export default function MeinProfil({ navigation }: any) {
     const dimensions = useWindowDimensions();
     const isLargeScreen = dimensions.width >= 768;
     return (
@@ -16,7 +16,7 @@ export default function MeinProfil() {
             <ScrollView style={{ width: '100%' }}
                 keyboardDismissMode="on-drag"
             >
-                <View style={[styles.innerContainer, {height: dimensions.height}]}>
+                <View style={[styles.innerContainer, { height: dimensions.height }]}>
                     <View style={styles.row}>
                         <Image style={styles.profilepicture}
                             source={{ uri: "https://puu.sh/IsTPQ/5d69029437.png" }}
@@ -59,15 +59,17 @@ export default function MeinProfil() {
                         </View>
                     </View>
                     <Seperator />
-                    <View style={[styles.row, {marginVertical: 10, justifyContent:"space-around"}]}>
-                        <OwnButton title="Matches"/>
-                        <OwnButton title="Freunde"/>
-                        <OwnButton title="Chats"/>
+                    <View style={[styles.row, { marginVertical: 10, justifyContent: "space-around" }]}>
+                        <OwnButton title="Matches" />
+                        <OwnButton title="Freunde" />
+                        <OwnButton title="Chats" />
                     </View>
-                    <Seperator/>
-                    </View>
-                </ScrollView>
-            <OwnButton title="Zurück" style={{ margin: 32, alignSelf: "flex-start"}}/>
+                    <Seperator />
+                </View>
+            </ScrollView>
+            <OwnButton title="Zurück" style={{ margin: 32, alignSelf: "flex-start" }} onPress={() => {
+                navigation.goBack();
+            }} />
         </View>
     );
 }

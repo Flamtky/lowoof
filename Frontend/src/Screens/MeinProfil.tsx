@@ -8,7 +8,8 @@ import { BLACK, GRAY, MAINCOLOR, TITLECOLOR } from '../Constants/colors';
 import Seperator from '../Components/seperator';
 import OwnButton from '../Components/ownButton';
 
-export default function MeinProfil() {
+
+export default function MeinProfil({navigation}:any) {
     const dimensions = useWindowDimensions();
     const isLargeScreen = dimensions.width >= 768;
     return (
@@ -46,7 +47,7 @@ export default function MeinProfil() {
                     <TextBlock style={styles.title}>Eigene Haustiere</TextBlock>
                     <Seperator />
                     <View style={styles.row}>
-                        <TouchableOpacity onPress={() => {/*TODO: Show Tierprofil*/ }} >
+                        <TouchableOpacity onPress={() => {navigation.navigate('Tierprofil')}} >
                             <Image style={styles.petpicture}
                                 source={{ uri: "https://puu.sh/IsTPQ/5d69029437.png" }}
                             />

@@ -10,7 +10,7 @@ export default function Seperator(props: any) {
 const styles = StyleSheet.create({
     seperator: {
         height: 1,
-        width: "90%",
+        width: "100%",
         marginVertical: 10,
     }
 });

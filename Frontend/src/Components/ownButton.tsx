@@ -6,8 +6,8 @@ import { TextBlock } from './styledText';
 
 // TODO: Add type for props
 export default function OwnButton(props: any) {
-    return <View style={[{ minWidth: 100, width: "auto"}, props.style]}>
-        <TouchableOpacity onPress={() => { }}>
+    return <View style={[{ minWidth: 100, width: "auto" }, props.style]}>
+        <TouchableOpacity onPress={props.onPress}>
             <TextBlock style={styles.button}>{props.title}</TextBlock>
         </TouchableOpacity>
     </View>;

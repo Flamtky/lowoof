@@ -23,7 +23,7 @@ export default function MeinProfil({navigation}:any) {
                             source={{ uri: "https://puu.sh/IsTPQ/5d69029437.png" }}
                         />
                         <View style={{ position: "absolute", right: "10%" }}>
-                            <TouchableOpacity onPress={() => {/*TODO: Show Edit page*/ }} >
+                            <TouchableOpacity onPress={() => { navigation.navigate("EditProfile") }} >
                                 <FontAwesomeIcon icon={faUserEdit} size={40} />
                             </TouchableOpacity>
                         </View>
@@ -68,7 +68,9 @@ export default function MeinProfil({navigation}:any) {
                         </View>
                     </View>
                     <Seperator />
-                    <OwnButton title="Neues Tier hinzufügen" />
+                    <OwnButton title="Neues Tier hinzufügen" style={{
+                        alignSelf: "center",
+                    }}/>
                 </View>
             </ScrollView>
         </View>

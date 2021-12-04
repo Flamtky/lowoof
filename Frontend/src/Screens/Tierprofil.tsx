@@ -59,15 +59,15 @@ export default function MeinProfil() {
                         </View>
                     </View>
                     <Seperator />
-                    <View style={[styles.row, {marginTop: 15, marginBottom: 15}]}>
-                        <OwnButton title="Matches" style={{ width: "20%", marginTop: 0, position: "absolute", left: "10%" }} />
-                        <OwnButton title="Freunde" style={{ width: "20%", marginTop: 0, position: "absolute", left: "40%" }} />
-                        <OwnButton title="Chats" style={{ width: "20%", marginTop: 0, position: "absolute", left: "70%" }} />
+                    <View style={[styles.row, {marginVertical: 10, justifyContent:"space-around"}]}>
+                        <OwnButton title="Matches"/>
+                        <OwnButton title="Freunde"/>
+                        <OwnButton title="Chats"/>
                     </View>
-                    <Seperator />
+                    <Seperator/>
                     </View>
                 </ScrollView>
-            <OwnButton title="Zurück" style={{ margin: 32, alignSelf: "flex-start" }}/>
+            <OwnButton title="Zurück" style={{ margin: 32, alignSelf: "flex-start"}}/>
         </View>
     );
 }

@@ -63,7 +63,7 @@ export default function MeinProfil({ navigation }: any) {
                                 <FontAwesomeIcon icon={faUserEdit} size={40} />
                             </TouchableOpacity>
                             <TouchableOpacity onPress={() => { alert("Tier gelöscht")/*TODO: Delete*/ }}>
-                                <FontAwesomeIcon icon={faTrashAlt} size={40} />
+                                <FontAwesomeIcon icon={faTrashAlt} size={40} color="#555"/>
                             </TouchableOpacity>
                         </View>
                     </View>

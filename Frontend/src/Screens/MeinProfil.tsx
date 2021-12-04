@@ -9,7 +9,7 @@ import Seperator from '../Components/seperator';
 import OwnButton from '../Components/ownButton';
 
 
-export default function MeinProfil({navigation}:any) {
+export default function MeinProfil({ navigation }: any) {
     const dimensions = useWindowDimensions();
     const isLargeScreen = dimensions.width >= 768;
     return (
@@ -47,7 +47,7 @@ export default function MeinProfil({navigation}:any) {
                     <TextBlock style={styles.title}>Eigene Haustiere</TextBlock>
                     <Seperator />
                     <View style={styles.row}>
-                        <TouchableOpacity onPress={() => {navigation.navigate('Tierprofil')}} >
+                        <TouchableOpacity onPress={() => { navigation.navigate('Tierprofil') }} >
                             <Image style={styles.petpicture}
                                 source={{ uri: "https://puu.sh/IsTPQ/5d69029437.png" }}
                             />
@@ -59,10 +59,10 @@ export default function MeinProfil({navigation}:any) {
                             <TextBlock>Rasse: </TextBlock>
                         </View>
                         <View style={[styles.row, { marginLeft: "auto", right: "10%" }]}>
-                            <TouchableOpacity onPress={() => {/*TODO: Show Edit page*/ }}>
+                            <TouchableOpacity onPress={() => {navigation.navigate('EditAnimal') }}>
                                 <FontAwesomeIcon icon={faUserEdit} size={40} />
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={() => {/*TODO: Delete*/ }}>
+                            <TouchableOpacity onPress={() => { alert("Tier gelöscht")/*TODO: Delete*/ }}>
                                 <FontAwesomeIcon icon={faTrashAlt} size={40} />
                             </TouchableOpacity>
                         </View>
@@ -70,7 +70,7 @@ export default function MeinProfil({navigation}:any) {
                     <Seperator />
                     <OwnButton title="Neues Tier hinzufügen" style={{
                         alignSelf: "center",
-                    }}/>
+                    }} />
                 </View>
             </ScrollView>
         </View>

@@ -100,14 +100,38 @@ app.get('/users', (req, res) => {
         (err, rows, fields) => {
         if (err) {
             console.log(err);
-            res.sendStatus(500).json({message:"Something went wrong, Try again or contact the administrator"});
+            res.status(500).json({message:"Something went wrong, Try again or contact the administrator"});
         } else {
-            res.json(rows);
+            res.status(200).json(rows);
         }
     }
     );
     connection.end();
 });
+
+app.get('/getuser', (req, res) => {
+    if(req.query.userid){
+        const connection: mysql.Connection = getConnection();
+        connection.connect(function(err) {
+            if (err) throw err;
+            console.log("Connected!");
+        });
+        connection.query(`SELECT * FROM USER WHERE USERID = '${req.query.userid}'`,
+            (err, rows, fields) => {
+            if (err) {
+                console.log(err);
+                res.status(500).json({message:"Something went wrong, Try again or contact the administrator"});
+            } else {
+                if(rows.length == 0) {
+                    res.status(500).json({message:"Given userid doesnt exist"});
+                } else {
+                    res.status(200).json(rows);
+                }
+            }
+        }
+        );
+        connection.end();
+}});
 
 app.post('/adduser', (req, res) => {
     console.log(req.body);
@@ -134,9 +158,9 @@ app.post('/adduser', (req, res) => {
         (err, rows, fields) => {
         if (err) {
             console.log(err);
-            res.sendStatus(500).json({message:"Something went wrong, Try again or contact the administrator"});
+            res.status(500).json({message:"Something went wrong, Try again or contact the administrator"});
         } else {
-            res.json({message: 'User added'});
+            res.status(200).json({message: 'User added'});
         }
     }
     );
@@ -144,4 +168,4 @@ app.post('/adduser', (req, res) => {
 });
 
 
-app.listen(port, () => console.log(`Hello world app listening on port ${port}!`))
+app.listen(port, () => console.log(`Lowoof API running on port ${port}!`))

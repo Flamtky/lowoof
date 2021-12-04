@@ -33,7 +33,7 @@ export default function Sidebar() {
                 },
                 swipeEdgeWidth: dimensions.width,
                 headerRight: () => (
-                    <SearchBar />
+                    <SearchBar mobileStyle={{ width: "100%", height: "60%" }}/>
                 ),
                 headerRightContainerStyle: {
                     right: isLargeScreen ? "40%": "0%",

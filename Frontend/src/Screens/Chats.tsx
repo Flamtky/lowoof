@@ -14,23 +14,23 @@ export default function Chats({ navigation }: any) {
             <ScrollView style={{ width: '100%' }}
                 keyboardDismissMode="on-drag"
             >
-                <View style={[styles.row, { marginLeft: 15, height: 60 }]}>
-                    <TouchableOpacity onPress={() => { navigation.navigate('Mein Profil') }}>
-                        <Image style={styles.profilepicture}
-                            source={{ uri: "https://puu.sh/IsTPQ/5d69029437.png" }}
-                        />
-                    </TouchableOpacity>
-                    <TouchableOpacity style= {[styles.row, {marginTop: 0, height:"100%"}]} onPress={() => { navigation.navigate('Chat') }}>
+                <TouchableOpacity style={[styles.row, { marginTop: 0, height: "100%" }]} onPress={() => { navigation.navigate('Chat') }}>
+                    <View style={[styles.row, {width:"100%", marginLeft: 15, height: 60 }]}>
+                        <TouchableOpacity onPress={() => { navigation.navigate('Mein Profil') }}>
+                            <Image style={styles.profilepicture}
+                                source={{ uri: "https://puu.sh/IsTPQ/5d69029437.png" }}
+                            />
+                        </TouchableOpacity>
                         <View style={{ marginLeft: 10, height: "100%", justifyContent: "space-between" }}>
                             <TextBlock>Besitzer: </TextBlock>
                             <TextBlock>Rufname: </TextBlock>
                             <TextBlock>Letzte Nachricht: </TextBlock>
                         </View>
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => { /* Delete */ }} style={{ marginLeft: "auto", alignSelf:"center", right: 20 }}>
-                                <FontAwesomeIcon icon={faTrashAlt} size={32} color="#555" />
-                    </TouchableOpacity>
-                </View>
+                        <TouchableOpacity onPress={() => { /* Delete */ }} style={{ marginLeft: "auto", alignSelf: "center", right: 20 }}>
+                            <FontAwesomeIcon icon={faTrashAlt} size={32} color="#555" />
+                        </TouchableOpacity>
+                    </View>
+                </TouchableOpacity>
                 <Seperator />
             </ScrollView>
         </View>

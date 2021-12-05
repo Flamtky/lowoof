@@ -17,6 +17,7 @@ export default function SearchBar(props: any) {
                 onBlur={() => setIsFocused(false)}
                 onFocus={() => setIsFocused(true)}
                 spellCheck={false}
+                onChange={props.onChange}
             />
         </View>
     );

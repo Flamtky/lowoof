@@ -9,7 +9,6 @@ export function Chat(props: any) {
     const dimensions = useWindowDimensions();
     const isLargeScreen = dimensions.width >= 768;
     const [message, setMessage] = useState('');
-    const [clearFunc, setClearFunc] = useState(Function);
 
     return (
         <View style={{ backgroundColor: BACKGROUNDCOLOR, height: "100%" }}>
@@ -17,22 +16,24 @@ export function Chat(props: any) {
                 <ScrollView keyboardDismissMode='on-drag' style={{ height: "100%", width: "100%" }}>
                     {/*Messages*/}
                 </ScrollView>
-                <View style={{ flexDirection: 'row', alignSelf: 'stretch' }}>
+                <View style={{ width: "100%", flexDirection: 'row' }}>
                     <SearchBar
                         placeholder="Nachricht...."
                         style={styles.input}
-                        onChange={(text: any) => {
-                            setMessage(text.target.value);
-                            setClearFunc(() => text.target.clear);
+                        value={message}
+                        onChange={(event: any) => {
+                            setMessage(event.nativeEvent.text);
                         }}
                     />
                     <OwnButton
                         title="➤"
-                        style={{ width: 40, padding: 0, minWidth: 0, borderRadius: 0, bottom: -0.3 }}
+                        style={{ width: 40, padding: 0, minWidth: 0, borderRadius: 0 }}
                         onPress={() => {
                             console.log(message);
-                            // send message
-                            clearFunc();
+                            /* TODO: Handle message */
+
+                            // Clears the input
+                            setMessage('');
                         }}
                     />
                 </View>
@@ -51,8 +52,8 @@ const styles = StyleSheet.create({
     },
     input: {
         height: 42,
-        width: "95%",
-        alignSelf: 'flex-end',
+        width: 32,
+        flexGrow: 1,
         borderRadius: 0,
     },
 });

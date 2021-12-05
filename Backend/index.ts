@@ -153,14 +153,51 @@ app.post('/adduser', (req, res) => {
         if (err) throw err;
         console.log("Connected!");
       });
-    connection.query(`INSERT INTO USER (USERNAME, HASHEDPASSWORD, EMAIL, VORNAME, NACHNAME, GEBURTSTAG, INSTITUTION, TELEFONNUMMER, PLZ, WOHNORT, GESCHLECHT)
-        VALUES ('${username}', '${password}', '${email}', '${vorname}', '${nachname}', '${geburtsdatum}', '${institution}', '${telefonnummer}', '${plz}', '${adresse}', '${geschlecht}')`,
+    connection.query(`INSERT INTO USER (USERNAME, HASHEDPASSWORD, EMAIL, VORNAME, NACHNAME, GEBURTSTAG, INSTITUTION, TELEFONNUMMER, PLZ, WOHNORT, GESCHLECHT, ONLINESTATUS, MITGLIEDSCHAFTPAUSIERT)
+        VALUES ('${username}', '${password}', '${email}', '${vorname}', '${nachname}', '${geburtsdatum}', '${institution}', '${telefonnummer}', '${plz}', '${adresse}', '${geschlecht}', 0, 0)`,
         (err, rows, fields) => {
         if (err) {
             console.log(err);
             res.status(500).json({message:"Something went wrong, Try again or contact the administrator"});
         } else {
             res.status(200).json({message: 'User added'});
+        }
+    }
+    );
+    connection.end();
+});
+
+app.post('/updateuser', (req, res) => {
+    console.log(req.body);
+    const userid:string = req.body.id;
+    const sprachId:string = req.body.sprachId;
+    const username:string = req.body.username;
+    const email:string = req.body.email;
+    const vorname:string = req.body.vorname;
+    const nachname:string = req.body.nachname;
+    const geburtsdatum:string = req.body.geburtsdatum;
+    const institution:string = req.body.institution;
+    const telefonnummer:string = req.body.telefonnummer;
+    const plz:string = req.body.plz;
+    const adresse:string = req.body.adresse;
+    const geschlecht:string = req.body.geschlecht;
+    const onlinestatus:string = req.body.onlinestatus;
+    const mitgliedschaftPausiert:string = req.body.mitgliedschaftPausiert;
+
+
+    const connection: mysql.Connection = getConnection();
+    connection.connect(function(err) {
+        if (err) throw err;
+        console.log("Connected!");
+      });
+    connection.query(`UPDATE USER SET SPRACHID = '${sprachId}', USERNAME = '${username}', EMAIL = '${email}', VORNAME = '${vorname}', NACHNAME = '${nachname}', GEBURTSTAG = '${geburtsdatum}', INSTITUTION = '${institution}',
+    TELEFONNUMMER = '${telefonnummer}', PLZ = '${plz}', WOHNORT = '${adresse}', GESCHLECHT = '${geschlecht}', ONLINESTATUS = '${onlinestatus}', MITGLIEDSCHAFTPAUSIERT = '${mitgliedschaftPausiert}' WHERE USERID = '${userid}';`,
+    (err, rows, fields) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({message:"Something went wrong, Try again or contact the administrator"});
+        } else {
+            res.status(200).json({message: 'User edited'});
         }
     }
     );

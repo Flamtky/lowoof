@@ -90,14 +90,46 @@ export class Api {
             headers: {
                 'Authorization': `Beaver ${this.apiToken}`
             }
-        }).then(response => {res = response.data;})
+        }).then(response => {if(response.data > 1){res = {message: "Es wurden mehrere User gefunden"}};res = response.data[0];})
         .catch((error) => {res = error; }); //TODO remove console log
         return res;
     }
 
-    updateProfile(newProfile: any): void {
-        return;
-    }
+    async updateProfile(newProfile: any): Promise<any> {
+        var res:any;
+        if((newProfile["GEBURTSTAG"]as string).includes("T")){
+            newProfile["GEBURTSTAG"] = (newProfile["GEBURTSTAG"]as string).split("T")[0];
+        }
+        await axios.post(this.url + '/updateuser', {
+            id: newProfile["USERID"],
+            sprachId: newProfile["SPRACHID"],
+            username: newProfile["USERNAME"],
+            password: newProfile["HASHEDPASSWORD"],
+            email: newProfile["EMAIL"],
+            vorname: newProfile["VORNAME"],
+            nachname: newProfile["NACHNAME"],
+            geburtsdatum: newProfile["GEBURTSTAG"],
+            institution: newProfile["INSTITUTION"],
+            telefonnummer: newProfile["TELEFONNUMMER"],
+            plz: newProfile["PLZ"],
+            adresse: newProfile["WOHNORT"],
+            geschlecht: newProfile["GESCHLECHT"],
+            profilbild: newProfile["PROFILBILD"],
+            onlinestatus: newProfile["ONLINESTATUS"],
+            mitgliedschaftPausiert: newProfile["MITGLIEDSCHAFTPAUSIERT"],
+          },{
+              headers: {
+            'Authorization': `Beaver ${this.apiToken}`
+        }
+        })
+        .then(response => {if(response.status == 200){
+              res = response.data;
+          }else{
+              res = response.data;
+          }} )
+          .catch((error) => { res = error });
+          return res;
+        }
 
     deleteUser(userId: number): void {
         return;

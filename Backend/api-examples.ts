@@ -6,6 +6,7 @@ async function start(){
     createUser();
     profileData(1);
     validUsername("username");
+    updateProfile(1);
 }
 
 //This creates a new user, you need to check if the username is valid 
@@ -39,4 +40,16 @@ async function profileData(userId: number) {
 //Returns true if the username is valid
 async function validUsername(username:string) {
     var isValid:boolean = await api.isUsernameValid(username);
+}
+
+//Changes Attributes of a user. In this case we print the old data,
+//change it and then print the new data
+//The update profile Data cant update the password, Profilepicture and the userId
+async function updateProfile(userID:number){
+    var user:any = await api.getProfileData(userID);
+    console.log(user);
+    user["GESCHLECHT"] = "Weiblich";
+    await api.updateProfile(user);
+    var user:any = await api.getProfileData(userID);
+    console.log(user);
 }

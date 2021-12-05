@@ -1,8 +1,9 @@
 import React from 'react';
 import { StyleSheet, View, Text, useWindowDimensions, ScrollView } from 'react-native';
+import OwnButton from '../Components/ownButton';
 import { MAINCOLOR } from '../Constants/colors';
 
-export default function Einstellungen() {
+export default function Einstellungen({ navigation }: any) {
     const dimensions = useWindowDimensions();
     const isLargeScreen = dimensions.width >= 768;
     return (
@@ -15,6 +16,9 @@ export default function Einstellungen() {
                     <Text>Einstellungen</Text>
                 </View>
             </ScrollView>
+            <OwnButton title="Zurück" style={{ margin: 32, alignSelf: "flex-start" }} onPress={() => {
+                navigation.goBack();
+            }} />
         </View>
     );
 }

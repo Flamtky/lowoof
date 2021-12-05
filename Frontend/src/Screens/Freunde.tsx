@@ -116,6 +116,9 @@ export default function Freunde({ navigation }: any) {
                 </View>
                 <Seperator />
             </ScrollView>
+            <OwnButton title="Zurück" style={{ margin: 32, alignSelf: "flex-start" }} onPress={() => {
+                navigation.goBack();
+            }} />
         </View>
     );
 }

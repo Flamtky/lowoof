@@ -5,6 +5,7 @@ import { StyleSheet, View, Image, TouchableOpacity, useWindowDimensions, ScrollV
 import { BLACK, MAINCOLOR } from '../Constants/colors';
 import { TextBlock } from '../Components/styledText';
 import Seperator from '../Components/seperator';
+import OwnButton from '../Components/ownButton';
 
 export default function Chats({ navigation }: any) {
     const dimensions = useWindowDimensions();
@@ -33,6 +34,9 @@ export default function Chats({ navigation }: any) {
                 </TouchableOpacity>
                 <Seperator />
             </ScrollView>
+            <OwnButton title="Zurück" style={{ margin: 32, alignSelf: "flex-start" }} onPress={() => {
+                navigation.goBack();
+            }} />
         </View>
     );
 }

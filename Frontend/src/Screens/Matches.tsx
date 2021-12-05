@@ -5,6 +5,7 @@ import { StyleSheet, View, Image, TouchableOpacity, useWindowDimensions, ScrollV
 import { BLACK, MAINCOLOR } from '../Constants/colors';
 import { TextBlock } from '../Components/styledText';
 import Seperator from '../Components/seperator';
+import OwnButton from '../Components/ownButton';
 
 export default function Matches({navigation}:any) {
     const dimensions = useWindowDimensions();
@@ -32,10 +33,10 @@ export default function Matches({navigation}:any) {
                         <TouchableOpacity onPress={() => { /* FA */}} style={{marginRight:6}}>
                             <FontAwesomeIcon icon={faHeart} size={32} color="#f00"/>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => { /* Chat */ }} style={{marginRight:6}}>
+                        <TouchableOpacity onPress={() => { navigation.navigate('Chat')/* Chat */ }} style={{marginRight:6}}>
                             <FontAwesomeIcon icon={faCommentDots} size={32} color="#0a0"/>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => { /* Unmatchen */ }} style={{marginRight:6}}>
+                        <TouchableOpacity onPress={() => { alert("Tier unmatched")/* Unmatchen */ }} style={{marginRight:6}}>
                             <FontAwesomeIcon icon={faTrashAlt} size={32} color="#555"/>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => { /*Report*/ }} style={{marginRight:6}}>
@@ -45,6 +46,9 @@ export default function Matches({navigation}:any) {
                 </View>
                 <Seperator />
             </ScrollView>
+            <OwnButton title="Zurück" style={{ margin: 32, alignSelf: "flex-start" }} onPress={() => {
+                navigation.goBack();
+            }} />
         </View>
     );
 }

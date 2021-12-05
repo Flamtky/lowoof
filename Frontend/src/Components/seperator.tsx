@@ -4,7 +4,7 @@ import { BACKGROUNDCOLOR } from "../Constants/colors";
 
 
 export default function Seperator(props: any) {
-    return <View style={[styles.seperator, { backgroundColor: props.color ?? "#000" }]} />
+    return <View style={[styles.seperator, { backgroundColor: props.color ?? "#000" }, props.style]} />
 }
 
 const styles = StyleSheet.create({

@@ -1,5 +1,6 @@
 import axios from 'axios';
-import bcrypt from 'bcrypt';
+import bcrypt from 'react-native-bcrypt';
+import { User, Response } from './interfaces';
 export class Api {
     apiToken: string = "";
     url: string = "http://127.0.0.1:3000";
@@ -31,7 +32,7 @@ export class Api {
     }
 
     async isUsernameValid(username: string): Promise<boolean> {
-        var valid:boolean = false;
+        var valid: boolean = false;
         await axios.get(this.url + '/users', {
             headers: {
                 'Authorization': `Beaver ${this.apiToken}`
@@ -48,88 +49,65 @@ export class Api {
         return valid;
     }
     //TODO Klartext mit Hash in der Datenbank abgleichen? Dann müsste noch ein User übergeben werden
-    isPasswordValid(password: string): boolean {
+    isLoginValid(password: string): boolean {
         return false;
     }
 
-    async createNewUser(user: any): Promise<any> {
-        var hashedPassword:string;
-        var res:any;
-        hashedPassword = await bcrypt.hash(user["PASSWORD"], 10);
-        await axios.post(this.url + '/adduser', {
-            username: user["USERNAME"],
-            password: hashedPassword,
-            email: user["EMAIL"],
-            vorname: user["VORNAME"],
-            nachname: user["NACHNAME"],
-            geburtsdatum: user["GEBURTSTAG"],
-            institution: user["INSTITUTION"],
-            telefonnummer: user["TELEFONNUMMER"],
-            plz: user["PLZ"],
-            adresse: user["WOHNORT"],
-            geschlecht: user["GESCHLECHT"],
-          },{
-              headers: {
-            'Authorization': `Beaver ${this.apiToken}`
+    async createNewUser(user: User): Promise<Response> {
+        var hashedPassword: string;
+        var res: Response = { message: "Error" };
+        if (user["PASSWORD"] == null) {
+            return { message: "Password is missing" };
         }
-        })
-        .then(response => {if(response.status == 200){
-              console.log(response.data);
-              res = response.data;
-          }else{
-              res = response.data;
-          }} )
-          .catch((error) => { res = error }); //TODO remove console log
-          return res;
-        }
-
-   async getProfileData(userId: number): Promise<any> {
-        var res:any;
-        var user:any;
-        await axios.get(this.url + '/getuser?userid='+userId, {
-            headers: {
-                'Authorization': `Beaver ${this.apiToken}`
-            }
-        }).then(response => {if(response.data > 1){res = {message: "Es wurden mehrere User gefunden"}};res = response.data[0];})
-        .catch((error) => {res = error; }); //TODO remove console log
+        await bcrypt.hash(user["PASSWORD"], 12, async (err: any, hash: any) => {
+            if (err) throw err;
+            user["PASSWORD"] = hash;
+            await axios.post(this.url + '/adduser', user, {
+                headers: {
+                    'Authorization': `Beaver ${this.apiToken}`
+                }
+            })
+                .then(response => {
+                    if (response.status == 200) {
+                        res = response.data;
+                    } else {
+                        res = response.data;
+                    }
+                })
+                .catch((error) => { res = error });
+        });
         return res;
     }
 
-    async updateProfile(newProfile: any): Promise<any> {
-        var res:any;
-        if((newProfile["GEBURTSTAG"]as string).includes("T")){
-            newProfile["GEBURTSTAG"] = (newProfile["GEBURTSTAG"]as string).split("T")[0];
-        }
-        await axios.post(this.url + '/updateuser', {
-            id: newProfile["USERID"],
-            sprachId: newProfile["SPRACHID"],
-            username: newProfile["USERNAME"],
-            password: newProfile["HASHEDPASSWORD"],
-            email: newProfile["EMAIL"],
-            vorname: newProfile["VORNAME"],
-            nachname: newProfile["NACHNAME"],
-            geburtsdatum: newProfile["GEBURTSTAG"],
-            institution: newProfile["INSTITUTION"],
-            telefonnummer: newProfile["TELEFONNUMMER"],
-            plz: newProfile["PLZ"],
-            adresse: newProfile["WOHNORT"],
-            geschlecht: newProfile["GESCHLECHT"],
-            profilbild: newProfile["PROFILBILD"],
-            onlinestatus: newProfile["ONLINESTATUS"],
-            mitgliedschaftPausiert: newProfile["MITGLIEDSCHAFTPAUSIERT"],
-          },{
-              headers: {
-            'Authorization': `Beaver ${this.apiToken}`
-        }
+    async getProfileData(userId: number): Promise<User | Response> {
+        var res: User | Response = { message: "Something bad happend :(" };
+        await axios.get(this.url + '/getuser?userid=' + userId, {
+            headers: {
+                'Authorization': `Beaver ${this.apiToken}`
+            }
+        }).then(response => { if (response.data > 1) { res = { message: "Es wurden mehrere User gefunden" } }; res = response.data[0]; })
+            .catch((error) => { res = error; }); //TODO remove console log
+        return res;
+    }
+
+    async updateProfile(newProfile: User): Promise<Response> {
+        var res: Response = { message: "Error" };
+        //newProfile["GEBURTSTAG"] = newProfile["GEBURTSTAG"].toISOString();
+        await axios.post(this.url + '/updateuser', newProfile, {
+            headers: {
+                'Authorization': `Beaver ${this.apiToken}`
+            }
         })
-        .then(response => {if(response.status == 200){
-              res = response.data;
-          }else{
-              res = response.data;
-          }} )
-          .catch((error) => { res = error });
-          return res;
-        }
+            .then(response => {
+                if (response.status == 200) {
+                    res = response.data;
+                } else {
+                    res = response.data;
+                }
+            })
+            .catch((error) => { res = error });
+        return res;
+    }
 
     deleteUser(userId: number): void {
         return;

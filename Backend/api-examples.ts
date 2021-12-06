@@ -1,4 +1,4 @@
-import { Api } from "./lowoof-api";
+import { Api } from "../Frontend/src/Api/lowoof-api";
 const api: Api = new Api();
 
 async function start(){

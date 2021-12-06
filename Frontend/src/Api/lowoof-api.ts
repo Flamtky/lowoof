@@ -3,7 +3,7 @@ import bcrypt from 'react-native-bcrypt';
 import { User, Response } from './interfaces';
 export class Api {
     apiToken: string = "";
-    url: string = "http://127.0.0.1:3000";
+    url: string = "http://server.it-humke.de:8080";
     constructor() { }
 
     async getAuthTokenfromServer(username: string, password: string) {

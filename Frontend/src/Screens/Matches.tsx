@@ -6,6 +6,7 @@ import { BLACK, MAINCOLOR } from '../Constants/colors';
 import { TextBlock } from '../Components/styledText';
 import Seperator from '../Components/seperator';
 import OwnButton from '../Components/ownButton';
+import PetItem from '../Components/petItem';
 
 export default function Matches({navigation}:any) {
     const dimensions = useWindowDimensions();
@@ -15,36 +16,10 @@ export default function Matches({navigation}:any) {
             <ScrollView style={{ width: '100%' }}
                 keyboardDismissMode="on-drag"
             >
-                <View style={[styles.row, {marginLeft: 15, height: 60}]}>
-                    <TouchableOpacity onPress={() => { navigation.navigate('Mein Profil') }} >
-                        <Image style={styles.profilepicture}
-                            source={{ uri: "https://puu.sh/IsTPQ/5d69029437.png" }}
-                        />
-                    </TouchableOpacity>
-                    <View style={{ marginLeft: 10, height: "100%", justifyContent: "space-between"}}>
-                        <TextBlock>Besitzer: </TextBlock>
-                        <TextBlock>Rufname: </TextBlock>
-                        <View style={[styles.row, {marginTop: 0}]}>
-                            <TextBlock>Art: </TextBlock>
-                            <TextBlock>Rasse: </TextBlock>
-                        </View>
-                    </View>
-                    <View style={[styles.row, { marginLeft: "auto", right: "5%" }]}>
-                        <TouchableOpacity onPress={() => { /* FA */}} style={{marginRight:6}}>
-                            <FontAwesomeIcon icon={faHeart} size={32} color="#f00"/>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => { navigation.navigate('Chat')/* Chat */ }} style={{marginRight:6}}>
-                            <FontAwesomeIcon icon={faCommentDots} size={32} color="#0a0"/>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => { alert("Tier unmatched")/* Unmatchen */ }} style={{marginRight:6}}>
-                            <FontAwesomeIcon icon={faTrashAlt} size={32} color="#555"/>
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => { /*Report*/ }} style={{marginRight:6}}>
-                            <FontAwesomeIcon icon={faExclamationTriangle} size={32} color="#f66"/>
-                        </TouchableOpacity>
-                    </View>
-                </View>
-                <Seperator />
+                <PetItem/>
+                <Seperator/>
+                <PetItem/>
+                <Seperator/>
             </ScrollView>
             <OwnButton title="Zurück" style={{ margin: 32, alignSelf: "flex-start" }} onPress={() => {
                 navigation.goBack();

@@ -157,15 +157,29 @@ export class Api {
         return res;
     }
 
-    deleteUser(userId: number): void {
-        return;
+    async deleteUser(userId: number): Promise<Response> {
+        var res:Response = { message: "Something bad happend :(" };
+        await axios.get(this.url + '/deleteuser?userid=' + userId, {
+            headers: {
+                'Authorization': `Beaver ${this.apiToken}`
+            }
+        }).then(response => {res = response.data as Response; })
+            .catch((error) => { res = error; });
+        return res;
     }
 
-    createPetProfile(petProfile: any): void {
-        return;
+    async deletePet(petId: number): Promise<Response> {
+        var res:Response = { message: "Something bad happend :(" };
+        await axios.get(this.url + '/deletepet?petid=' + petId, {
+            headers: {
+                'Authorization': `Beaver ${this.apiToken}`
+            }
+        }).then(response => {res = response.data as Response; })
+            .catch((error) => { res = error; });
+        return res;
     }
 
-    getFriends(userId: number): any {
+    createPetProfile(newPet:Pet): void {
         return;
     }
 

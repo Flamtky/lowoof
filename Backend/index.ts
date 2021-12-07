@@ -264,5 +264,48 @@ app.get('/getpet', (req, res) => {
     }
 });
 
+app.get('/deleteuser', (req, res) => {
+    if (req.query.userid) {
+        const connection: mysql.Connection = getConnection();
+        connection.connect(function (err) {
+            if (err) throw err;
+            console.log("Connected!");
+        });
+        connection.query(`DELETE FROM USER WHERE USERID = '${req.query.userid}'`,
+            (err, rows, fields) => {
+                if (err) {
+                    console.log(err);
+                    res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+                } else {
+                    res.status(200).json({ message: 'User deleted' });
+                }
+            }
+        );
+        connection.end();
+    }
+});
+
+app.get('/deletepet', (req, res) => {
+    if (req.query.petid) {
+        const connection: mysql.Connection = getConnection();
+        connection.connect(function (err) {
+            if (err) throw err;
+            console.log("Connected!");
+        });
+        connection.query(`DELETE FROM TIER WHERE TIERID = '${req.query.petid}'`,
+            (err, rows, fields) => {
+                if (err) {
+                    console.log(err);
+                    res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+                } else {
+                    res.status(200).json({ message: 'Pet deleted' });
+                }
+            }
+        );
+        connection.end();
+    }
+});
+
+
 
 app.listen(port, () => console.log(`Lowoof API running on port ${port}!`))

@@ -10,7 +10,7 @@ dotenv.config({ path: './vars.env' });
 
 
 const app: express.Application = express();
-const port: number = 3000;
+const port: number = 8080;
 
 const mySqlHost: string = process.env.MYSQL_HOST ?? '';
 const mySqlPort: string = process.env.MYSQL_PORT ?? '';
@@ -73,6 +73,8 @@ app.get('/auth', (req, res) => {
                 connection.end();
             }
         );
+    }else{
+        res.status(401).json({ message: "Missing Username or Password" });
     }
 });
 
@@ -185,6 +187,31 @@ app.post('/updateuser', (req, res) => {
         }
     );
     connection.end();
+});
+
+app.get('/getuserrelationships', (req, res) => {
+    if (req.query.userid) {
+        const connection: mysql.Connection = getConnection();
+        connection.connect(function (err) {
+            if (err) throw err;
+            console.log("Connected!");
+        });
+        connection.query(`SELECT * FROM USER_RELATIONSHIPS WHERE USER_A_ID = '${req.query.userid}' OR USER_B_ID = '${req.query.userid}';`,
+            (err, rows, fields) => {
+                if (err) {
+                    console.log(err);
+                    res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+                } else {
+                    if (rows.length == 0) {
+                        res.status(500).json({ message: "Given userid doesnt exist" });
+                    } else {
+                        res.status(200).json(rows);
+                    }
+                }
+            }
+        );
+        connection.end();
+    }
 });
 
 

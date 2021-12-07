@@ -109,6 +109,22 @@ export class Api {
         return res;
     }
 
+    async getUserRelationships(userId: number): Promise<any> {
+        var res: any = { message: "Error" };
+        await axios.get(this.url + '/getuserrelationships?userid=' + userId, {
+            headers: {
+                'Authorization': `Beaver ${this.apiToken}`
+            }
+        }).then(response => {
+            if (response.status == 200) {
+                res = response.data;
+            } else {
+                res = response.data;
+            }
+        }).catch((error) => { res = error });
+        return res;
+    }
+
     deleteUser(userId: number): void {
         return;
     }

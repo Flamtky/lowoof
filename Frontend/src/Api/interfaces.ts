@@ -12,7 +12,7 @@ export interface User {
     PLZ: number;
     WOHNORT: string;
     GESCHLECHT: string;
-    PROFILBILD: string;
+    PROFILBILD: any;
     ONLINESTATUS: number;
     MITGLIEDSCHAFTPAUSIERT: number;
 }

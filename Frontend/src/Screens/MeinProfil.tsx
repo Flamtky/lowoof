@@ -7,11 +7,28 @@ import { TextBlock } from '../Components/styledText';
 import { BLACK, GRAY, MAINCOLOR, TITLECOLOR } from '../Constants/colors';
 import Seperator from '../Components/seperator';
 import OwnButton from '../Components/ownButton';
+import { Api } from '../Api/lowoof-api';
+import { User } from '../Api/interfaces';
+import moment from 'moment';
 
 
-export default function MeinProfil({ navigation }: any) {
+
+export default function Profile({ route, navigation }: any) {
     const dimensions = useWindowDimensions();
     const isLargeScreen = dimensions.width >= 768;
+    const [profile, setProfile] = React.useState<User | null>(null);
+    React.useEffect(() => {
+        const api = new Api();
+        api.getAuthTokenfromServer("username","pw").then(() => {
+            api.getProfileData(route.params.userID).then(data => {
+                // If data has message as key, then the user does not exist or multiple users with the same username exist
+                if (!data.hasOwnProperty("message")) {
+                    setProfile(data as User);
+                }
+                // TODO: Handle error
+            });
+        });
+    }, []);
     return (
         <View style={[styles.item, styles.container, isLargeScreen ? { width: '60%' } : { width: "100%" }]}>
             <ScrollView style={{ width: '100%' }}
@@ -20,7 +37,7 @@ export default function MeinProfil({ navigation }: any) {
                 <View style={styles.innerContainer}>
                     <View style={styles.row}>
                         <Image style={styles.profilepicture}
-                            source={{ uri: "https://puu.sh/IsTPQ/5d69029437.png" }}
+                            source={{ uri: profile?.PROFILBILD != null ? "data:image/png;base64,"+profile?.PROFILBILD : "https://puu.sh/IsTPQ/5d69029437.png" }}
                         />
                         <View style={{ position: "absolute", right: "10%" }}>
                             <TouchableOpacity onPress={() => { navigation.navigate("EditProfile") }} >
@@ -29,22 +46,22 @@ export default function MeinProfil({ navigation }: any) {
                         </View>
                     </View>
                     <View style={styles.column}>
-                        <TextBlock>Benutzername: </TextBlock>
-                        <TextBlock>Nachname, Vorname: </TextBlock>
+                        <TextBlock>{profile?.USERNAME ?? "<Username>"}</TextBlock>
+                        <TextBlock>{profile?.NACHNAME ?? "<Last Name>"}, {profile?.VORNAME ?? "<First Name>"} </TextBlock>
                     </View>
                     <View style={styles.row}>
                         <View style={{ width: "50%" }}>
-                            <TextBlock>PLZ, Ort: </TextBlock>
-                            <TextBlock>Geschlecht: </TextBlock>
-                            <TextBlock>Geburtsdatum: </TextBlock>
+                            <TextBlock>{profile?.PLZ ?? "<Zip Code>"}, {profile?.WOHNORT ?? "<City>"} </TextBlock>
+                            <TextBlock>{profile?.GESCHLECHT ?? "<Gender>"} </TextBlock>
+                            <TextBlock>{moment(profile?.GEBURTSTAG).format("MM/DD/YYYY") ?? "<Date Of Birth>"} </TextBlock>
                         </View>
                         <View style={{ width: "50%" }}>
-                            <TextBlock>Email: </TextBlock>
-                            <TextBlock>Telefonnummer: </TextBlock>
+                            <TextBlock>{profile?.EMAIL ?? "<E-Mail>"}</TextBlock>
+                            <TextBlock>{profile?.TELEFONNUMMER ?? "<Phone Number>"} </TextBlock>
                         </View>
                     </View>
                     <Seperator />
-                    <TextBlock style={styles.title}>Eigene Haustiere</TextBlock>
+                    <TextBlock style={styles.title}>Your Pets</TextBlock>
                     <Seperator />
                     <View style={styles.row}>
                         <TouchableOpacity onPress={() => { navigation.navigate('Tierprofil') }} >
@@ -54,21 +71,21 @@ export default function MeinProfil({ navigation }: any) {
                         </TouchableOpacity>
                         <View style={{ marginLeft: 10 }}>
                             <TextBlock>Matches: </TextBlock>
-                            <TextBlock>Rufname: </TextBlock>
-                            <TextBlock>Art: </TextBlock>
-                            <TextBlock>Rasse: </TextBlock>
+                            <TextBlock>Name: </TextBlock>
+                            <TextBlock>Species: </TextBlock>
+                            <TextBlock>Breed: </TextBlock>
                         </View>
                         <View style={[styles.row, { marginLeft: "auto", right: "10%" }]}>
-                            <TouchableOpacity onPress={() => {navigation.navigate('EditAnimal') }}>
+                            <TouchableOpacity onPress={() => { navigation.navigate('EditAnimal') }}>
                                 <FontAwesomeIcon icon={faUserEdit} size={40} />
                             </TouchableOpacity>
                             <TouchableOpacity onPress={() => { alert("Tier gelöscht")/*TODO: Delete*/ }}>
-                                <FontAwesomeIcon icon={faTrashAlt} size={40} color="#555"/>
+                                <FontAwesomeIcon icon={faTrashAlt} size={40} color="#555" />
                             </TouchableOpacity>
                         </View>
                     </View>
                     <Seperator />
-                    <OwnButton title="Neues Tier hinzufügen" style={{
+                    <OwnButton title="Add Pet" style={{
                         alignSelf: "center",
                     }} />
                 </View>

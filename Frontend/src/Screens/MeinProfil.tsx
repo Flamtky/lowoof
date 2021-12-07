@@ -19,7 +19,7 @@ export default function Profile({ route, navigation }: any) {
     const [profile, setProfile] = React.useState<User | null>(null);
     React.useEffect(() => {
         const api = new Api();
-        api.getAuthTokenfromServer("username", "pw").then(() => {
+        api.getAuthTokenfromServer("application", "W*rx*TMn]:NuP|ywN`z8aUcHeTpL5<5,").then(() => {
             api.getProfileData(route.params.userID).then(data => {
                 // If data has message as key, then the user does not exist or multiple users with the same username exist
                 if (!data.hasOwnProperty("message")) {

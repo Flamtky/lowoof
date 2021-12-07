@@ -19,13 +19,13 @@ export default function Profile({ route, navigation }: any) {
     const [profile, setProfile] = React.useState<User | null>(null);
     React.useEffect(() => {
         const api = new Api();
-        api.getAuthTokenfromServer("username","pw").then(() => {
+        api.getAuthTokenfromServer("username", "pw").then(() => {
             api.getProfileData(route.params.userID).then(data => {
                 // If data has message as key, then the user does not exist or multiple users with the same username exist
                 if (!data.hasOwnProperty("message")) {
                     setProfile(data as User);
                 }
-                // TODO: Handle error
+                // TODO: Handle error / show error page
             });
         });
     }, []);
@@ -37,7 +37,7 @@ export default function Profile({ route, navigation }: any) {
                 <View style={styles.innerContainer}>
                     <View style={styles.row}>
                         <Image style={styles.profilepicture}
-                            source={{ uri: profile?.PROFILBILD != null ? "data:image/png;base64,"+profile?.PROFILBILD : "https://puu.sh/IsTPQ/5d69029437.png" }}
+                            source={{ uri: profile?.PROFILBILD != null ? "data:image/png;base64," + profile?.PROFILBILD : "https://puu.sh/IsTPQ/5d69029437.png" }}
                         />
                         <View style={{ position: "absolute", right: "10%" }}>
                             <TouchableOpacity onPress={() => { navigation.navigate("EditProfile") }} >

@@ -279,6 +279,14 @@ app.get('/deleteuser', (req, res) => {
                 }
             }
         );
+        connection.query(`DELETE FROM USER_RELATIONSHIPS WHERE USER_A_ID = '${req.query.userid}' OR USER_B_ID = '${req.query.userid}'`,
+            (err, rows, fields) => {
+                if (err) {
+                    console.log(err);
+                    res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+                }
+            }
+        );
         connection.query(`DELETE FROM USER WHERE USERID = '${req.query.userid}'`,
             (err, rows, fields) => {
                 if (err) {

@@ -199,7 +199,7 @@ export class Api {
     }
 
     /**
-     * Deletes a User from the Database. If a User is deleted all his Pets will be deleted too
+     * Deletes a User from the Database. If a User is deleted all his Pets and Relationships will be deleted too
      * @param userId :number UserID to delete from the database
      * @returns {Response} Response Object with message from the server
      */

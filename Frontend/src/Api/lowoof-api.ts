@@ -141,6 +141,22 @@ export class Api {
         return res;
     }
 
+    async getPetData(petId: number): Promise<Pet | Response> {
+        var res: Pet | Response = { message: "Error" };
+        await axios.get(this.url + '/getpet?petid=' + petId, {
+            headers: {
+                'Authorization': `Beaver ${this.apiToken}`
+            }
+        }).then(response => {
+            if (response.status == 200) {
+                res = response.data as Pet;
+            } else {
+                res = response.data as Response;
+            }
+        }).catch((error) => { res = error });
+        return res;
+    }
+
     deleteUser(userId: number): void {
         return;
     }

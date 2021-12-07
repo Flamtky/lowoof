@@ -239,5 +239,30 @@ app.get('/getuserpets', (req, res) => {
     }
 });
 
+app.get('/getpet', (req, res) => {
+    if (req.query.petid) {
+        const connection: mysql.Connection = getConnection();
+        connection.connect(function (err) {
+            if (err) throw err;
+            console.log("Connected!");
+        });
+        connection.query(`SELECT * FROM TIER WHERE TIERID = '${req.query.petid}';`,
+            (err, rows, fields) => {
+                if (err) {
+                    console.log(err);
+                    res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+                } else {
+                    if (rows.length == 0) {
+                        res.status(500).json({ message: "Given petid doesnt exist" });
+                    } else {
+                        res.status(200).json(rows);
+                    }
+                }
+            }
+        );
+        connection.end();
+    }
+});
+
 
 app.listen(port, () => console.log(`Lowoof API running on port ${port}!`))

@@ -271,6 +271,14 @@ app.get('/deleteuser', (req, res) => {
             if (err) throw err;
             console.log("Connected!");
         });
+        connection.query(`DELETE FROM TIER WHERE USERID = '${req.query.userid}'`,
+            (err, rows, fields) => {
+                if (err) {
+                    console.log(err);
+                    res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+                }
+            }
+        );
         connection.query(`DELETE FROM USER WHERE USERID = '${req.query.userid}'`,
             (err, rows, fields) => {
                 if (err) {

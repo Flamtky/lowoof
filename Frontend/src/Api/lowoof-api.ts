@@ -6,6 +6,14 @@ export class Api {
     url: string = "http://server.it-humke.de:8080";
     constructor() { }
 
+    /**
+     * @param username: string Username of the Api-User
+     * @param password: string Clear text Password of the Api-User
+     * 
+     * This function logs in the given user and returns a Auth Token.
+     * This Token is needed for all further requests to the API.
+     * The function saves the Auth Token in the Api-Object.
+    */
     async getAuthTokenfromServer(username: string, password: string) {
         try {
             return await axios.get(this.url + '/auth?username=' + username + '&password=' + password).then(response => { this.setAuthToken(response.data); });
@@ -15,10 +23,13 @@ export class Api {
         }
     }
     
-    setAuthToken(token: string) {
+    private setAuthToken(token: string) {
         this.apiToken = token;
     }
 
+    /**
+     * @returns {string} The current Auth Token
+     */
     getAuthToken() {
         return this.apiToken;
     }
@@ -31,6 +42,10 @@ export class Api {
         return;
     }
 
+    /**
+     * @param username :string Username to check
+     * @returns {boolean} true if username is available, false if not
+     */
     async isUsernameValid(username: string): Promise<boolean> {
         var valid: boolean = false;
         await axios.get(this.url + '/users', {
@@ -48,11 +63,16 @@ export class Api {
         }).catch((error) => { console.log(error); throw new Error("Error while connecting to server. Are you authorized?"); }); //TODO remove console log
         return valid;
     }
-    //TODO Klartext mit Hash in der Datenbank abgleichen? Dann müsste noch ein User übergeben werden
+    //TODO
     isLoginValid(password: string): boolean {
         return false;
     }
 
+    /**
+     * Creates a new User in the Database
+     * @param user :User User object to save to the database
+     * @returns {Response}  Response object with message from the server
+     */
     async createNewUser(user: User): Promise<Response> {
         var hashedPassword: string;
         var res: Response = { message: "Error" };
@@ -79,6 +99,11 @@ export class Api {
         return res;
     }
 
+    /**
+     * Gets Profile Data of a User except the the hashed password
+     * @param userId :number UserID of the User to get the Profile of
+     * @returns {User|Response} User Object if the user is found else a Response Object with the message from the server
+     */
     async getProfileData(userId: number): Promise<User | Response> {
         var res: User | Response = { message: "Something bad happend :(" };
         await axios.get(this.url + '/getuser?userid=' + userId, {
@@ -90,6 +115,12 @@ export class Api {
         return res;
     }
 
+    /**
+     * Updates the Profile of a User except the userId,password,profilePicture
+     * [CAUTION]    If you change the UserID a different User will be edited
+     * @param newProfile :User Updated User Object
+     * @returns {Response} Response Object with message from the server
+     */
     async updateProfile(newProfile: User): Promise<Response> {
         var res: Response = { message: "Error" };
         //newProfile["GEBURTSTAG"] = newProfile["GEBURTSTAG"].toISOString();
@@ -125,7 +156,12 @@ export class Api {
         return res;
     }
 
-    async getUserPets(userId: number): Promise<Pet | Response> {
+    /**
+     * 
+     * @param userId :number UserID of the Pet Owner
+     * @returns {Pet[] | Response} Array of owned Pets. If something goes wrong a Response Object with the message from the server will be returned
+     */
+    async getUserPets(userId: number): Promise<Pet[] | Response> {
         var res: Pet[] | Response = { message: "Error" };
         await axios.get(this.url + '/getuserpets?userid=' + userId, {
             headers: {
@@ -141,6 +177,11 @@ export class Api {
         return res;
     }
 
+    /**
+     * Gets the Profile data of a Pet
+     * @param petId :number PetID of the Pet to get the Profile data of
+     * @returns {Pet | Response} Pet Object if the pet is found else a Response Object with the message from the server
+     */
     async getPetData(petId: number): Promise<Pet | Response> {
         var res: Pet | Response = { message: "Error" };
         await axios.get(this.url + '/getpet?petid=' + petId, {
@@ -157,6 +198,11 @@ export class Api {
         return res;
     }
 
+    /**
+     * Deletes a User from the Database. If a User is deleted all his Pets will be deleted too
+     * @param userId :number UserID to delete from the database
+     * @returns {Response} Response Object with message from the server
+     */
     async deleteUser(userId: number): Promise<Response> {
         var res:Response = { message: "Something bad happend :(" };
         await axios.get(this.url + '/deleteuser?userid=' + userId, {
@@ -168,6 +214,11 @@ export class Api {
         return res;
     }
 
+    /**
+     * Deletes a pet from the Database
+     * @param petId :number PetID of the Pet to delete
+     * @returns {Response} Response Object with message from the server
+     */
     async deletePet(petId: number): Promise<Response> {
         var res:Response = { message: "Something bad happend :(" };
         await axios.get(this.url + '/deletepet?petid=' + petId, {

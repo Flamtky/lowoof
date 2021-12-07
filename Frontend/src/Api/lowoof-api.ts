@@ -13,8 +13,8 @@ export class Api {
             this.setAuthToken("Error contact admin");
             return "Error"
         }
-
     }
+    
     setAuthToken(token: string) {
         this.apiToken = token;
     }

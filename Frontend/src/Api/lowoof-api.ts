@@ -1,6 +1,6 @@
 import axios from 'axios';
 import bcrypt from 'react-native-bcrypt';
-import { User, Response, Pet } from './interfaces';
+import { User, Response, Pet, Relationship } from './interfaces';
 export class Api {
     private apiToken: string = "";
     private url: string = "http://server.it-humke.de:8080";
@@ -139,23 +139,23 @@ export class Api {
             .catch((error) => { res = error });
         return res;
     }
-    //TODO Add Relationship Interface and implement
+
     /**
      * Returns a Array of Users relationships but there are only UserIDs no usernames in the Response
      * @param userId :number UserID of the User to get the relationships of
-     * @returns {any} Array of Relationships
+     * @returns {Relationship[] | Response} Array of Relationships or Response Object with the message from the server
      */
-    async getUserRelationships(userId: number): Promise<any> {
-        var res: any = { message: "Error" };
+    async getUserRelationships(userId: number): Promise<Relationship[] | Response> {
+        var res: Relationship[] | Response = { message: "Error" };
         await axios.get(this.url + '/getuserrelationships?userid=' + userId, {
             headers: {
                 'Authorization': `Beaver ${this.apiToken}`
             }
         }).then(response => {
             if (response.status == 200) {
-                res = response.data;
+                res = response.data as Relationship[];
             } else {
-                res = response.data;
+                res = response.data as Response;
             }
         }).catch((error) => { res = error });
         return res;

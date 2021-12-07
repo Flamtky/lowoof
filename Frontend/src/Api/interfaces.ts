@@ -28,6 +28,13 @@ export interface Pet {
     PROFILBILD: string;
 }
 
+export interface Relationship {
+    RELATIONID: number;
+    USER_A_ID: number;
+    USER_B_ID: number;
+    RELATIONSHIP: string;
+}
+
 export interface Response {
     message: string;
 }

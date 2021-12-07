@@ -36,7 +36,7 @@ export default function Sidebar() {
                     <SearchBar mobileStyle={{ width: "100%", height: "60%" }} />
                 ),
                 headerRightContainerStyle: {
-                    right: isLargeScreen ? "40%" : "0%",
+                    right: isLargeScreen ? "40%" : "10%",
                 },
                 headerStyle: {
                     backgroundColor: BACKGROUNDCOLOR,
@@ -56,7 +56,7 @@ export default function Sidebar() {
             }}
             backBehavior='history'
         >
-            <Drawer.Screen name="Mein Profil" component={Profile} initialParams={{ userID: 1 /* TODO: Give current UserID */ }} />
+            <Drawer.Screen name="Mein Profil" component={Profile} initialParams={{ userID: 2 /* TODO: Give current UserID */ }} />
             <Drawer.Screen name="Tierprofil" component={Tierprofil} />
             <Drawer.Screen name="Matches" component={Matches} />
             <Drawer.Screen name="Freunde" component={Freunde} />

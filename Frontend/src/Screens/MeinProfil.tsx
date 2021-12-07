@@ -10,7 +10,7 @@ import OwnButton from '../Components/ownButton';
 import { Api } from '../Api/lowoof-api';
 import { User } from '../Api/interfaces';
 import moment from 'moment';
-
+import { Buffer } from "buffer"
 
 
 export default function Profile({ route, navigation }: any) {
@@ -37,7 +37,7 @@ export default function Profile({ route, navigation }: any) {
                 <View style={styles.innerContainer}>
                     <View style={styles.row}>
                         <Image style={styles.profilepicture}
-                            source={{ uri: profile?.PROFILBILD != null ? "data:image/png;base64," + profile?.PROFILBILD : "https://puu.sh/IsTPQ/5d69029437.png" }}
+                            source={{ uri: profile?.PROFILBILD != null ? "data:image/png;base64," + Buffer.from(profile.PROFILBILD, 'base64').toString('base64'): "https://puu.sh/IsTPQ/5d69029437.png" }}
                         />
                         <View style={{ position: "absolute", right: "10%" }}>
                             <TouchableOpacity onPress={() => { navigation.navigate("EditProfile") }} >

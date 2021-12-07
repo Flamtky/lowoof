@@ -2,7 +2,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import React from 'react';
 import { useWindowDimensions } from 'react-native';
 import SearchBar from './searchbar';
-import MeinProfil from '../Screens/MeinProfil';
+import Profile from '../Screens/MeinProfil';
 import Tierprofil from '../Screens/Tierprofil';
 import Matches from '../Screens/Matches';
 import Freunde from '../Screens/Freunde';
@@ -33,10 +33,10 @@ export default function Sidebar() {
                 },
                 swipeEdgeWidth: dimensions.width,
                 headerRight: () => (
-                    <SearchBar mobileStyle={{ width: "100%", height: "60%" }}/>
+                    <SearchBar mobileStyle={{ width: "100%", height: "60%" }} />
                 ),
                 headerRightContainerStyle: {
-                    right: isLargeScreen ? "40%": "0%",
+                    right: isLargeScreen ? "40%" : "0%",
                 },
                 headerStyle: {
                     backgroundColor: BACKGROUNDCOLOR,
@@ -56,7 +56,7 @@ export default function Sidebar() {
             }}
             backBehavior='history'
         >
-            <Drawer.Screen name="Mein Profil" component={MeinProfil} />
+            <Drawer.Screen name="Mein Profil" component={Profile} initialParams={{ userID: 1 /* TODO: Give current UserID */ }} />
             <Drawer.Screen name="Tierprofil" component={Tierprofil} />
             <Drawer.Screen name="Matches" component={Matches} />
             <Drawer.Screen name="Freunde" component={Freunde} />

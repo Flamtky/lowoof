@@ -1,6 +1,6 @@
 import axios from 'axios';
 import bcrypt from 'react-native-bcrypt';
-import { User, Response } from './interfaces';
+import { User, Response, Pet } from './interfaces';
 export class Api {
     apiToken: string = "";
     url: string = "http://server.it-humke.de:8080";
@@ -120,6 +120,22 @@ export class Api {
                 res = response.data;
             } else {
                 res = response.data;
+            }
+        }).catch((error) => { res = error });
+        return res;
+    }
+
+    async getUserPets(userId: number): Promise<Pet | Response> {
+        var res: Pet[] | Response = { message: "Error" };
+        await axios.get(this.url + '/getuserpets?userid=' + userId, {
+            headers: {
+                'Authorization': `Beaver ${this.apiToken}`
+            }
+        }).then(response => {
+            if (response.status == 200) {
+                res = response.data as Pet[];
+            } else {
+                res = response.data as Response;
             }
         }).catch((error) => { res = error });
         return res;

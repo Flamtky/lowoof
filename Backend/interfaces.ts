@@ -17,6 +17,17 @@ export interface User {
     MITGLIEDSCHAFTPAUSIERT: number;
 }
 
+export interface Pet {
+    TIERID: number;
+    USERID: number;
+    NAME: string;
+    ART: string;
+    RASSE: string;
+    GESCHLECHT: string;
+    GEBURTSTAG: Date;
+    PROFILBILD: string;
+}
+
 export interface Response {
     message: string;
 }

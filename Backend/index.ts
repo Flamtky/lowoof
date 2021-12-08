@@ -18,15 +18,17 @@ const mySqlUser: string = process.env.MYSQL_USER ?? '';
 const mySqlPassword: string = process.env.MYSQL_PWD ?? '';
 const mySqlDatabase: string = process.env.MYSQL_DB ?? '';
 
+var sqlcon:mysql.Pool = mysql.createPool({
+    connectionLimit: 10,
+    host: mySqlHost,
+    port: mySqlPort as unknown as number,
+    user: mySqlUser,
+    password: mySqlPassword,
+    database: mySqlDatabase
+});
+
 function getConnection(): mysql.Pool {
-    return mysql.createPool({
-        connectionLimit: 10,
-        host: mySqlHost,
-        port: mySqlPort as unknown as number,
-        user: mySqlUser,
-        password: mySqlPassword,
-        database: mySqlDatabase
-    });
+    return sqlcon
 
 }
 
@@ -217,11 +219,7 @@ app.get('/getuserpets', (req, res) => {
                     console.log(err);
                     res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
                 } else {
-                    if (rows.length == 0) {
-                        res.status(500).json({ message: "Given userid doesnt exist or user does not have any Pets" });
-                    } else {
                         res.status(200).json(rows);
-                    }
                 }
             }
         );

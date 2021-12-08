@@ -30,6 +30,7 @@ export default function Sidebar() {
                     paddingLeft: isLargeScreen ? '20%' : 0,
                     width: isLargeScreen ? "auto" : "80%",
                     backgroundColor: BACKGROUNDCOLOR,
+                    borderRightWidth: 0,
                 },
                 swipeEdgeWidth: dimensions.width,
                 headerRight: () => (
@@ -40,6 +41,7 @@ export default function Sidebar() {
                 },
                 headerStyle: {
                     backgroundColor: BACKGROUNDCOLOR,
+                    borderBottomWidth: 0,
                 },
                 headerTitleStyle: {
                     fontSize: 24,

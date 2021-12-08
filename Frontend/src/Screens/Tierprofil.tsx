@@ -7,40 +7,73 @@ import { TextBlock } from '../Components/styledText';
 import { BLACK, GRAY, MAINCOLOR, TITLECOLOR } from '../Constants/colors';
 import Seperator from '../Components/seperator';
 import OwnButton from '../Components/ownButton';
+import { Pet, User } from '../Api/interfaces';
+import { Api } from '../Api/lowoof-api';
 
-export default function MeinProfil({ navigation }: any) {
+const api = new Api();
+export default function PetProfile({ route, navigation }: any) {
     const dimensions = useWindowDimensions();
     const isLargeScreen = dimensions.width >= 768;
+    const [petProfile, setPetProfile] = React.useState<Pet | null>(null);
+    const [ownerProfile, setOwnerProfile] = React.useState<User | null>(null);
+    const [isLoading, setIsLoading] = React.useState(true);
+
+    React.useEffect(() => {
+        if (petProfile === null) {
+            navigation.navigate('Mein Profil');
+        }
+    }, [petProfile]);
+
+    React.useEffect(() => {
+        api.getAuthTokenfromServer("application", "W*rx*TMn]:NuP|ywN`z8aUcHeTpL5<5,").then((resp) => {
+            if (resp !== "Error") {
+                api.getPetData(route.params.petID).then(data => {
+                    if (!data.hasOwnProperty("message")) {
+                        setPetProfile(data as Pet);
+                        api.getProfileData((data as Pet).USERID).then(data => {
+                            if (!data.hasOwnProperty("message")) {
+                                setOwnerProfile(data as User);
+                            }
+                            // TODO: Handle error / show error page
+                            setIsLoading(false);
+                        });
+                    }
+                    // TODO: Handle error / show error page
+                });
+            }
+        });
+    }, []);
+
     return (
         <View style={[styles.item, styles.container, isLargeScreen ? { width: '60%' } : { width: "100%" }]}>
             <ScrollView style={{ width: '100%' }}
                 keyboardDismissMode="on-drag"
             >
-                <View style={[styles.innerContainer, { height: dimensions.height }]}>
+                <View style={[styles.innerContainer, { height: dimensions.height }, isLoading ? { display: "none" } : null]}>
                     <View style={styles.row}>
                         <Image style={styles.profilepicture}
                             source={{ uri: "https://puu.sh/IsTPQ/5d69029437.png" }}
                         />
                         <View style={[styles.row, { position: "absolute", right: "10%" }]}>
-                            <TouchableOpacity onPress={() => {navigation.navigate('EditAnimal')}} >
+                            <TouchableOpacity onPress={() => { navigation.navigate('EditAnimal') }} >
                                 <FontAwesomeIcon icon={faUserEdit} size={40} />
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={() => {alert("Tier gelöscht!")/*TODO: Delete*/ }} >
+                            <TouchableOpacity onPress={() => { alert("Tier gelöscht!")/*TODO: Delete*/ }} >
                                 <FontAwesomeIcon icon={faTrashAlt} size={40} color="#555" />
                             </TouchableOpacity>
                         </View>
                     </View>
                     <View style={styles.row}>
                         <View style={{ width: "50%" }}>
-                            <TextBlock>Rufname: </TextBlock>
-                            <TextBlock>Besitzer: </TextBlock>
+                            <TextBlock>Rufname: {petProfile?.NAME}</TextBlock>
+                            <TextBlock>Besitzer: {ownerProfile?.USERNAME}</TextBlock>
                             <TextBlock> </TextBlock>
-                            <TextBlock>PLZ, Ort: </TextBlock>
-                            <TextBlock>Geschlecht: </TextBlock>
-                            <TextBlock>Geburtsdatum: </TextBlock>
+                            <TextBlock>Wohnort: {ownerProfile?.PLZ}, {ownerProfile?.WOHNORT} </TextBlock>
+                            <TextBlock>Geschlecht: {petProfile?.GESCHLECHT}</TextBlock>
+                            <TextBlock>Geburtsdatum: {petProfile?.GEBURTSTAG}</TextBlock>
                             <TextBlock> </TextBlock>
-                            <TextBlock>Beschreibung: </TextBlock>
-                            <TextBlock>Text... </TextBlock>
+                            <TextBlock>Art: {petProfile?.ART} </TextBlock>
+                            <TextBlock>Rasse: {petProfile?.RASSE} </TextBlock>
                             <TextBlock>Text... </TextBlock>
                             <TextBlock>Text... </TextBlock>
                         </View>
@@ -62,13 +95,13 @@ export default function MeinProfil({ navigation }: any) {
                     <View style={[styles.row, { marginVertical: 10, justifyContent: "space-around" }]}>
                         <OwnButton title="Matches" onPress={() => {
                             navigation.navigate('Matches');
-                        }}/>
+                        }} />
                         <OwnButton title="Freunde" onPress={() => {
                             navigation.navigate('Freunde');
                         }} />
                         <OwnButton title="Chats" onPress={() => {
                             navigation.navigate('Chats');
-                        }}/>
+                        }} />
                     </View>
                     <Seperator />
                 </View>

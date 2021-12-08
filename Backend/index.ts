@@ -18,7 +18,7 @@ const mySqlUser: string = process.env.MYSQL_USER ?? '';
 const mySqlPassword: string = process.env.MYSQL_PWD ?? '';
 const mySqlDatabase: string = process.env.MYSQL_DB ?? '';
 
-var sqlcon:mysql.Pool = mysql.createPool({
+var sqlcon: mysql.Pool = mysql.createPool({
     connectionLimit: 10,
     host: mySqlHost,
     port: mySqlPort as unknown as number,
@@ -219,7 +219,7 @@ app.get('/getuserpets', (req, res) => {
                     console.log(err);
                     res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
                 } else {
-                        res.status(200).json(rows);
+                    res.status(200).json(rows);
                 }
             }
         );
@@ -264,13 +264,13 @@ app.post('/deleteuser', (req, res) => {
                             if (err) {
                                 console.log(err);
                                 res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
-                            }else{
+                            } else {
                                 connection.query(`DELETE FROM TIER WHERE USERID = '${req.body.userid}'`,
                                     (err, rows, fields) => {
                                         if (err) {
                                             console.log(err);
                                             res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
-                                        }else{
+                                        } else {
                                             connection.query(`DELETE FROM USER WHERE USERID = '${req.body.userid}'`,
                                                 (err, rows, fields) => {
                                                     if (err) {
@@ -282,7 +282,7 @@ app.post('/deleteuser', (req, res) => {
                                                 }
                                             );
                                         }
-    
+
                                     }
                                 );
                             }
@@ -346,6 +346,112 @@ app.post('/deletepet', (req, res) => {
         });
 
 
+    }
+});
+
+app.post('/sendfriendrequest', (req, res) => {
+    const user: User = req.body.user;
+    if (req.body.petid && req.body.friendid && user) {
+        const connection: mysql.Pool = getConnection();
+        connection.query(`SELECT USERID FROM TIER WHERE TIERID = '${req.body.petid}';`,
+            (err, rows, fields) => {
+                if (err) {
+                    console.log(err);
+                    res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+                } else if (rows[0].USERID === user.USERID) {
+                    var TIER_A_ID: number;
+                    var TIER_B_ID: number;
+                    var RELATIONSHIP: string;
+                    var RELATIONID: number;
+                    if (req.body.petid < req.body.friendid) {
+                        TIER_A_ID = req.body.petid;
+                        TIER_B_ID = req.body.friendid;
+                        RELATIONSHIP = "A requested B";
+                    } else {
+                        TIER_A_ID = req.body.friendid;
+                        TIER_B_ID = req.body.petid;
+                        RELATIONSHIP = "B requested A";
+                    }
+                    RELATIONID = (`${TIER_A_ID}${TIER_B_ID}`) as unknown as number;
+                    connection.query(`INSERT INTO TIER_RELATIONSHIPS (RELATIONID, TIER_A_ID, TIER_B_ID, RELATIONSHIP) VALUES ('${RELATIONID}','${TIER_A_ID}', '${TIER_B_ID}', '${RELATIONSHIP}');`,
+                        (err, rows, fields) => {
+                            if (err) {
+                                console.log(err);
+                                res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+                            } else {
+                                res.status(200).json({ message: 'Friend request sent' });
+                            }
+                        }
+                    );
+                } else {
+                    res.status(401).json({ message: "You are not the owner of this pet" });
+                }
+
+            }
+        );
+
+    } else {
+        res.status(401).json({ message: "You are not the owner of this pet" });
+    }
+});
+
+app.post('/acceptfriendrequest', (req, res) => {
+    const user: User = req.body.user;
+    if (req.body.petid && req.body.friendid && user) {
+        const connection: mysql.Pool = getConnection();
+        connection.query(`SELECT USERID FROM TIER WHERE TIERID = '${req.body.petid}';`,
+            (err, rows, fields) => {
+                if (err) {
+                    console.log(err);
+                    res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+                } else if (rows[0].USERID === user.USERID) {
+                    var TIER_A_ID: number;
+                    var TIER_B_ID: number;
+                    var RELATIONSHIP: string;
+                    var RELATIONID: number;
+                    if (req.body.petid < req.body.friendid) {
+                        TIER_A_ID = req.body.petid;
+                        TIER_B_ID = req.body.friendid;
+                        RELATIONSHIP = "A requested B";
+                    } else {
+                        TIER_A_ID = req.body.friendid;
+                        TIER_B_ID = req.body.petid;
+                        RELATIONSHIP = "B requested A";
+                    }
+                    RELATIONID = (`${TIER_A_ID}${TIER_B_ID}`) as unknown as number;
+
+                    connection.query(`SELECT RELATIONSHIP FROM TIER_RELATIONSHIPS WHERE RELATIONID = '${RELATIONID}';`,
+                        (err, rows, fields) => {
+                            if (err) {
+                                console.log(err);
+                                res.status(500).json({ message: "There isnt a active relationship between these Pets" });
+                            } else if (((rows[0].RELATIONSHIP as string).startsWith("A") && TIER_B_ID == req.body.petid) || ((rows[0].RELATIONSHIP as string).startsWith("B") && TIER_A_ID == req.body.petid)) {
+                                RELATIONSHIP = "Friends";
+                                connection.query(`UPDATE TIER_RELATIONSHIPS SET RELATIONSHIP = '${RELATIONSHIP}' WHERE TIER_RELATIONSHIPS.RELATIONID = ${RELATIONID};`,
+                                    (err, rows, fields) => {
+                                        if (err) {
+                                            console.log(err);
+                                            res.status(400).json({ message: "Something went wrong, Try again or contact the administrator" });
+                                        } else {
+                                            res.status(200).json({ message: 'Friend request accepted' });
+                                        }
+                                    }
+                                );
+                            } else {
+                                res.status(400).json({ message: "There is no pendig Friend request between these Pets or you cant accept your own request" });
+                            }
+                        });
+
+
+                } else {
+                    res.status(401).json({ message: "You are not the owner of this pet" });
+                }
+
+            }
+        );
+
+    } else {
+        res.status(400).json({ message: "You didnt provide the required informations" });
     }
 });
 

@@ -211,12 +211,17 @@ export class Api {
      */
     async deleteUser(userId: number, pwd: string): Promise<Response> {
         var res: Response = { message: "Something bad happend :(" };
-        await axios.post(this.url + '/deleteuser', { userid: userId, password: pwd }, {
-            headers: {
-                'Authorization': `Beaver ${this.apiToken}`
-            }
-        }).then(response => { res = response.data as Response; })
-            .catch((error) => { res = error; });
+        if(pwd.length < 1){
+            res = {message: "Password not set"};
+        }else{
+            await axios.post(this.url + '/deleteuser', { userid: userId, password: pwd }, {
+                headers: {
+                    'Authorization': `Beaver ${this.apiToken}`
+                }
+            }).then(response => { res = response.data as Response; })
+                .catch((error) => { res = error; });
+        }
+        
         return res;
     }
 
@@ -244,9 +249,41 @@ export class Api {
     createPetProfile(newPet: Pet): void {
         return;
     }
+    
+    /**
+     * 
+     * @param user :User User Object of the User who wants the pet
+     * @param petId :number PetID of the Pet who wants to send the friend request
+     * @param friendId :number PeterID of the Pet who recieves the friend request
+     * @returns {Response} Response Object with message from the server
+     */
+    async sendFriendRequest(user:User, petId: number, friendId: number): Promise<Response> {
+        var res: Response = { message: "Error" };
+        await axios.post(this.url + '/sendfriendrequest',{user:user,petid:petId,friendid:friendId}, {
+            headers: {
+                'Authorization': `Beaver ${this.apiToken}`
+            }
+        }).then(response => {res = response.data as Response; })
+            .catch((error) => { res = error.response.data; });
+        return res;
+    }
 
-    addFriend(userId: number, friendId: number): void {
-        return;
+    /**
+     * 
+     * @param user :User User Object of the User who wants the pet
+     * @param petId :number PetID of the Pet who wants to accept the friend request
+     * @param friendId :number PerterID of the User who sent the friend request
+     * @returns {Response} Response Object with message from the server
+     */
+    async acceptFriendRequest(user:User, petId: number, friendId: number): Promise<Response>{
+        var res: Response = { message: "Error" };
+        await axios.post(this.url + '/acceptfriendrequest',{user:user,petid:petId,friendid:friendId}, {
+            headers: {
+                'Authorization': `Beaver ${this.apiToken}`
+            }
+        }).then(response => {res = response.data as Response; })
+            .catch((error) => { res = error.response.data; });
+        return res;
     }
 
     removeFriend(userId: number, friendId: number): void {

@@ -35,7 +35,7 @@ export default function Profile({ route, navigation }: any) {
                 // TODO: Handle error / show error page
             });
         });
-    }, []);
+    }, [route]);
 
     return (
         <View style={[styles.item, styles.container, isLargeScreen ? { width: '60%' } : { width: "100%" }]}>

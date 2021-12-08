@@ -77,7 +77,10 @@ export default function Profile({ route, navigation }: any) {
                                 navigation={navigation}
                                 onPic={() => { navigation.navigate('Tierprofil') }}
                                 onEdit={() => { navigation.navigate('EditAnimal') }}
-                                onDelete={() => { alert("Tier gelöscht");api.deletePet(pet.TIERID, "W*rx*TMn]:NuP|ywN`z8aUcHeTpL5<5,").then(()=>{window.location.reload();}) }}
+                                onDelete={() => {
+                                    navigation.navigate('DeleteAnimal', { petToDelete: pet, api: api, navigation: navigation });
+                                }}
+                                key={pet.TIERID}
                             />)
                     })}
                     <OwnButton title="Add Pet" style={{

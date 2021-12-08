@@ -9,6 +9,7 @@ import Freunde from '../Screens/Freunde';
 import Chats from '../Screens/Chats';
 import Einstellungen from '../Screens/Einstellungen';
 import { BACKGROUNDCOLOR, BLACK, TITLECOLOR, WHITE } from '../Constants/colors';
+import ImagePickerExample from '../Screens/test';
 
 const Drawer = createDrawerNavigator();
 
@@ -60,6 +61,7 @@ export default function Sidebar() {
         >
             <Drawer.Screen name="Mein Profil" component={Profile} initialParams={{ userID: 10 /* TODO: Give current UserID */ }} />
             <Drawer.Screen name="Tierprofil" component={Tierprofil} />
+            <Drawer.Screen name="ImagePickerExample" component={ImagePickerExample} />
             <Drawer.Screen name="Matches" component={Matches} />
             <Drawer.Screen name="Freunde" component={Freunde} />
             <Drawer.Screen name="Chats" component={Chats} />

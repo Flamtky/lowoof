@@ -67,13 +67,13 @@ app.get('/auth', (req, res) => {
                             res.status(401).json({ message: "Wrong Password" });
                         }
                     } else {
-                        res.status(500).json({ message: "User not found, contact Admin to create an API account" });
+                        res.status(403).json({ message: "User not found, contact Admin to create an API account" });
                     }
                 }
                 connection.end();
             }
         );
-    }else{
+    } else {
         res.status(401).json({ message: "Missing Username or Password" });
     }
 });
@@ -169,24 +169,39 @@ app.post('/adduser', (req, res) => {
 app.post('/updateuser', (req, res) => {
     console.log(req.body);
     const user: User = req.body;
-
+    if (user.PASSWORD === undefined) {
+        return res.status(401).json({ message: "Missing Password" });
+    }
     const connection: mysql.Connection = getConnection();
     connection.connect(function (err) {
         if (err) throw err;
         console.log("Connected!");
     });
-    connection.query(`UPDATE USER SET SPRACHID = '${user["SPRACHID"]}', USERNAME = '${user["USERNAME"]}', EMAIL = '${user["EMAIL"]}', VORNAME = '${user["VORNAME"]}', NACHNAME = '${user["NACHNAME"]}', GEBURTSTAG = '${user["GEBURTSTAG"]}', INSTITUTION = '${user["INSTITUTION"]}',
-    TELEFONNUMMER = '${user["TELEFONNUMMER"]}', PLZ = '${user["PLZ"]}', WOHNORT = '${user["WOHNORT"]}', GESCHLECHT = '${user["GESCHLECHT"]}', ONLINESTATUS = '${user["ONLINESTATUS"]}', MITGLIEDSCHAFTPAUSIERT = '${user["MITGLIEDSCHAFTPAUSIERT"]}' WHERE USERID = '${user["USERID"]}';`,
-        (err, rows, fields) => {
+    connection.query(`SELECT PASSWORD FROM USER WHERE USERID = ${user.USERID}`,
+        async (err, rows, fields) => {
             if (err) {
                 console.log(err);
                 res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
-            } else {
-                res.status(200).json({ message: 'User edited' });
             }
-        }
-    );
-    connection.end();
+            if (await bcrypt.compareSync(user.PASSWORD as string, rows[0].PASSWORD)) {
+                connection.query(`UPDATE USER SET SPRACHID = '${user["SPRACHID"]}', USERNAME = '${user["USERNAME"]}', EMAIL = '${user["EMAIL"]}', VORNAME = '${user["VORNAME"]}', NACHNAME = '${user["NACHNAME"]}', GEBURTSTAG = '${user["GEBURTSTAG"]}', INSTITUTION = '${user["INSTITUTION"]}',
+                                    TELEFONNUMMER = '${user["TELEFONNUMMER"]}', PLZ = '${user["PLZ"]}', WOHNORT = '${user["WOHNORT"]}', GESCHLECHT = '${user["GESCHLECHT"]}', ONLINESTATUS = '${user["ONLINESTATUS"]}', MITGLIEDSCHAFTPAUSIERT = '${user["MITGLIEDSCHAFTPAUSIERT"]}' WHERE USERID = '${user["USERID"]}';`,
+                    (err, rows, fields) => {
+                        if (err) {
+                            console.log(err);
+                            res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+                        } else {
+                            res.status(200).json({ message: 'User edited' });
+                        }
+                    }
+                );
+            } else {
+                return res.status(401).json({ message: "Wrong Password" });
+            }
+
+
+            connection.end();
+        });
 });
 
 app.get('/getuserrelationships', (req, res) => {
@@ -264,13 +279,45 @@ app.get('/getpet', (req, res) => {
     }
 });
 
-app.get('/deleteuser', (req, res) => {
-    if (req.query.userid) {
+app.post('/deleteuser', (req, res) => {
+    if (req.body.userid) {
         const connection: mysql.Connection = getConnection();
         connection.connect(function (err) {
             if (err) throw err;
             console.log("Connected!");
         });
+        connection.query(`SELECT PASSWORD FROM USER WHERE USERID = ${req.body.userId}`,
+            async (err, rows, fields) => {
+                if (err) {
+                    console.log(err);
+                    res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+                }
+                if (await bcrypt.compareSync(req.body.password, rows[0].PASSWORD)) {
+                    connection.query(`DELETE FROM USER WHERE USERID = ${req.body.userId}`,
+                        (err, rows, fields) => {
+                            if (err) {
+                                console.log(err);
+                                res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+                            } else {
+                                res.status(200).json({ message: 'User deleted' });
+                            }
+                        }
+                    );
+                } else {
+                    return res.status(401).json({ message: "Wrong Password" });
+                }
+            }
+        );
+
+        connection.query(`DELETE FROM TIER_RELATIONSHIPS WHERE TIER_A_ID = '${req.query.petid}' OR TIER_B_ID = '${req.query.petid}'`,
+            (err, rows, fields) => {
+                if (err) {
+                    console.log(err);
+                    res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+                }
+            }
+        );
+
         connection.query(`DELETE FROM TIER WHERE USERID = '${req.query.userid}'`,
             (err, rows, fields) => {
                 if (err) {
@@ -279,14 +326,7 @@ app.get('/deleteuser', (req, res) => {
                 }
             }
         );
-        connection.query(`DELETE FROM USER_RELATIONSHIPS WHERE USER_A_ID = '${req.query.userid}' OR USER_B_ID = '${req.query.userid}'`,
-            (err, rows, fields) => {
-                if (err) {
-                    console.log(err);
-                    res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
-                }
-            }
-        );
+
         connection.query(`DELETE FROM USER WHERE USERID = '${req.query.userid}'`,
             (err, rows, fields) => {
                 if (err) {
@@ -301,27 +341,55 @@ app.get('/deleteuser', (req, res) => {
     }
 });
 
-app.get('/deletepet', (req, res) => {
-    if (req.query.petid) {
+app.post('/deletepet', (req, res) => {
+    if (req.body.petid) {
         const connection: mysql.Connection = getConnection();
         connection.connect(function (err) {
             if (err) throw err;
             console.log("Connected!");
         });
-        connection.query(`DELETE FROM TIER WHERE TIERID = '${req.query.petid}'`,
-            (err, rows, fields) => {
+        var userId: number = 0;
+        connection.query(`SELECT USERID FROM TIER WHERE TIERID = '${req.body.petid}'`, (err, rows, fields) => {
+            if (err) {
+                console.log(err);
+                return res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+            } else {
+                userId = rows[0].USERID;
+            }
+        });
+
+        connection.query(`SELECT PASSWORD FROM USER WHERE USERID = ${userId}`,
+            async (err, rows, fields) => {
                 if (err) {
                     console.log(err);
                     res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
-                } else {
-                    res.status(200).json({ message: 'Pet deleted' });
                 }
-            }
-        );
-        connection.end();
+                if (await bcrypt.compareSync(req.body.password, rows[0].PASSWORD)) {
+                    connection.query(`DELETE FROM TIER_RELATIONSHIPS WHERE TIER_A_ID = '${req.query.petid}' OR TIER_B_ID = '${req.query.petid}'`,
+                        (err, rows, fields) => {
+                            if (err) {
+                                console.log(err);
+                                res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+                            }
+                        }
+                    );
+                    connection.query(`DELETE FROM TIER WHERE TIERID = '${req.query.petid}'`,
+                        (err, rows, fields) => {
+                            if (err) {
+                                console.log(err);
+                                res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+                            } else {
+                                res.status(200).json({ message: 'Pet deleted' });
+                            }
+                        }
+                    );
+                }else{
+                    return res.status(401).json({ message: "Wrong Password" });
+                }
+                connection.end();
+            
+            });
     }
 });
 
-
-
-app.listen(port, () => console.log(`Lowoof API running on port ${port}!`))
+app.listen(port, () => console.log(`Lowoof API running on port ${port}!`));

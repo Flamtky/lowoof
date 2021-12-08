@@ -117,7 +117,7 @@ export class Api {
 
     /**
      * Updates the Profile of a User except the userId,password,profilePicture
-     * [CAUTION]    If you change the UserID a different User will be edited
+     * [CAUTION]    Password Attribute must be set!
      * @param newProfile :User Updated User Object
      * @returns {Response} Response Object with message from the server
      */
@@ -145,9 +145,9 @@ export class Api {
      * @param userId :number UserID of the User to get the relationships of
      * @returns {Relationship[] | Response} Array of Relationships or Response Object with the message from the server
      */
-    async getUserRelationships(userId: number): Promise<Relationship[] | Response> {
+    async getPetRelationships(petId: number): Promise<Relationship[] | Response> {
         var res: Relationship[] | Response = { message: "Error" };
-        await axios.get(this.url + '/getuserrelationships?userid=' + userId, {
+        await axios.get(this.url + '/getuserrelationships?userid=' + petId, {
             headers: {
                 'Authorization': `Beaver ${this.apiToken}`
             }
@@ -206,11 +206,12 @@ export class Api {
     /**
      * Deletes a User from the Database. If a User is deleted all his Pets and Relationships will be deleted too
      * @param userId :number UserID to delete from the database
+     * @param pwd :string Password of the User to delete
      * @returns {Response} Response Object with message from the server
      */
-    async deleteUser(userId: number): Promise<Response> {
+    async deleteUser(userId: number,pwd:string): Promise<Response> {
         var res:Response = { message: "Something bad happend :(" };
-        await axios.get(this.url + '/deleteuser?userid=' + userId, {
+        await axios.post(this.url + '/deleteuser',{userid: userId,password:pwd}, {
             headers: {
                 'Authorization': `Beaver ${this.apiToken}`
             }
@@ -222,11 +223,12 @@ export class Api {
     /**
      * Deletes a pet from the Database
      * @param petId :number PetID of the Pet to delete
+     * @param pwd :string Password of the User who owns the Pet
      * @returns {Response} Response Object with message from the server
      */
-    async deletePet(petId: number): Promise<Response> {
+    async deletePet(petId: number,pwd:string): Promise<Response> {
         var res:Response = { message: "Something bad happend :(" };
-        await axios.get(this.url + '/deletepet?petid=' + petId, {
+        await axios.post(this.url + '/deletepet',{petid:petId,password:pwd}, {
             headers: {
                 'Authorization': `Beaver ${this.apiToken}`
             }

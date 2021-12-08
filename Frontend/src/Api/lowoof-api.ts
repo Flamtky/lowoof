@@ -22,7 +22,7 @@ export class Api {
             return "Error"
         }
     }
-    
+
     private setAuthToken(token: string) {
         this.apiToken = token;
     }
@@ -209,13 +209,13 @@ export class Api {
      * @param pwd :string Password of the User to delete
      * @returns {Response} Response Object with message from the server
      */
-    async deleteUser(userId: number,pwd:string): Promise<Response> {
-        var res:Response = { message: "Something bad happend :(" };
-        await axios.post(this.url + '/deleteuser',{userid: userId,password:pwd}, {
+    async deleteUser(userId: number, pwd: string): Promise<Response> {
+        var res: Response = { message: "Something bad happend :(" };
+        await axios.post(this.url + '/deleteuser', { userid: userId, password: pwd }, {
             headers: {
                 'Authorization': `Beaver ${this.apiToken}`
             }
-        }).then(response => {res = response.data as Response; })
+        }).then(response => { res = response.data as Response; })
             .catch((error) => { res = error; });
         return res;
     }
@@ -236,12 +236,12 @@ export class Api {
                     'Authorization': `Beaver ${this.apiToken}`
                 }
             }).then(response => {res = response.data as Response; })
-                .catch((error) => { res = error; });
+                .catch((error) => { res = error.response.data; });
         }
         return res;
     }
 
-    createPetProfile(newPet:Pet): void {
+    createPetProfile(newPet: Pet): void {
         return;
     }
 

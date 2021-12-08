@@ -147,7 +147,7 @@ export class Api {
      */
     async getPetRelationships(petId: number): Promise<Relationship[] | Response> {
         var res: Relationship[] | Response = { message: "Error" };
-        await axios.get(this.url + '/getuserrelationships?userid=' + petId, {
+        await axios.get(this.url + '/getpetrelationships?petid=' + petId, {
             headers: {
                 'Authorization': `Beaver ${this.apiToken}`
             }
@@ -228,12 +228,16 @@ export class Api {
      */
     async deletePet(petId: number,pwd:string): Promise<Response> {
         var res:Response = { message: "Something bad happend :(" };
-        await axios.post(this.url + '/deletepet',{petid:petId,password:pwd}, {
-            headers: {
-                'Authorization': `Beaver ${this.apiToken}`
-            }
-        }).then(response => {res = response.data as Response; })
-            .catch((error) => { res = error; });
+        if(pwd.length < 1){
+            res = {message: "Password not set"};
+        }else{
+            await axios.post(this.url + '/deletepet',{petid:petId,password:pwd}, {
+                headers: {
+                    'Authorization': `Beaver ${this.apiToken}`
+                }
+            }).then(response => {res = response.data as Response; })
+                .catch((error) => { res = error; });
+        }
         return res;
     }
 

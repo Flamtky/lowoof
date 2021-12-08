@@ -18,14 +18,16 @@ const mySqlUser: string = process.env.MYSQL_USER ?? '';
 const mySqlPassword: string = process.env.MYSQL_PWD ?? '';
 const mySqlDatabase: string = process.env.MYSQL_DB ?? '';
 
-function getConnection(): mysql.Connection {
-    return mysql.createConnection({
+function getConnection(): mysql.Pool {
+    return mysql.createPool({
+        connectionLimit: 10,
         host: mySqlHost,
         port: mySqlPort as unknown as number,
         user: mySqlUser,
         password: mySqlPassword,
         database: mySqlDatabase
     });
+
 }
 
 app.use(cors());
@@ -41,11 +43,7 @@ app.get('/auth', (req, res) => {
     //Create Auth Token
     if (req.query.username && req.query.password) {
         var hashedPassword: string;
-        const connection: mysql.Connection = getConnection();
-        connection.connect(function (err) {
-            if (err) throw err;
-            console.log("Connected!");
-        });
+        const connection: mysql.Pool = getConnection();
         connection.query(`SELECT HASHEDPW FROM API_USER WHERE USERNAME = '${req.query.username}'`,
             (err, rows, fields) => {
                 if (err) {
@@ -70,7 +68,7 @@ app.get('/auth', (req, res) => {
                         res.status(403).json({ message: "User not found, contact Admin to create an API account" });
                     }
                 }
-                connection.end();
+
             }
         );
     } else {
@@ -99,11 +97,7 @@ app.use((req, res, next) => {
 
 app.get('/users', (req, res) => {
 
-    const connection: mysql.Connection = getConnection();
-    connection.connect(function (err) {
-        if (err) throw err;
-        console.log("Connected!");
-    });
+    const connection: mysql.Pool = getConnection();
     connection.query(`SELECT * FROM USER`,
         (err, rows, fields) => {
             if (err) {
@@ -114,16 +108,12 @@ app.get('/users', (req, res) => {
             }
         }
     );
-    connection.end();
+
 });
 
 app.get('/getuser', (req, res) => {
     if (req.query.userid) {
-        const connection: mysql.Connection = getConnection();
-        connection.connect(function (err) {
-            if (err) throw err;
-            console.log("Connected!");
-        });
+        const connection: mysql.Pool = getConnection();
         connection.query(`SELECT * FROM USER WHERE USERID = '${req.query.userid}'`,
             (err, rows, fields) => {
                 if (err) {
@@ -139,7 +129,7 @@ app.get('/getuser', (req, res) => {
                 }
             }
         );
-        connection.end();
+
     }
 });
 
@@ -147,11 +137,7 @@ app.post('/adduser', (req, res) => {
     console.log(req.body);
     const user: User = req.body;
 
-    const connection: mysql.Connection = getConnection();
-    connection.connect(function (err) {
-        if (err) throw err;
-        console.log("Connected!");
-    });
+    const connection: mysql.Pool = getConnection();
     connection.query(`INSERT INTO USER (USERNAME, HASHEDPASSWORD, EMAIL, VORNAME, NACHNAME, GEBURTSTAG, INSTITUTION, TELEFONNUMMER, PLZ, WOHNORT, GESCHLECHT, ONLINESTATUS, MITGLIEDSCHAFTPAUSIERT)
         VALUES ('${user["USERNAME"]}', '${user["PASSWORD"]}', '${user["EMAIL"]}', '${user["VORNAME"]}', '${user["NACHNAME"]}', '${user["GEBURTSTAG"]}', '${user["INSTITUTION"]}', '${user["TELEFONNUMMER"]}', '${user["PLZ"]}', '${user["WOHNORT"]}', '${user["GESCHLECHT"]}', 0, 0)`,
         (err, rows, fields) => {
@@ -163,7 +149,7 @@ app.post('/adduser', (req, res) => {
             }
         }
     );
-    connection.end();
+
 });
 
 app.post('/updateuser', (req, res) => {
@@ -172,11 +158,7 @@ app.post('/updateuser', (req, res) => {
     if (user.PASSWORD === undefined) {
         return res.status(401).json({ message: "Missing Password" });
     }
-    const connection: mysql.Connection = getConnection();
-    connection.connect(function (err) {
-        if (err) throw err;
-        console.log("Connected!");
-    });
+    const connection: mysql.Pool = getConnection();
     connection.query(`SELECT PASSWORD FROM USER WHERE USERID = ${user.USERID}`,
         async (err, rows, fields) => {
             if (err) {
@@ -200,18 +182,15 @@ app.post('/updateuser', (req, res) => {
             }
 
 
-            connection.end();
+
         });
 });
 
-app.get('/getuserrelationships', (req, res) => {
-    if (req.query.userid) {
-        const connection: mysql.Connection = getConnection();
-        connection.connect(function (err) {
-            if (err) throw err;
-            console.log("Connected!");
-        });
-        connection.query(`SELECT * FROM USER_RELATIONSHIPS WHERE USER_A_ID = '${req.query.userid}' OR USER_B_ID = '${req.query.userid}';`,
+
+app.get('/getpetrelationships', (req, res) => {
+    if (req.query.petid) {
+        const connection: mysql.Pool = getConnection();
+        connection.query(`SELECT * FROM TIER_RELATIONSHIPS WHERE TIER_A_ID = '${req.query.petid}' OR TIER_B_ID = '${req.query.petid}';`,
             (err, rows, fields) => {
                 if (err) {
                     console.log(err);
@@ -225,17 +204,13 @@ app.get('/getuserrelationships', (req, res) => {
                 }
             }
         );
-        connection.end();
+
     }
 });
 
 app.get('/getuserpets', (req, res) => {
     if (req.query.userid) {
-        const connection: mysql.Connection = getConnection();
-        connection.connect(function (err) {
-            if (err) throw err;
-            console.log("Connected!");
-        });
+        const connection: mysql.Pool = getConnection();
         connection.query(`SELECT * FROM TIER WHERE USERID = '${req.query.userid}';`,
             (err, rows, fields) => {
                 if (err) {
@@ -250,17 +225,13 @@ app.get('/getuserpets', (req, res) => {
                 }
             }
         );
-        connection.end();
+
     }
 });
 
 app.get('/getpet', (req, res) => {
     if (req.query.petid) {
-        const connection: mysql.Connection = getConnection();
-        connection.connect(function (err) {
-            if (err) throw err;
-            console.log("Connected!");
-        });
+        const connection: mysql.Pool = getConnection();
         connection.query(`SELECT * FROM TIER WHERE TIERID = '${req.query.petid}';`,
             (err, rows, fields) => {
                 if (err) {
@@ -275,17 +246,13 @@ app.get('/getpet', (req, res) => {
                 }
             }
         );
-        connection.end();
+
     }
 });
 
 app.post('/deleteuser', (req, res) => {
     if (req.body.userid) {
-        const connection: mysql.Connection = getConnection();
-        connection.connect(function (err) {
-            if (err) throw err;
-            console.log("Connected!");
-        });
+        const connection: mysql.Pool = getConnection();
         connection.query(`SELECT PASSWORD FROM USER WHERE USERID = ${req.body.userId}`,
             async (err, rows, fields) => {
                 if (err) {
@@ -293,13 +260,33 @@ app.post('/deleteuser', (req, res) => {
                     res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
                 }
                 if (await bcrypt.compareSync(req.body.password, rows[0].PASSWORD)) {
-                    connection.query(`DELETE FROM USER WHERE USERID = ${req.body.userId}`,
+
+                    connection.query(`DELETE FROM TIER_RELATIONSHIPS WHERE TIER_A_ID = '${req.body.petid}' OR TIER_B_ID = '${req.body.petid}'`,
                         (err, rows, fields) => {
                             if (err) {
                                 console.log(err);
                                 res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
-                            } else {
-                                res.status(200).json({ message: 'User deleted' });
+                            }else{
+                                connection.query(`DELETE FROM TIER WHERE USERID = '${req.body.userid}'`,
+                                    (err, rows, fields) => {
+                                        if (err) {
+                                            console.log(err);
+                                            res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+                                        }else{
+                                            connection.query(`DELETE FROM USER WHERE USERID = '${req.body.userid}'`,
+                                                (err, rows, fields) => {
+                                                    if (err) {
+                                                        console.log(err);
+                                                        return res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+                                                    } else {
+                                                        res.status(200).json({ message: 'User deleted' });
+                                                    }
+                                                }
+                                            );
+                                        }
+    
+                                    }
+                                );
                             }
                         }
                     );
@@ -308,87 +295,59 @@ app.post('/deleteuser', (req, res) => {
                 }
             }
         );
-
-        connection.query(`DELETE FROM TIER_RELATIONSHIPS WHERE TIER_A_ID = '${req.query.petid}' OR TIER_B_ID = '${req.query.petid}'`,
-            (err, rows, fields) => {
-                if (err) {
-                    console.log(err);
-                    res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
-                }
-            }
-        );
-
-        connection.query(`DELETE FROM TIER WHERE USERID = '${req.query.userid}'`,
-            (err, rows, fields) => {
-                if (err) {
-                    console.log(err);
-                    res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
-                }
-            }
-        );
-
-        connection.query(`DELETE FROM USER WHERE USERID = '${req.query.userid}'`,
-            (err, rows, fields) => {
-                if (err) {
-                    console.log(err);
-                    res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
-                } else {
-                    res.status(200).json({ message: 'User deleted' });
-                }
-            }
-        );
-        connection.end();
     }
 });
 
 app.post('/deletepet', (req, res) => {
     if (req.body.petid) {
-        const connection: mysql.Connection = getConnection();
-        connection.connect(function (err) {
-            if (err) throw err;
-            console.log("Connected!");
-        });
+        const connection: mysql.Pool = getConnection();
         var userId: number = 0;
         connection.query(`SELECT USERID FROM TIER WHERE TIERID = '${req.body.petid}'`, (err, rows, fields) => {
             if (err) {
                 console.log(err);
-                return res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+                res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
             } else {
+                console.log(rows);
                 userId = rows[0].USERID;
+                connection.query(`SELECT PASSWORD FROM USER WHERE USERID = ${userId}`,
+                    async (err, rows, fields) => {
+                        if (err) {
+                            console.log(err);
+                            return res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+                        }
+                        console.log(rows);
+                        console.log(req.body.password);
+                        if (await bcrypt.compareSync(req.body.password, rows[0].PASSWORD)) {
+                            console.log("Password was correct");
+                            connection.query(`DELETE FROM TIER_RELATIONSHIPS WHERE TIER_A_ID = '${req.body.petid}' OR TIER_B_ID = '${req.body.petid}'`,
+                                (err, rows, fields) => {
+                                    if (err) {
+                                        console.log(err);
+                                        return res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+                                    }
+                                }
+                            );
+                            connection.query(`DELETE FROM TIER WHERE TIERID = '${req.body.petid}'`,
+                                (err, rows, fields) => {
+                                    if (err) {
+                                        console.log(err);
+                                        return res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+                                    } else {
+                                        console.log("Pet deleted ID:" + req.body.petid);
+                                        res.status(200).json({ message: 'Pet deleted' });
+                                    }
+                                }
+                            );
+                        } else {
+                            return res.status(401).json({ message: "Wrong Password" });
+                        }
+
+
+                    });
             }
         });
 
-        connection.query(`SELECT PASSWORD FROM USER WHERE USERID = ${userId}`,
-            async (err, rows, fields) => {
-                if (err) {
-                    console.log(err);
-                    res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
-                }
-                if (await bcrypt.compareSync(req.body.password, rows[0].PASSWORD)) {
-                    connection.query(`DELETE FROM TIER_RELATIONSHIPS WHERE TIER_A_ID = '${req.query.petid}' OR TIER_B_ID = '${req.query.petid}'`,
-                        (err, rows, fields) => {
-                            if (err) {
-                                console.log(err);
-                                res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
-                            }
-                        }
-                    );
-                    connection.query(`DELETE FROM TIER WHERE TIERID = '${req.query.petid}'`,
-                        (err, rows, fields) => {
-                            if (err) {
-                                console.log(err);
-                                res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
-                            } else {
-                                res.status(200).json({ message: 'Pet deleted' });
-                            }
-                        }
-                    );
-                }else{
-                    return res.status(401).json({ message: "Wrong Password" });
-                }
-                connection.end();
-            
-            });
+
     }
 });
 

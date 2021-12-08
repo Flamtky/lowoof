@@ -1,0 +1,178 @@
+{
+    "Search": {
+        "EN": "Search...",
+        "DE": "Suchen..."
+    },
+    "BTN_BACK": {
+        "EN": "Back",
+        "DE": "Zurück"
+    },
+    "BTN_SAVE": {
+        "EN": "Save",
+        "DE": "Speichern"
+    },
+    "PROFILE": {
+        "HEADER": {
+            "EN": "My Profile",
+            "DE": "Mein Profil"
+        },
+        "USERNAME": {
+            "EN": "Username",
+            "DE": "Benutzername"
+        },
+        "LASTNAME": {
+            "EN": "Last Name",
+            "DE": "Nachname"
+        },
+        "FIRSTNAME": {
+            "EN": "First Name",
+            "DE": "Vorname"
+        },
+        "POSTCODE": {
+            "EN": "Zip Code",
+            "DE": "PLZ"
+        },
+        "CITY": {
+            "EN": "City",
+            "DE": "Ort"
+        },
+        "GENDER": {
+            "EN": "Gender",
+            "DE": "Geschlecht"
+        },
+        "MALE": {
+            "EN": "Male",
+            "DE": "Männlich"
+        },
+        "FEMALE": {
+            "EN": "Female",
+            "DE": "Weiblich"
+        },
+        "BIRTHDAY": {
+            "EN": "Date of Birth",
+            "DE": "Geburtstag"
+        },
+        "EMAIL": {
+            "EN": "E-Mail",
+            "DE": "E-Mail"
+        },
+        "PHONE": {
+            "EN": "Phone Number",
+            "DE": "Telefonnummer"
+        },
+        "PASSWORD": {
+            "EN": "Password",
+            "DE": "Passwort"
+        },
+        "YOURPETS": {
+            "EN": "Your Pets",
+            "DE": "Deine Haustiere"
+        },
+        "ADDPET": {
+            "EN": "Add Pet",
+            "DE": "Haustier hinzufügen"
+        }
+    },
+    "EDIT_PROFILE": {
+        "HEADER": {
+            "EN": "Edit Profile",
+            "DE": "Profil bearbeiten"
+        }
+    },
+    "PET": {
+        "HEADER": {
+            "EN": "Tierprofil",
+            "DE": "Pet Profile"
+        },
+        "NAME": {
+            "EN": "Nickname",
+            "DE": "Rufame"
+        },
+        "OWNER": {
+            "EN": "Owner",
+            "DE": "Besitzer"
+        },
+        "SPECIES": {
+            "EN": "Species",
+            "DE": "Art"
+        },
+        "BREED": {
+            "EN": "Breed",
+            "DE": "Rasse"
+        },
+        "GENDER": {
+            "EN": "Gender",
+            "DE": "Geschlecht"
+        },
+        "DATE_OF_BIRTH": {
+            "EN": "Date of Birth",
+            "DE": "Geburtstag"
+        },
+        "PREFERENCES": {
+            "EN": "Preferences",
+            "DE": "Präferenzen"
+        },
+        "DISTANCE": {
+            "EN": "Max. Distance",
+            "DE": "Max. Entfernung"
+        },
+        "AGE": {
+            "EN": "AGE",
+            "DE": "ALTER"
+        },
+        "DESCRIPTION": {
+            "EN": "Description",
+            "DE": "Beschreibung"
+        },
+        "FEATURES": {
+            "EN": "External Features",
+            "DE": "Besondere Merkmale"
+        }
+    },
+    "EDIT_PET": {
+        "HEADER": {
+            "EN": "Edit Pet Profile",
+            "DE": "Tierprofil bearbeiten"
+        }
+    },
+    "MATCHES": {
+        "HEADER": {
+            "EN": "Matches",
+            "DE": "Matches"
+        }
+    },
+    "FRIENDS": {
+        "HEADER": {
+            "EN": "Friends",
+            "DE": "Freunde"
+        },
+        "INCOMING_FRIEND": {
+            "EN": "Incoming Friend Request",
+            "DE": "Eingehende Freundschaftsanfragen"
+        },
+        "OUTGOING_FRIEND": {
+            "EN": "Outgoing Friend Request",
+            "DE": "Ausgehende Freundschaftsanfragen"
+        }
+    },
+    "CHATS": {
+        "HEADER": {
+            "EN": "Chats",
+            "DE": "Chats"
+        },
+        "CHAT_WITH": {
+            "EN": "Chat with ",
+            "DE": "Chat mit "
+        },
+        "MESSAGE": {
+            "EN": "Message",
+            "DE": "Nachricht"
+        }
+    },
+    "SETTINGS": {
+        "HEADER": {
+            "EN": "Settings",
+            "DE": "Einstellungen"
+        }
+    }
+}

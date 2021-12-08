@@ -8,36 +8,44 @@ import { BLACK, GRAY, MAINCOLOR, TITLECOLOR } from '../Constants/colors';
 import Seperator from '../Components/seperator';
 import OwnButton from '../Components/ownButton';
 import { Api } from '../Api/lowoof-api';
-import { User } from '../Api/interfaces';
+import { User, Pet } from '../Api/interfaces';
 import moment from 'moment';
 import { Buffer } from "buffer"
 
-
+const api = new Api();
 export default function Profile({ route, navigation }: any) {
     const dimensions = useWindowDimensions();
     const isLargeScreen = dimensions.width >= 768;
     const [profile, setProfile] = React.useState<User | null>(null);
+    const [pets, setPets] = React.useState<Pet[]>([]);
+    const [isLoading, setIsLoading] = React.useState(true);
     React.useEffect(() => {
-        const api = new Api();
         api.getAuthTokenfromServer("application", "W*rx*TMn]:NuP|ywN`z8aUcHeTpL5<5,").then(() => {
             api.getProfileData(route.params.userID).then(data => {
                 // If data has message as key, then the user does not exist or multiple users with the same username exist
                 if (!data.hasOwnProperty("message")) {
                     setProfile(data as User);
+                    api.getUserPets(route.params.userID).then(data => {
+                        if (!data.hasOwnProperty("message")) {
+                            setPets(data as Pet[]);
+                        }
+                        setIsLoading(false);
+                    });
                 }
                 // TODO: Handle error / show error page
             });
         });
     }, []);
+
     return (
         <View style={[styles.item, styles.container, isLargeScreen ? { width: '60%' } : { width: "100%" }]}>
             <ScrollView style={{ width: '100%' }}
                 keyboardDismissMode="on-drag"
             >
-                <View style={styles.innerContainer}>
+                <View style={[styles.innerContainer, isLoading ? { display: "none" } : null]}>
                     <View style={styles.row}>
                         <Image style={styles.profilepicture}
-                            source={{ uri: profile?.PROFILBILD != null ? "data:image/png;base64," + Buffer.from(profile.PROFILBILD, 'base64').toString('base64'): "https://puu.sh/IsTPQ/5d69029437.png" }}
+                            source={{ uri: profile?.PROFILBILD != null ? "data:image/png;base64," + Buffer.from(profile.PROFILBILD, 'base64').toString('base64') : "https://puu.sh/IsTPQ/5d69029437.png" }}
                         />
                         <View style={{ position: "absolute", right: "10%" }}>
                             <TouchableOpacity onPress={() => { navigation.navigate("EditProfile") }} >
@@ -61,35 +69,53 @@ export default function Profile({ route, navigation }: any) {
                         </View>
                     </View>
                     <Seperator />
-                    <TextBlock style={styles.title}>Your Pets</TextBlock>
-                    <Seperator />
-                    <View style={styles.row}>
-                        <TouchableOpacity onPress={() => { navigation.navigate('Tierprofil') }} >
-                            <Image style={styles.petpicture}
-                                source={{ uri: "https://puu.sh/IsTPQ/5d69029437.png" }}
-                            />
-                        </TouchableOpacity>
-                        <View style={{ marginLeft: 10 }}>
-                            <TextBlock>Matches: </TextBlock>
-                            <TextBlock>Name: </TextBlock>
-                            <TextBlock>Species: </TextBlock>
-                            <TextBlock>Breed: </TextBlock>
-                        </View>
-                        <View style={[styles.row, { marginLeft: "auto", right: "10%" }]}>
-                            <TouchableOpacity onPress={() => { navigation.navigate('EditAnimal') }}>
-                                <FontAwesomeIcon icon={faUserEdit} size={40} />
-                            </TouchableOpacity>
-                            <TouchableOpacity onPress={() => { alert("Tier gelöscht")/*TODO: Delete*/ }}>
-                                <FontAwesomeIcon icon={faTrashAlt} size={40} color="#555" />
-                            </TouchableOpacity>
-                        </View>
-                    </View>
-                    <Seperator />
+                    <TextBlock style={[styles.title, pets.length <= 0 ? { display: "none" } : null]}>Your Pets</TextBlock>
+                    {pets.map((pet: Pet) => {
+                        return (
+                            <PetItem
+                                pet={pet}
+                                navigation={navigation}
+                                onPic={() => { navigation.navigate('Tierprofil') }}
+                                onEdit={() => { navigation.navigate('EditAnimal') }}
+                                onDelete={() => { alert("Tier gelöscht");api.deletePet(pet.TIERID, "W*rx*TMn]:NuP|ywN`z8aUcHeTpL5<5,").then(()=>{window.location.reload();}) }}
+                            />)
+                    })}
                     <OwnButton title="Add Pet" style={{
                         alignSelf: "center",
                     }} />
                 </View>
             </ScrollView>
+        </View>
+    );
+}
+
+function PetItem(props: any) {
+    const pet: Pet = props.pet;
+    return (
+        <View>
+            <Seperator />
+            <View style={styles.row}>
+                <TouchableOpacity onPress={props.onPic} >
+                    <Image style={styles.petpicture}
+                        source={{ uri: pet?.PROFILBILD != null ? "data:image/png;base64," + Buffer.from(pet.PROFILBILD, 'base64').toString('base64') : "https://puu.sh/IsTPQ/5d69029437.png" }}
+                    />
+                </TouchableOpacity>
+                <View style={{ marginLeft: 10 }}>
+                    <TextBlock>Matches: </TextBlock>
+                    <TextBlock>{pet.NAME ?? "<Name>"}</TextBlock>
+                    <TextBlock>{pet.ART ?? "<Species>"} </TextBlock>
+                    <TextBlock>{pet.RASSE ?? "<Breet>"}</TextBlock>
+                </View>
+                <View style={[styles.row, { marginLeft: "auto", right: "10%" }]}>
+                    <TouchableOpacity onPress={props.onEdit}>
+                        <FontAwesomeIcon icon={faUserEdit} size={40} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={props.onDelete}>
+                        <FontAwesomeIcon icon={faTrashAlt} size={40} color="#555" />
+                    </TouchableOpacity>
+                </View>
+            </View>
+            <Seperator />
         </View>
     );
 }

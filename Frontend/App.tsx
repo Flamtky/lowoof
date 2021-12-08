@@ -1,7 +1,6 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
-import { StyleSheet } from 'react-native';
 import Sidebar from './src/Components/sidebar';
 import { EditProfile, EditAnimal } from './src/Screens/EditProfile';
 import { BACKGROUNDCOLOR, TITLECOLOR } from './src/Constants/colors';

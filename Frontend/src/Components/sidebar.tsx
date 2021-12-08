@@ -58,7 +58,7 @@ export default function Sidebar() {
             }}
             backBehavior='history'
         >
-            <Drawer.Screen name="Mein Profil" component={Profile} initialParams={{ userID: 2 /* TODO: Give current UserID */ }} />
+            <Drawer.Screen name="Mein Profil" component={Profile} initialParams={{ userID: 10 /* TODO: Give current UserID */ }} />
             <Drawer.Screen name="Tierprofil" component={Tierprofil} />
             <Drawer.Screen name="Matches" component={Matches} />
             <Drawer.Screen name="Freunde" component={Freunde} />

@@ -6,6 +6,7 @@ import Sidebar from './src/Components/sidebar';
 import { EditProfile, EditAnimal } from './src/Screens/EditProfile';
 import { BACKGROUNDCOLOR, TITLECOLOR } from './src/Constants/colors';
 import { Chat } from './src/Screens/Chat';
+import DeleteAnimal from './src/Screens/DeleteAnimal';
 
 const Stack = createNativeStackNavigator<any>();
 
@@ -48,6 +49,17 @@ export default function App() {
 							fontWeight: "bold",
 						},
 					}} />
+					<Stack.Screen name="DeleteAnimal" component={DeleteAnimal} options={({route}) =>({
+						title: route?.params?.name ?? 'Tier löschen',
+						headerStyle: {
+							backgroundColor: BACKGROUNDCOLOR,
+						},
+						headerTitleStyle: {
+							fontSize: 24,
+							color: TITLECOLOR,
+							fontWeight: "bold",
+						},
+					})} />
 				</Stack.Group>
 			</Stack.Navigator>
 		</NavigationContainer>

@@ -9,6 +9,8 @@ import Seperator from '../Components/seperator';
 import OwnButton from '../Components/ownButton';
 import { Pet, User } from '../Api/interfaces';
 import { Api } from '../Api/lowoof-api';
+import language from '../../language.json';
+import { currentLanguage } from '../../App';
 
 const api = new Api();
 export default function PetProfile({ route, navigation }: any) {
@@ -104,7 +106,7 @@ export default function PetProfile({ route, navigation }: any) {
                     <Seperator />
                 </View>
             </ScrollView>
-            <OwnButton title="Zurück" style={{ margin: 32, alignSelf: "flex-start" }} onPress={() => {
+            <OwnButton title={language.BTN_BACK[currentLanguage]} style={{ margin: 32, alignSelf: "flex-start" }} onPress={() => {
                 navigation.goBack();
             }} />
         </View>

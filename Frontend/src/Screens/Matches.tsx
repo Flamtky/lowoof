@@ -7,6 +7,8 @@ import { TextBlock } from '../Components/styledText';
 import Seperator from '../Components/seperator';
 import OwnButton from '../Components/ownButton';
 import PetItem from '../Components/petItem';
+import language from '../../language.json';
+import { currentLanguage } from '../../App';
 
 export default function Matches({navigation}:any) {
     const dimensions = useWindowDimensions();
@@ -21,7 +23,7 @@ export default function Matches({navigation}:any) {
                 <PetItem/>
                 <Seperator/>
             </ScrollView>
-            <OwnButton title="Zurück" style={{ margin: 32, alignSelf: "flex-start" }} onPress={() => {
+            <OwnButton title={language.BTN_BACK[currentLanguage]} style={{ margin: 32, alignSelf: "flex-start" }} onPress={() => {
                 navigation.goBack();
             }} />
         </View>

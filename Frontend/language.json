@@ -81,8 +81,8 @@
     },
     "PET": {
         "HEADER": {
-            "EN": "Tierprofil",
-            "DE": "Pet Profile"
+            "EN": "Pet Profile",
+            "DE": "Tierprofil"
         },
         "NAME": {
             "EN": "Nickname",
@@ -133,6 +133,10 @@
         "HEADER": {
             "EN": "Edit Pet Profile",
             "DE": "Tierprofil bearbeiten"
+        },
+        "DELETE": {
+            "EN": "Delete Pet",
+            "DE": "Haustier löschen"
         }
     },
     "MATCHES": {
@@ -165,8 +169,8 @@
             "DE": "Chat mit "
         },
         "MESSAGE": {
-            "EN": "Message",
-            "DE": "Nachricht"
+            "EN": "Message...",
+            "DE": "Nachricht..."
         }
     },
     "SETTINGS": {

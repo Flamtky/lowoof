@@ -4,6 +4,8 @@ import { ScrollView } from 'react-native-gesture-handler';
 import OwnButton from '../Components/ownButton';
 import SearchBar from '../Components/searchbar';
 import { BACKGROUNDCOLOR, MAINCOLOR } from '../Constants/colors';
+import language from '../../language.json';
+import { currentLanguage } from '../../App';
 
 export function Chat(props: any) {
     const dimensions = useWindowDimensions();
@@ -18,7 +20,7 @@ export function Chat(props: any) {
                 </ScrollView>
                 <View style={{ width: "100%", flexDirection: 'row' }}>
                     <SearchBar
-                        placeholder="Nachricht...."
+                        placeholder={language.CHATS.MESSAGE[currentLanguage]}
                         style={styles.input}
                         value={message}
                         onChange={(event: any) => {

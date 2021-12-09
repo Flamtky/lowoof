@@ -21,7 +21,7 @@ export default function App() {
 			<Stack.Navigator>
 				<Stack.Screen name="Root" component={Sidebar} options={{ headerShown: false }} />
 				<Stack.Group screenOptions={{ presentation: 'modal' }}>
-					<Stack.Screen name={language.EDIT_PROFILE.HEADER[currentLanguage]} component={EditProfile} options={{
+					<Stack.Screen name="EditProfile" component={EditProfile} options={{
 						title: language.EDIT_PROFILE.HEADER[currentLanguage],
 						headerStyle: {
 							backgroundColor: BACKGROUNDCOLOR,
@@ -32,7 +32,7 @@ export default function App() {
 							fontWeight: "bold",
 						},
 					}} />
-					<Stack.Screen name={language.EDIT_PET.HEADER[currentLanguage]} component={EditAnimal} options={{
+					<Stack.Screen name="EditPet" component={EditAnimal} options={{
 						title: language.EDIT_PET.HEADER[currentLanguage],
 						headerStyle: {
 							backgroundColor: BACKGROUNDCOLOR,
@@ -54,7 +54,7 @@ export default function App() {
 							fontWeight: "bold",
 						},
 					}} />
-					<Stack.Screen name={language.EDIT_PET.DELETE[currentLanguage]} component={DeleteAnimal} options={({route}) =>({
+					<Stack.Screen name="DeletePet" component={DeleteAnimal} options={({route}) =>({
 						title: route?.params?.name ?? language.EDIT_PET.DELETE[currentLanguage],
 						headerStyle: {
 							backgroundColor: BACKGROUNDCOLOR,

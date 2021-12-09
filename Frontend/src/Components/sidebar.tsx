@@ -61,13 +61,13 @@ export default function Sidebar() {
             }}
             backBehavior='history'
         >
-            <Drawer.Screen name={language.PROFILE.HEADER[currentLanguage]} component={Profile} initialParams={{ userID: 10 /* TODO: Give current UserID */ }} />
-            <Drawer.Screen name={language.PET.HEADER[currentLanguage]} component={Tierprofil} />
+            <Drawer.Screen name="MyProfile" component={Profile} initialParams={{ userID: 10 /* TODO: Give current UserID */ }} />
+            <Drawer.Screen name="PetProfile" component={Tierprofil} />
             <Drawer.Screen name="ImagePickerExample" component={ImagePickerExample} />
-            <Drawer.Screen name={language.MATCHES.HEADER[currentLanguage]} component={Matches} />
-            <Drawer.Screen name={language.FRIENDS.HEADER[currentLanguage]} component={Freunde} initialParams={{ petID: 195 /* TODO: Give current UserID */ }} />
-            <Drawer.Screen name={language.CHATS.HEADER[currentLanguage]} component={Chats} />
-            <Drawer.Screen name={language.SETTINGS.HEADER[currentLanguage]} component={Einstellungen} />
+            <Drawer.Screen name="Matches" component={Matches} />
+            <Drawer.Screen name="Friends" component={Freunde} initialParams={{ petID: 195 /* TODO: Give current UserID */ }} />
+            <Drawer.Screen name="Chats" component={Chats} />
+            <Drawer.Screen name="Settings" component={Einstellungen} />
         </Drawer.Navigator>
     );
 }

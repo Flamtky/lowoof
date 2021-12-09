@@ -7,6 +7,7 @@ import { BLACK, MAINCOLOR } from '../Constants/colors';
 import { Api } from '../Api/lowoof-api';
 import { Pet, Relationship, User } from '../Api/interfaces';
 import PetItem from '../Components/petItem';
+import { API } from '../../App';
 
 const api = new Api();
 export default function Freunde({ route, navigation }: any) {
@@ -20,36 +21,34 @@ export default function Freunde({ route, navigation }: any) {
 
     const [isLoading, setIsLoading] = React.useState(true);
 
+    const api:Api = API;
+
     React.useEffect(() => {
         if (route.params.petID === null) {
             navigation.navigate('Mein Profil');
         } else {
-            api.getAuthTokenfromServer("application", "W*rx*TMn]:NuP|ywN`z8aUcHeTpL5<5,").then((resp) => {
-                if (resp !== "Error") {
-                    api.getPetRelationships(route.params.petID).then(data => {
-                        if (!data.hasOwnProperty("message")) {
-                            console.log(data);
-                            setFriends((data as Relationship[]).filter(x => x.RELATIONSHIP === "Friends"));
-                            setFriendsIn((data as Relationship[]).filter(x => x.TIER_B_ID === route.params.petID && x.RELATIONSHIP !== "Friends"));
-                            setFriendsOut((data as Relationship[]).filter(x => x.TIER_A_ID === route.params.petID && x.RELATIONSHIP !== "Friends"));
+            api.getPetRelationships(route.params.petID).then(data => {
+                if (!data.hasOwnProperty("message")) {
+                    console.log(data);
+                    setFriends((data as Relationship[]).filter(x => x.RELATIONSHIP === "Friends"));
+                    setFriendsIn((data as Relationship[]).filter(x => x.TIER_B_ID === route.params.petID && x.RELATIONSHIP !== "Friends"));
+                    setFriendsOut((data as Relationship[]).filter(x => x.TIER_A_ID === route.params.petID && x.RELATIONSHIP !== "Friends"));
 
-                            let temp: Pet[] = [];
-                            (data as Relationship[]).forEach(async rel => {
-                                await api.getPetData(rel.TIER_A_ID !== route.params.petID ? rel.TIER_A_ID : rel.TIER_B_ID).then((data2) => {
-                                    if (!data2.hasOwnProperty("message")) {
-                                        temp.push((data2 as Pet));
-                                    }
-                                });
-                                // if last iteration
-                                if (temp.length === (data as Relationship[]).length) {
-                                    setIsLoading(false);
-                                    setFriendsPets(temp);
-                                }
-                            });
+                    let temp: Pet[] = [];
+                    (data as Relationship[]).forEach(async rel => {
+                        await api.getPetData(rel.TIER_A_ID !== route.params.petID ? rel.TIER_A_ID : rel.TIER_B_ID).then((data2) => {
+                            if (!data2.hasOwnProperty("message")) {
+                                temp.push((data2 as Pet));
+                            }
+                        });
+                        // if last iteration
+                        if (temp.length === (data as Relationship[]).length) {
+                            setIsLoading(false);
+                            setFriendsPets(temp);
                         }
-
                     });
                 }
+
             });
         }
     }, [route]);

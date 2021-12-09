@@ -11,6 +11,7 @@ import { Pet, User } from '../Api/interfaces';
 import { Api } from '../Api/lowoof-api';
 import language from '../../language.json';
 import { currentLanguage } from '../../App';
+import { API } from '../../App';
 
 const api = new Api();
 export default function PetProfile({ route, navigation }: any) {
@@ -19,27 +20,24 @@ export default function PetProfile({ route, navigation }: any) {
     const [petProfile, setPetProfile] = React.useState<Pet | null>(null);
     const [ownerProfile, setOwnerProfile] = React.useState<User | null>(null);
     const [isLoading, setIsLoading] = React.useState(true);
+    const api:Api = API;
 
     React.useEffect(() => {
         if (petProfile === null) {
             navigation.navigate('Mein Profil');
         } else {
-            api.getAuthTokenfromServer("application", "W*rx*TMn]:NuP|ywN`z8aUcHeTpL5<5,").then((resp) => {
-                if (resp !== "Error") {
-                    api.getPetData(route.params.petID).then(data => {
+            api.getPetData(route.params.petID).then(data => {
+                if (!data.hasOwnProperty("message")) {
+                    setPetProfile(data as Pet);
+                    api.getProfileData((data as Pet).USERID).then(data => {
                         if (!data.hasOwnProperty("message")) {
-                            setPetProfile(data as Pet);
-                            api.getProfileData((data as Pet).USERID).then(data => {
-                                if (!data.hasOwnProperty("message")) {
-                                    setOwnerProfile(data as User);
-                                }
-                                // TODO: Handle error / show error page
-                                setIsLoading(false);
-                            });
+                            setOwnerProfile(data as User);
                         }
                         // TODO: Handle error / show error page
+                        setIsLoading(false);
                     });
                 }
+                // TODO: Handle error / show error page
             });
         }
     }, [petProfile, route]);

@@ -13,29 +13,28 @@ import moment from 'moment';
 import { Buffer } from "buffer"
 import language from '../../language.json';
 import { currentLanguage } from '../../App';
+import { API } from '../../App';
 
-const api = new Api();
 export default function Profile({ route, navigation }: any) {
     const dimensions = useWindowDimensions();
     const isLargeScreen = dimensions.width >= 768;
     const [profile, setProfile] = React.useState<User | null>(null);
     const [pets, setPets] = React.useState<Pet[]>([]);
     const [isLoading, setIsLoading] = React.useState(true);
+    const api:Api = API;
     React.useEffect(() => {
-        api.getAuthTokenfromServer("nimalu", "W*rx*TMn]:NuP|ywN`z8aUcHeTpL5<5,").then(() => {
-            api.getProfileData(route.params.userID).then(data => {
-                // If data has message as key, then the user does not exist or multiple users with the same username exist
-                if (!data.hasOwnProperty("message")) {
-                    setProfile(data as User);
-                    api.getUserPets(route.params.userID).then(data => {
-                        if (!data.hasOwnProperty("message")) {
-                            setPets(data as Pet[]);
-                        }
-                        setIsLoading(false);
-                    });
-                }
-                // TODO: Handle error / show error page
-            });
+        api.getProfileData(route.params.userID).then(data => {
+            // If data has message as key, then the user does not exist or multiple users with the same username exist
+            if (!data.hasOwnProperty("message")) {
+                setProfile(data as User);
+                api.getUserPets(route.params.userID).then(data => {
+                    if (!data.hasOwnProperty("message")) {
+                        setPets(data as Pet[]);
+                    }
+                    setIsLoading(false);
+                });
+            }
+            // TODO: Handle error / show error page
         });
     }, [route]);
 

@@ -21,28 +21,26 @@ export default function PetProfile({ route, navigation }: any) {
     React.useEffect(() => {
         if (petProfile === null) {
             navigation.navigate('Mein Profil');
+        } else {
+            api.getAuthTokenfromServer("application", "W*rx*TMn]:NuP|ywN`z8aUcHeTpL5<5,").then((resp) => {
+                if (resp !== "Error") {
+                    api.getPetData(route.params.petID).then(data => {
+                        if (!data.hasOwnProperty("message")) {
+                            setPetProfile(data as Pet);
+                            api.getProfileData((data as Pet).USERID).then(data => {
+                                if (!data.hasOwnProperty("message")) {
+                                    setOwnerProfile(data as User);
+                                }
+                                // TODO: Handle error / show error page
+                                setIsLoading(false);
+                            });
+                        }
+                        // TODO: Handle error / show error page
+                    });
+                }
+            });
         }
-    }, [petProfile]);
-
-    React.useEffect(() => {
-        api.getAuthTokenfromServer("application", "W*rx*TMn]:NuP|ywN`z8aUcHeTpL5<5,").then((resp) => {
-            if (resp !== "Error") {
-                api.getPetData(route.params.petID).then(data => {
-                    if (!data.hasOwnProperty("message")) {
-                        setPetProfile(data as Pet);
-                        api.getProfileData((data as Pet).USERID).then(data => {
-                            if (!data.hasOwnProperty("message")) {
-                                setOwnerProfile(data as User);
-                            }
-                            // TODO: Handle error / show error page
-                            setIsLoading(false);
-                        });
-                    }
-                    // TODO: Handle error / show error page
-                });
-            }
-        });
-    }, []);
+    }, [petProfile, route]);
 
     return (
         <View style={[styles.item, styles.container, isLargeScreen ? { width: '60%' } : { width: "100%" }]}>

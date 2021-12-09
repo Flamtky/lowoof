@@ -47,14 +47,14 @@ app.post('/auth', (req, res) => {
     if (req.body.username && req.body.password) {
         var hashedPassword: string;
         const connection: mysql.Pool = getConnection();
-        connection.query(`SELECT HASHEDPW FROM API_USER WHERE USERNAME = '${req.body.username}'`,
+        connection.query(`SELECT PASSWORD FROM USER WHERE USERNAME = '${req.body.username}'`,
             (err, rows, fields) => {
                 if (err) {
                     console.log(err);
                     res.status(500).json({ message: "Something went wrong, contact the administrator" });
                 } else {
                     if (rows.length > 0) {
-                        hashedPassword = rows[0].HASHEDPW;
+                        hashedPassword = rows[0].PASSWORD;
                         if (bcrypt.compareSync(req.body.password as string, hashedPassword)) {
                             const token: any = jwt.sign(
                                 {
@@ -78,6 +78,76 @@ app.post('/auth', (req, res) => {
         res.status(401).json({ status: res.statusCode, message: "Missing Username or Password" } as Response);
     }
 });
+
+
+
+
+//Allowed Users: All Users
+app.get('/getpet', async(req, res) => {
+    if (req.query.petid) {
+        var response: Response | Pet = await queries.getPetByID(req.query.petid as unknown as number);
+        if("status" in response){
+            res.status(response.status).json(response);
+        }else{
+            res.status(200).json(response as Pet);
+        }
+
+    }else{
+        res.status(400).json({ status: res.statusCode, message: "Missing PetID" } as Response);
+    }
+});
+
+
+//Allowed Users: All Users
+app.get('/users', async(req, res) => {
+    var response:Response|User[] = await queries.getAllUsers();
+    
+    if(response instanceof Response){
+        res.status(response.status).json(response);
+    }else{
+        res.status(200).json(response);
+    }
+    
+
+});
+
+//Allowed Users: All Users
+app.get('/getuser', async(req, res) => {
+    if (req.query.userid) {
+        var response:Response | User = await queries.getUserByID(req.query.userid as unknown as number)
+            if("status" in response){
+                res.status(response.status).json(response);
+            }else{
+                res.status(200).json(response);
+            }
+    }else{
+        return res.status(400).json({ status: res.statusCode, message: "Missing UserID" } as Response);
+    }
+});
+app.get('/getuserlanguage', async(req, res) => {
+    if (req.query.userid) {
+        var response: string|Response = await queries.getUserLanguage(req.query.userid as unknown as number)
+            if(!(typeof response === "string")){
+                res.status(response.status).json(response);
+            }else{
+                res.status(200).json(response);
+            }
+    }else{
+        return res.status(400).json({ status: res.statusCode, message: "Missing UserID" } as Response);
+    }
+});
+
+
+//Allowed Users: Everyone
+app.post('/adduser', async(req, res) => {
+    console.log(req.body);
+    const user: User = req.body;
+    var response: Response = await queries.addUser(user);
+    console.log(response);
+    return res.status(response.status).json(response);
+});
+
+
 /**
  * This is the Middleware to Authenticate the User via JWT Token
  */
@@ -98,62 +168,8 @@ app.use((req, res, next) => {
         res.status(403).json({ status: res.statusCode, message: "Missing Authorization Header" } as Response);
     }
 })
+
 //Allowed Users: All Users
-app.get('/users', async(req, res) => {
-    var response:Response|User[] = await queries.getAllUsers();
-    
-    if(response instanceof Response){
-        res.status(response.status).json(response);
-    }else{
-        res.status(200).json(response);
-    }
-    
-
-});
-//Allowed Users: All Users
-app.get('/getuser', async(req, res) => {
-    if (req.query.userid) {
-        var response:Response | User = await queries.getUserByID(req.query.userid as unknown as number)
-            if("status" in response){
-                res.status(response.status).json(response);
-            }else{
-                res.status(200).json(response);
-            }
-    }else{
-        return res.status(400).json({ status: res.statusCode, message: "Missing UserID" } as Response);
-    }
-});
-//Allowed Users: Everyone
-app.post('/adduser', async(req, res) => {
-    console.log(req.body);
-    const user: User = req.body;
-    var response: Response = await queries.addUser(user);
-    console.log(response);
-    return res.status(response.status).json(response);
-});
-//Allowed Users: User
-app.post('/updateuser', async(req, res) => {
-    console.log(req.body);
-    const user: User = req.body;
-    var response: Response = await queries.updateUser(user);
-    return res.status(response.status).json(response);
-});
-
-//Allowed Users: User
-app.get('/getpetrelationships', async(req, res) => {
-    if (req.query.petid) {
-        var response: Response | Relationship[] = await queries.getPetRelationships(req.query.petid as unknown as number);
-        if("status" in response){
-            res.status(response.status).json(response);
-        }else{
-            res.status(200).json(response as Relationship[]);
-        }
-    }else{
-        res.status(400).json({ status: res.statusCode, message: "Missing PetID" } as Response);
-    }
-});
-
-//Allowed Users: User
 app.get('/getuserpets', async(req, res) => {
     if (req.query.userid) {
         var response: Response | Pet[] = await queries.getUserPets(req.query.userid as unknown as number);
@@ -168,22 +184,45 @@ app.get('/getuserpets', async(req, res) => {
     }
 
 });
-//Allowed Users: All Users
-app.get('/getpet', async(req, res) => {
+
+//Allowed Users: User
+app.post('/updateuser', async(req, res) => {
+    console.log(req.body);
+    const user: User = req.body;
+    var isCorrectUser: boolean = await queries.authenticateByUserObject(req.user,user);
+    if(!isCorrectUser){
+        return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
+    }
+    var response: Response = await queries.updateUser(user);
+    return res.status(response.status).json(response);
+});
+
+//Allowed Users: User
+app.get('/getpetrelationships', async(req, res) => {
+    var isCorrectUser: boolean = await queries.authenticateByPetId(req.user,req.query.petid as unknown as number);
+    if(!isCorrectUser){
+        return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
+    }
     if (req.query.petid) {
-        var response: Response | Pet = await queries.getPetByID(req.query.petid as unknown as number);
+        var response: Response | Relationship[] = await queries.getPetRelationships(req.query.petid as unknown as number);
         if("status" in response){
             res.status(response.status).json(response);
         }else{
-            res.status(200).json(response as Pet);
+            res.status(200).json(response as Relationship[]);
         }
-
     }else{
         res.status(400).json({ status: res.statusCode, message: "Missing PetID" } as Response);
     }
 });
+
+
+
 //Allowed Users: User
 app.post('/deleteuser', async(req, res) => {
+    var isCorrectUser: boolean = await queries.authenticateByUserId(req.user,req.body.userid as unknown as number);
+    if(!isCorrectUser){
+        return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
+    }
     console.log("Delete User " + req.body.userid + "...");
     if (req.body.userid) {
         const connection: mysql.Pool = getConnection();
@@ -208,6 +247,10 @@ app.post('/deleteuser', async(req, res) => {
 });
 //Allowed Users: User
 app.post('/deletepet', async(req, res) => {
+    var isCorrectUser: boolean = await queries.authenticateByPetId(req.user,req.body.petid as unknown as number);
+    if(!isCorrectUser){
+        return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
+    }
     if (req.body.petid) {
         await queries.deletePetRelationships(req.body.petid as unknown as number);
         var response: Response = await queries.deletePet(req.body.petid as unknown as number);
@@ -218,6 +261,10 @@ app.post('/deletepet', async(req, res) => {
 });
 //Allowed Users: User
 app.post('/sendfriendrequest', async(req, res) => {
+    var isCorrectUser: boolean = await queries.authenticateByPetId(req.user,req.body.petid as unknown as number);
+    if(!isCorrectUser){
+        return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
+    }
     if (req.body.petid && req.body.friendid) {
         var response: Response = await queries.sendFriendRequest(req.body.petid as unknown as number, req.body.friendid as unknown as number);
         return res.status(response.status).json(response);
@@ -227,6 +274,10 @@ app.post('/sendfriendrequest', async(req, res) => {
 });
 //Allowed Users: User
 app.post('/acceptfriendrequest', async(req, res) => {
+    var isCorrectUser: boolean = await queries.authenticateByPetId(req.user,req.body.petid as unknown as number);
+    if(!isCorrectUser){
+        return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
+    }
     if (req.body.petid && req.body.friendid) {
         var relation: Relationship | Response = await queries.getRelationshipBetweenPets(req.body.petid as unknown as number, req.body.friendid as unknown as number);
         if("status" in relation){

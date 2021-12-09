@@ -64,6 +64,22 @@ export default class Queries {
         });
     }
 
+    async getUserLanguage(id: number): Promise<Response | string> {
+        return new Promise<Response | string>((resolve, reject) => {
+            var response: Response | string = { status: 0, message: '' };
+            const connection: mysql.Pool = this.getConnection();
+            connection.query(`SELECT USER.SPRACHID, SPRACHE.SPRACHE FROM USER LEFT JOIN SPRACHE on USER.SPRACHID = SPRACHE.SPRACHID WHERE USERID = ?;`, [id],
+            (err, rows, fields) => {
+                if (err) {
+                    console.log(err + "\n---------NOT FATAL----------\n");
+                    resolve(this.errorResponse);
+                } else {
+                    resolve(rows[0].SPRACHE as string);
+                }
+            });
+        });
+    }
+
     async addUser(user: User): Promise<Response> {
         return new Promise<Response>((resolve, reject) => {
             const connection: mysql.Pool = this.getConnection();
@@ -304,20 +320,81 @@ export default class Queries {
 
     async acceptFriendRequest(relationid: number): Promise<Response> {
         return new Promise<Response>((resolve, reject) => {
-            var RELATIONSHIP:string = "Friends";
+            var RELATIONSHIP: string = "Friends";
             const connection: mysql.Pool = this.getConnection();
-            connection.query(`UPDATE TIER_RELATIONSHIPS SET RELATIONSHIP = ? WHERE TIER_RELATIONSHIPS.RELATIONID = ?;`,[RELATIONSHIP,relationid],
-                                    (err, rows, fields) => {
-                                        if (err) {
-                                            console.log(err);
-                                            resolve(this.errorResponse);
-                                        } else {
-                                            resolve({ status: 200, message: 'Friend request accepted' } as Response);
-                                        }
-                                    }
-                                );
+            connection.query(`UPDATE TIER_RELATIONSHIPS SET RELATIONSHIP = ? WHERE TIER_RELATIONSHIPS.RELATIONID = ?;`, [RELATIONSHIP, relationid],
+                (err, rows, fields) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(this.errorResponse);
+                    } else {
+                        resolve({ status: 200, message: 'Friend request accepted' } as Response);
+                    }
+                }
+            );
         });
-        
+
+    }
+
+    async authenticateByUserObject(tokenUser: any, user: User): Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            connection.query(`SELECT PASSWORD FROM USER WHERE USERNAME = ?`, [user.USERNAME],
+                (err, rows, fields) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(false);
+                    } else {
+                        if (tokenUser.username === user.USERNAME && tokenUser.password === rows[0].PASSWORD) {
+                            resolve(true);
+                        } else {
+                            resolve(false);
+                        }
+
+                    }
+                }
+            );
+        });
+    }
+
+    async authenticateByUserId(tokenUser: any, userId: number): Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            connection.query(`SELECT USERNAME, PASSWORD FROM USER WHERE USERID = ?`, [userId],
+                (err, rows, fields) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(false);
+                    } else {
+                        if (tokenUser.username === rows[0].USERNAME && tokenUser.password === rows[0].PASSWORD) {
+                            resolve(true);
+                        } else {
+                            resolve(false);
+                        }
+
+                    }
+                }
+            );
+        });
+    }
+
+    async authenticateByPetId(tokenUser: any, petId: number): Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            connection.query(`SELECT USERID FROM TIER WHERE TIERID = ?`, [petId],
+                async (err, rows, fields) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(false);
+                    } else {
+                        var isLoggedIn: boolean = await this.authenticateByUserId(tokenUser, rows[0].USERID);
+                        resolve(isLoggedIn);
+                    }
+                }
+            );
+        });
     }
 }
+
+
 

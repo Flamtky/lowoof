@@ -285,6 +285,22 @@ export class Api {
         return res;
     }
 
+    async getUserLanguage(userId: number): Promise<string | Response> {
+        var res: string | Response = { status: 500, message: "Error" };
+        await axios.get(this.url + '/getuserlanguage&userid=' + userId, {
+            headers: {
+                'Authorization': `Beaver ${this.apiToken}`
+            }
+        }).then(response => {
+            if (response.status == 200) {
+                res = response.data as string;
+            } else {
+                res = response.data as Response;
+            }
+        }).catch((error) => { res = error.response.data as Response });
+        return res;
+    }
+
     removeFriend(userId: number, friendId: number): void {
         return;
     }

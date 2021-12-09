@@ -15,7 +15,7 @@ import language from '../../language.json';
 import { currentLanguage } from '../../App';
 import { API } from '../../App';
 
-export default function Profile({ route, navigation }: any) {
+export default function MyProfile({ route, navigation }: any) {
     const dimensions = useWindowDimensions();
     const isLargeScreen = dimensions.width >= 768;
     const [profile, setProfile] = React.useState<User | null>(null);

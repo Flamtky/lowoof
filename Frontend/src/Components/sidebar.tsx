@@ -2,12 +2,12 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import React from 'react';
 import { useWindowDimensions } from 'react-native';
 import SearchBar from './searchbar';
-import MyProfile from '../Screens/MeinProfil';
-import PetProfile from '../Screens/Tierprofil';
+import MyProfile from '../Screens/MyProfile';
+import PetProfile from '../Screens/PetProfile';
 import Matches from '../Screens/Matches';
-import Friends from '../Screens/Freunde';
+import Friends from '../Screens/Friends';
 import Chats from '../Screens/Chats';
-import Settings from '../Screens/Einstellungen';
+import Settings from '../Screens/Settings';
 import { BACKGROUNDCOLOR, BLACK, TITLECOLOR, WHITE } from '../Constants/colors';
 import ImagePickerExample from '../Screens/test';
 

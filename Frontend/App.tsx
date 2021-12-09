@@ -5,7 +5,7 @@ import Sidebar from './src/Components/sidebar';
 import { EditProfile, EditPet } from './src/Screens/EditProfile';
 import { BACKGROUNDCOLOR, TITLECOLOR } from './src/Constants/colors';
 import { Chat } from './src/Screens/Chat';
-import DeletePet from './src/Screens/DeleteAnimal';
+import DeletePet from './src/Screens/DeletePet';
 import language from './language.json';
 import { Api } from './src/Api/lowoof-api';
 import Login from './src/Screens/Login';

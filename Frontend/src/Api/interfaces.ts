@@ -30,8 +30,8 @@ export interface Pet {
 
 export interface Relationship {
     RELATIONID: number;
-    USER_A_ID: number;
-    USER_B_ID: number;
+    TIER_A_ID: number;
+    TIER_B_ID: number;
     RELATIONSHIP: string;
 }
 

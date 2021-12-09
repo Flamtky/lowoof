@@ -63,7 +63,7 @@ export default function Sidebar() {
             <Drawer.Screen name="Tierprofil" component={Tierprofil} />
             <Drawer.Screen name="ImagePickerExample" component={ImagePickerExample} />
             <Drawer.Screen name="Matches" component={Matches} />
-            <Drawer.Screen name="Freunde" component={Freunde} />
+            <Drawer.Screen name="Freunde" component={Freunde} initialParams={{ petID: 195 /* TODO: Give current UserID */ }} />
             <Drawer.Screen name="Chats" component={Chats} />
             <Drawer.Screen name="Einstellungen" component={Einstellungen} />
         </Drawer.Navigator>

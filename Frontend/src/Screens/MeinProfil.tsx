@@ -11,6 +11,8 @@ import { Api } from '../Api/lowoof-api';
 import { User, Pet } from '../Api/interfaces';
 import moment from 'moment';
 import { Buffer } from "buffer"
+import language from '../../language.json';
+import { currentLanguage } from '../../App';
 
 const api = new Api();
 export default function Profile({ route, navigation }: any) {
@@ -69,7 +71,7 @@ export default function Profile({ route, navigation }: any) {
                         </View>
                     </View>
                     <Seperator />
-                    <TextBlock style={[styles.title, pets.length <= 0 ? { display: "none" } : null]}>Your Pets</TextBlock>
+                    <TextBlock style={[styles.title, pets.length <= 0 ? { display: "none" } : null]}>{language.PROFILE.YOURPETS[currentLanguage]}</TextBlock>
                     {pets.map((pet: Pet) => {
                         return (
                             <PetItem
@@ -83,7 +85,7 @@ export default function Profile({ route, navigation }: any) {
                                 key={pet.TIERID}
                             />)
                     })}
-                    <OwnButton title="Add Pet" style={{
+                    <OwnButton title={language.PROFILE.ADDPET[currentLanguage]} style={{
                         alignSelf: "center",
                     }} />
                 </View>

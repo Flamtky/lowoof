@@ -9,6 +9,11 @@ import DeleteAnimal from './src/Screens/DeleteAnimal';
 
 const Stack = createNativeStackNavigator<any>();
 
+export let currentLanguage: "EN" | "DE" = 'EN';
+export const setLanguage = (lang: "EN" | "DE") => {
+	currentLanguage = lang;
+};
+
 export default function App() {
 	return (
 		<NavigationContainer>

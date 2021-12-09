@@ -5,25 +5,27 @@ import { faStar as farStar } from "@fortawesome/free-regular-svg-icons"
 import { StyleSheet, View, Image, TouchableOpacity } from "react-native"
 import { BLACK, MAINCOLOR } from "../Constants/colors"
 import { TextBlock } from "./styledText"
+import { Pet } from "../Api/interfaces"
+import { Api } from "../Api/lowoof-api"
 
-export default function PetItem() {
-    /* TODO: Booleanwerte als Parameter übergeben */
-    const isFriend = false; /* Is this pet my friend? */
-    const hasRequested = false; /* Has this pet requested to become my friend? */
-    const hasOwnRequest = false; /* Have I requested to become this pet's friend? */
-    const isMarkedAttractive = true; /* Have I marked this pet as attractive? */
+export default function PetItem(props: any) {
+    const pet: Pet = props.pet; /* The pet to display */
+    const isFriend = props.isFriend; /* Is this pet my friend? */
+    const hasRequested = props.hasRequested; /* Has this pet requested to become my friend? */
+    const hasOwnRequest = props.hasOwnRequest; /* Have I requested to become this pet's friend? */
+    const isMarkedAttractive = props.isMarkedAttractive; /* Have I marked this pet as attractive? */
     return (<View style={[styles.row, { marginLeft: 15, height: 60 }]}>
-        <TouchableOpacity onPress={() => {/* Show profile */}} >
+        <TouchableOpacity onPress={() => {/* Show profile */ }} >
             <Image style={styles.profilepicture}
-                source={{ uri: "https://puu.sh/IsTPQ/5d69029437.png" /* TODO: Hier Link per Parameter angeben */ }}
+                 source={{ uri: pet.PROFILBILD != null ? "data:image/png;base64," + Buffer.from(pet.PROFILBILD, 'base64').toString('base64') : "https://puu.sh/IsTPQ/5d69029437.png" }}
             />
         </TouchableOpacity>
         <View style={{ marginLeft: 10, height: "100%", justifyContent: "space-between" /* TODO: In untenstehenden Textblocks Parameter für Daten übernehmen */ }}>
-            <TextBlock>Besitzer: </TextBlock>
-            <TextBlock>Rufname: </TextBlock>
+            <TextBlock>Besitzer: {pet.USERID /* TODO: Get Owner */}</TextBlock>
+            <TextBlock>Rufname: {pet.NAME}</TextBlock>
             <View style={[styles.row, { marginTop: 0 }]}>
-                <TextBlock>Art: </TextBlock>
-                <TextBlock>Rasse: </TextBlock>
+                <TextBlock>Art: {pet.ART}</TextBlock>
+                <TextBlock>Rasse: {pet.RASSE}</TextBlock>
             </View>
         </View>
         <View style={[styles.row, { marginLeft: "auto", right: "5%" }]}>

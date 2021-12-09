@@ -297,4 +297,49 @@ app.post('/acceptfriendrequest', async(req, res) => {
     }
 });
 
+//Allowed Users: User
+app.post('/sendattraktivrequest', async(req, res) => {
+    var isCorrectUser: boolean = await queries.authenticateByPetId(req.user,req.body.petid as unknown as number);
+    if(!isCorrectUser){
+        return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
+    }
+    if (req.body.petid && req.body.friendid) {
+        var response: Response = await queries.sendAttraktivRequest(req.body.petid as unknown as number, req.body.friendid as unknown as number);
+        return res.status(response.status).json(response);
+    } else {
+        res.status(400).json({ status: res.statusCode, message: "You are missing atleast one of two arguments" } as Response);
+    }
+});
+
+//Allowed Users: User
+app.post('/removeattraktivrequest', async(req, res) => {
+    var isCorrectUser: boolean = await queries.authenticateByPetId(req.user,req.body.petid as unknown as number);
+    if(!isCorrectUser){
+        return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
+    }
+    if (req.body.petid && req.body.friendid) {
+        var response: Response = await queries.removeAttraktivRequest(req.body.petid as unknown as number, req.body.friendid as unknown as number);
+        return res.status(response.status).json(response);
+    } else {
+        res.status(400).json({ status: res.statusCode, message: "You are missing atleast one of two arguments" } as Response);
+    }
+});
+
+app.get('/getpetmatches', async(req, res) => {
+    var isCorrectUser: boolean = await queries.authenticateByPetId(req.user,req.query.petid as unknown as number);
+    if(!isCorrectUser){
+        return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
+    }
+    if (req.query.petid) {
+        var response: Response | Relationship[] = await queries.getPetMatches(req.query.petid as unknown as number);
+        if("status" in response){
+            res.status(response.status).json(response);
+        }else{
+            res.status(200).json(response as Relationship[]);
+        }
+    }else{
+        res.status(400).json({ status: res.statusCode, message: "Missing PetID" } as Response);
+    }
+});
+
 app.listen(port, () => console.log(`Lowoof API running on port ${port}!`));

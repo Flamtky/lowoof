@@ -320,8 +320,38 @@ export class Api {
         return;
     }
 
-    getMatches(userId: number): any {
-        return;
+    /**
+     * 
+     * @param petId :number PetID of the Pet who wants to send the attraktiv request
+     * @param friendId :number PeterID of the Pet who recieves the attraktiv request
+     * @returns {Response} Response Object with message from the server
+     */
+     async sendAttraktivRequest(petId: number, friendId: number): Promise<Response> {
+        var res: Response = { status: 500, message: "Error" };
+        await axios.post(this.url + '/sendattraktivrequest', {petid: petId, friendid: friendId }, {
+            headers: {
+                'Authorization': `Beaver ${this.apiToken}`
+            }
+        }).then(response => { res = response.data as Response; })
+            .catch((error) => { res = error.response.data as Response; });
+        return res;
+    }
+
+    /**
+     * 
+     * @param petId :number PetID of the Pet who wants to remove the attraktiv request
+     * @param friendId :number PeterID of the Pet who recieved the attraktiv request
+     * @returns {Response} Response Object with message from the server
+     */
+     async removeAttraktivRequest(petId: number, friendId: number): Promise<Response> {
+        var res: Response = { status: 500, message: "Error" };
+        await axios.post(this.url + '/removeattraktivrequest', {petid: petId, friendid: friendId }, {
+            headers: {
+                'Authorization': `Beaver ${this.apiToken}`
+            }
+        }).then(response => { res = response.data as Response; })
+            .catch((error) => { res = error.response.data as Response; });
+        return res;
     }
 
     getMessages(userId: number, toUserId: number): any {

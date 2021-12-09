@@ -69,14 +69,14 @@ export default class Queries {
             var response: Response | string = { status: 0, message: '' };
             const connection: mysql.Pool = this.getConnection();
             connection.query(`SELECT USER.SPRACHID, SPRACHE.SPRACHE FROM USER LEFT JOIN SPRACHE on USER.SPRACHID = SPRACHE.SPRACHID WHERE USERID = ?;`, [id],
-            (err, rows, fields) => {
-                if (err) {
-                    console.log(err + "\n---------NOT FATAL----------\n");
-                    resolve(this.errorResponse);
-                } else {
-                    resolve(rows[0].SPRACHE as string);
-                }
-            });
+                (err, rows, fields) => {
+                    if (err) {
+                        console.log(err + "\n---------NOT FATAL----------\n");
+                        resolve(this.errorResponse);
+                    } else {
+                        resolve(rows[0].SPRACHE as string);
+                    }
+                });
         });
     }
 
@@ -289,16 +289,13 @@ export default class Queries {
             const connection: mysql.Pool = this.getConnection();
             var TIER_A_ID: number;
             var TIER_B_ID: number;
-            var RELATIONSHIP: string;
             var RELATIONID: number;
             if (petid < friendid) {
                 TIER_A_ID = petid;
                 TIER_B_ID = friendid;
-                RELATIONSHIP = "A requested B";
             } else {
                 TIER_A_ID = friendid;
                 TIER_B_ID = petid;
-                RELATIONSHIP = "B requested A";
             }
             RELATIONID = (`${TIER_A_ID}${TIER_B_ID}`) as unknown as number;
             connection.query(`SELECT * FROM TIER_RELATIONSHIPS WHERE RELATIONID = ?;`, [RELATIONID],
@@ -392,6 +389,170 @@ export default class Queries {
                     }
                 }
             );
+        });
+    }
+
+    async getPetMatches(petid: number): Promise<Response | Relationship[]> {
+        return new Promise<Response | Relationship[]>((resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            connection.query(`SELECT * FROM TIER_RELATIONSHIPS WHERE TIER_A_ID = ? OR TIER_B_ID = ?;`, [petid, petid],
+                (err, rows, fields) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(this.errorResponse)
+                    } else {
+                        resolve(rows as Relationship[]);
+                    }
+                }
+            );
+        });
+    }
+
+    async getMatchBetweenPets(petid: number, friendid: number): Promise<Response | Relationship> {
+        return new Promise<Response | Relationship>((resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            var TIER_A_ID: number;
+            var TIER_B_ID: number;
+            var RELATIONID: number;
+            if (petid < friendid) {
+                TIER_A_ID = petid;
+                TIER_B_ID = friendid;
+            } else {
+                TIER_A_ID = friendid;
+                TIER_B_ID = petid;
+            }
+            RELATIONID = (`${TIER_A_ID}${TIER_B_ID}`) as unknown as number;
+            connection.query(`SELECT * FROM TIER_RELATIONSHIPS WHERE RELATIONID = ?;`, [RELATIONID],
+                (err, rows, fields) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(this.errorResponse)
+                    } else {
+                        if (rows.length == 0) {
+                            resolve({ status: 404, message: "Relationship not Found" });
+                        } else {
+                            resolve(rows[0] as Relationship);
+                        }
+                    }
+                }
+            );
+        });
+    }
+
+    async sendAttraktivRequest(petid: number, friendid: number): Promise<Response> {
+        return new Promise<Response>(async (resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            var relation: Relationship | Response = await this.getMatchBetweenPets(petid, friendid);
+            if ("status" in relation) {
+                if(relation.status != 404) {
+                    resolve(relation);
+                }else{
+                    var TIER_A_ID: number;
+                    var TIER_B_ID: number;
+                    var RELATIONSHIP: string;
+                    var RELATIONID: number;
+                    if (petid < friendid) {
+                        TIER_A_ID = petid;
+                        TIER_B_ID = friendid;
+                        RELATIONSHIP = "A requested B";
+                    } else {
+                        TIER_A_ID = friendid;
+                        TIER_B_ID = petid;
+                        RELATIONSHIP = "B requested A";
+                    }
+                    RELATIONID = (`${TIER_A_ID}${TIER_B_ID}`) as unknown as number;
+                    connection.query(`INSERT INTO TIER_MATCHES (RELATIONID, TIER_A_ID, TIER_B_ID, RELATIONSHIP) VALUES (?,?, ?, ?);`, [RELATIONID, TIER_A_ID, TIER_B_ID, RELATIONSHIP],
+                        (err, rows, fields) => {
+                            if (err) {
+                                console.log(err);
+                                resolve(this.errorResponse);
+                            } else {
+                                resolve({ status: 200, message: 'Match request sent' } as Response);
+                            }
+                        }
+                    );
+                }
+                
+            } else {
+                var RELATIONSHIP: string = "";
+                if (relation.RELATIONSHIP == "Matched") {
+                    resolve({ status: 400, message: "You are already Matched" });
+                } else if (relation.RELATIONSHIP == "A requested B" && relation.TIER_B_ID == petid) {
+                    RELATIONSHIP = "Matched";
+                } else if (relation.RELATIONSHIP == "B requested A" && relation.TIER_A_ID == petid) {
+                    RELATIONSHIP = "Matched";
+                } else if (relation.RELATIONSHIP == "A removed B" && relation.TIER_A_ID == petid) {
+                    RELATIONSHIP = "Matched";
+                } else if (relation.RELATIONSHIP == "B removed A" && relation.TIER_B_ID == petid) {
+                    RELATIONSHIP = "Matched";
+                } else {
+                    resolve({ status: 500, message: "Someone messed Up" });
+                }
+                connection.query(`UPDATE TIER_MATCHES SET RELATIONSHIP=? WHERE RELATIONID = ?;`, [RELATIONSHIP,relation.RELATIONID],
+                        (err, rows, fields) => {
+                            if (err) {
+                                console.log(err);
+                                resolve(this.errorResponse);
+                            } else {
+                                resolve({ status: 200, message: 'You just matched' } as Response);
+                            }
+                        }
+                    );
+
+            }
+        });
+    }
+
+    async removeAttraktivRequest(petid: number, friendid: number): Promise<Response> {
+        return new Promise<Response>(async (resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            var relation: Relationship | Response = await this.getMatchBetweenPets(petid, friendid);
+            if ("status" in relation) {
+                resolve(relation);
+            }else {
+                var removeRelation: boolean = false;
+                var RELATIONSHIP: string = "";
+                if (relation.RELATIONSHIP == "Matched") {
+                    if(relation.TIER_B_ID == petid){
+                        RELATIONSHIP = "B removed A";
+                    }else if (relation.TIER_A_ID == petid) {
+                        RELATIONSHIP = "A removed B";
+                    }
+                    connection.query(`UPDATE TIER_MATCHES SET RELATIONSHIP=? WHERE RELATIONID = ?;`, [RELATIONSHIP,relation.RELATIONID],
+                        (err, rows, fields) => {
+                            if (err) {
+                                console.log(err);
+                                resolve(this.errorResponse);
+                            } else {
+                                resolve({ status: 200, message: 'You just matched' } as Response);
+                            }
+                        }
+                    );
+                    
+                } else if (relation.RELATIONSHIP == "A requested B" && relation.TIER_A_ID == petid) {
+                    removeRelation = true;
+                } else if (relation.RELATIONSHIP == "B requested A" && relation.TIER_B_ID == petid) {
+                    removeRelation = true;
+                } else if (relation.RELATIONSHIP == "A removed B" && relation.TIER_B_ID == petid) {
+                    removeRelation = true;
+                } else if (relation.RELATIONSHIP == "B removed A" && relation.TIER_A_ID == petid) {
+                    removeRelation = true;
+                } else {
+                    resolve({ status: 500, message: "Someone messed Up" });
+                }
+                if(removeRelation){
+                    connection.query(`DELETE FROM TIER_MATCHES WHERE RELATIONID = ?;`, [relation.RELATIONID],
+                        (err, rows, fields) => {
+                            if (err) {
+                                console.log(err);
+                                resolve(this.errorResponse);
+                            } else {
+                                resolve({ status: 200, message: 'You just lost a possible Match' } as Response);
+                            }
+                        }
+                    );
+                }
+            }
         });
     }
 }

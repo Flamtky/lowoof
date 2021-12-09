@@ -1,12 +1,12 @@
 export interface User {
-    USERID: number;
+    USERID?: number;
     SPRACHID: string;
     USERNAME: string;
     EMAIL: string;
     PASSWORD?: string;
     VORNAME: string;
     NACHNAME: string;
-    GEBURTSTAG: Date;
+    GEBURTSTAG: string;
     INSTITUTION: string;
     TELEFONNUMMER: string;
     PLZ: number;
@@ -30,8 +30,8 @@ export interface Pet {
 
 export interface Relationship {
     RELATIONID: number;
-    USER_A_ID: number;
-    USER_B_ID: number;
+    TIER_A_ID: number;
+    TIER_B_ID: number;
     RELATIONSHIP: string;
 }
 export interface Response {

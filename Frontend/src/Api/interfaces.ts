@@ -1,12 +1,12 @@
 export interface User {
-    USERID: number;
+    USERID?: number;
     SPRACHID: string;
     USERNAME: string;
     EMAIL: string;
     PASSWORD?: string;
     VORNAME: string;
     NACHNAME: string;
-    GEBURTSTAG: Date;
+    GEBURTSTAG: string;
     INSTITUTION: string;
     TELEFONNUMMER: string;
     PLZ: number;
@@ -15,6 +15,13 @@ export interface User {
     PROFILBILD: any;
     ONLINESTATUS: number;
     MITGLIEDSCHAFTPAUSIERT: number;
+}
+
+export interface Relationship{
+    RELATIONID:number,
+    TIER_A_ID:number,
+    TIER_B_ID:number,
+    RELATION:string,
 }
 
 export interface Pet {

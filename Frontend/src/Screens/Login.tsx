@@ -5,9 +5,9 @@ import OwnButton from '../Components/ownButton';
 import SearchBar from '../Components/searchbar';
 import { BACKGROUNDCOLOR, MAINCOLOR } from '../Constants/colors';
 import language from '../../language.json';
-import { currentLanguage } from '../../App';
+import { API, currentLanguage } from '../../App';
 
-export default function Login(props: any) {
+export default function Login({ route, navigation }:any) {
     const dimensions = useWindowDimensions();
     const isLargeScreen = dimensions.width >= 768;
     const [username, setUsername] = useState('');
@@ -44,9 +44,14 @@ export default function Login(props: any) {
                         style={{ width: 88, padding: 0, minWidth: 0, borderRadius: 0 }}
                         onPress={() => {
                             console.log(username, password);
-                            /* TODO: Handle message */
+                            API.getAuthTokenfromServer(username, password).then((resp: void | "Error" ) => {{
+                                if (resp === "Error") {
+                                    alert("Error");
+                                } else {
+                                    route.params.setLogin(true);
+                                }
+                            }});
 
-                            // Clears the input
                             setUsername('');
                             setPassword('');
                         }}

@@ -20,68 +20,69 @@ export const setLanguage = (lang: "EN" | "DE") => {
 export const API = new Api();
 
 export default function App() {
+	const [login, setLogin] = React.useState<boolean>(false);
 	return (
 		<NavigationContainer>
 			<Stack.Navigator>
-				{
-					API.getAuthToken() === "" ? (
-						<Stack.Screen
-							name="Login"
-							component={Login}
-							options={{
-								headerShown: false,
-							}}
-						/>) : (
-						<>
-							<Stack.Screen name="Root" component={Sidebar} options={{ headerShown: false }} />
-							<Stack.Group screenOptions={{ presentation: 'modal' }}>
-								<Stack.Screen name={language.EDIT_PROFILE.HEADER[currentLanguage]} component={EditProfile} options={{
-									title: language.EDIT_PROFILE.HEADER[currentLanguage],
-									headerStyle: {
-										backgroundColor: BACKGROUNDCOLOR,
-									},
-									headerTitleStyle: {
-										fontSize: 24,
-										color: TITLECOLOR,
-										fontWeight: "bold",
-									},
-								}} />
-								<Stack.Screen name={language.EDIT_PET.HEADER[currentLanguage]} component={EditAnimal} options={{
-									title: language.EDIT_PET.HEADER[currentLanguage],
-									headerStyle: {
-										backgroundColor: BACKGROUNDCOLOR,
-									},
-									headerTitleStyle: {
-										fontSize: 24,
-										color: TITLECOLOR,
-										fontWeight: "bold",
-									},
-								}} />
-								<Stack.Screen name="Chat" component={Chat} options={{
-									title: language.CHATS.CHAT_WITH[currentLanguage] + "XY", //TODO: Replace XY with name
-									headerStyle: {
-										backgroundColor: BACKGROUNDCOLOR,
-									},
-									headerTitleStyle: {
-										fontSize: 24,
-										color: TITLECOLOR,
-										fontWeight: "bold",
-									},
-								}} />
-								<Stack.Screen name={language.EDIT_PET.DELETE[currentLanguage]} component={DeleteAnimal} options={({ route }) => ({
-									title: route?.params?.name ?? language.EDIT_PET.DELETE[currentLanguage],
-									headerStyle: {
-										backgroundColor: BACKGROUNDCOLOR,
-									},
-									headerTitleStyle: {
-										fontSize: 24,
-										color: TITLECOLOR,
-										fontWeight: "bold",
-									},
-								})} />
-							</Stack.Group>
-						</>
-					)}
+				{!login ? (
+					<Stack.Screen
+						name="Login"
+						component={Login}
+						initialParams={{ setLogin }}
+						options={{
+							headerShown: false,
+						}}
+					/>) : (
+					<>
+						<Stack.Screen name="Root" component={Sidebar} options={{ headerShown: false }} />
+						<Stack.Group screenOptions={{ presentation: 'modal' }}>
+							<Stack.Screen name={language.EDIT_PROFILE.HEADER[currentLanguage]} component={EditProfile} options={{
+								title: language.EDIT_PROFILE.HEADER[currentLanguage],
+								headerStyle: {
+									backgroundColor: BACKGROUNDCOLOR,
+								},
+								headerTitleStyle: {
+									fontSize: 24,
+									color: TITLECOLOR,
+									fontWeight: "bold",
+								},
+							}} />
+							<Stack.Screen name={language.EDIT_PET.HEADER[currentLanguage]} component={EditAnimal} options={{
+								title: language.EDIT_PET.HEADER[currentLanguage],
+								headerStyle: {
+									backgroundColor: BACKGROUNDCOLOR,
+								},
+								headerTitleStyle: {
+									fontSize: 24,
+									color: TITLECOLOR,
+									fontWeight: "bold",
+								},
+							}} />
+							<Stack.Screen name="Chat" component={Chat} options={{
+								title: language.CHATS.CHAT_WITH[currentLanguage] + "XY", //TODO: Replace XY with name
+								headerStyle: {
+									backgroundColor: BACKGROUNDCOLOR,
+								},
+								headerTitleStyle: {
+									fontSize: 24,
+									color: TITLECOLOR,
+									fontWeight: "bold",
+								},
+							}} />
+							<Stack.Screen name={language.EDIT_PET.DELETE[currentLanguage]} component={DeleteAnimal} options={({ route }) => ({
+								title: route?.params?.name ?? language.EDIT_PET.DELETE[currentLanguage],
+								headerStyle: {
+									backgroundColor: BACKGROUNDCOLOR,
+								},
+								headerTitleStyle: {
+									fontSize: 24,
+									color: TITLECOLOR,
+									fontWeight: "bold",
+								},
+							})} />
+						</Stack.Group>
+					</>
+				)}
 			</Stack.Navigator>
 		</NavigationContainer>
 	);

@@ -47,7 +47,7 @@ app.post('/auth', (req, res) => {
     if (req.body.username && req.body.password) {
         var hashedPassword: string;
         const connection: mysql.Pool = getConnection();
-        connection.query(`SELECT PASSWORD FROM USER WHERE USERNAME = '${req.body.username}'`,
+        connection.query(`SELECT PASSWORD FROM USER WHERE USERNAME = ?`,[req.body.username],
             (err, rows, fields) => {
                 if (err) {
                     console.log(err);

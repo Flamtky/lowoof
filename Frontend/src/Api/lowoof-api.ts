@@ -34,14 +34,6 @@ export class Api {
         return this.apiToken;
     }
 
-    isSessionIDValid(sessionID: string): boolean {
-        return false;
-    }
-
-    destroySession(sessionID: string): void {
-        return;
-    }
-
     /**
      * @param username :string Username to check
      * @returns {boolean} true if username is available, false if not
@@ -62,10 +54,6 @@ export class Api {
             });
         }).catch((error) => { console.log(error); throw new Error("Error while connecting to server. Are you authorized?"); }); //TODO remove console log
         return valid;
-    }
-    //TODO
-    isLoginValid(password: string): boolean {
-        return false;
     }
 
     /**
@@ -132,6 +120,9 @@ export class Api {
     async updateProfile(newProfile: User): Promise<Response> {
         var res: Response = { status: 500, message: "Error" };
         //newProfile["GEBURTSTAG"] = newProfile["GEBURTSTAG"].toISOString();
+        if(newProfile["GEBURTSTAG"].includes("T")){
+            newProfile["GEBURTSTAG"] = newProfile["GEBURTSTAG"].split("T")[0];
+        }
         await axios.post(this.url + '/updateuser', newProfile, {
             headers: {
                 'Authorization': `Beaver ${this.apiToken}`

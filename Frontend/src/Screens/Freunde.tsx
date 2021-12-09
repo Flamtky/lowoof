@@ -37,7 +37,7 @@ export default function Freunde({ route, navigation }: any) {
                             (data as Relationship[]).forEach(async rel => {
                                 await api.getPetData(rel.TIER_A_ID !== route.params.petID ? rel.TIER_A_ID : rel.TIER_B_ID).then((data2) => {
                                     if (!data2.hasOwnProperty("message")) {
-                                        temp.push((data2 as Pet)[0]); /*TODO: FIX THIS (Remove Index / API Bug)*/
+                                        temp.push((data2 as Pet));
                                     }
                                 });
                                 // if last iteration

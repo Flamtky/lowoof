@@ -18,7 +18,6 @@ export class Api {
         try {
             return await axios.post(this.url + '/auth', { username: username, password: password }).then(response => { this.setAuthToken(response.data); });
         } catch (error) {
-            this.setAuthToken("Error contact admin");
             return "Error"
         }
     }

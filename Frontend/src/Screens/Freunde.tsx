@@ -8,6 +8,8 @@ import { Api } from '../Api/lowoof-api';
 import { Pet, Relationship, User } from '../Api/interfaces';
 import PetItem from '../Components/petItem';
 import { API } from '../../App';
+import language from '../../language.json';
+import { currentLanguage } from '../../App';
 
 const api = new Api();
 export default function Freunde({ route, navigation }: any) {
@@ -58,10 +60,10 @@ export default function Freunde({ route, navigation }: any) {
             <ScrollView style={{ width: '100%' }}
                 keyboardDismissMode="on-drag"
             >
-                <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>Eingehende Freundschaftsanfragen: </TextBlock>
+                <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.FRIENDS.INCOMING_FRIEND[currentLanguage]}</TextBlock>
                 <Seperator />
 
-                {friendsIn === null || friendsPets === null || friendsIn.length === 0 || isLoading ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>Keine Anfragen {friendsPets?.toString()}</TextBlock> :
+                {friendsIn === null || friendsPets === null || friendsIn.length === 0 || isLoading ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.FRIENDS.NO_REQUESTS[currentLanguage]} {friendsPets?.toString()}</TextBlock> :
                     friendsIn.map((friend: Relationship) => {
                         return (
                             <PetItem
@@ -78,10 +80,10 @@ export default function Freunde({ route, navigation }: any) {
                 }
 
                 <Seperator style={{ marginBottom: 50 }} />
-                <TextBlock style={{ marginLeft: 15 }}>Freunde: </TextBlock>
+                <TextBlock style={{ marginLeft: 15 }}>{language.FRIENDS.INCOMING_FRIEND[currentLanguage]/*TODO: add ": " to string. needs testing. check other strings in this file as well*/}</TextBlock>
                 <Seperator />
 
-                {friends === null || friendsPets === null || friends.length === 0 || isLoading ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>Keine Freunde 😞 {friendsPets?.toString()}</TextBlock> :
+                {friends === null || friendsPets === null || friends.length === 0 || isLoading ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.FRIENDS.NO_FRIENDS[currentLanguage]} {friendsPets?.toString()}</TextBlock> :
                     friends.map((friend: Relationship) => {
                         return (
                             <PetItem
@@ -98,10 +100,10 @@ export default function Freunde({ route, navigation }: any) {
                 }
 
                 <Seperator style={{ marginBottom: 50 }} />
-                <TextBlock style={{ marginLeft: 15 }}>Ausgehende Freundschaftsanfragen: </TextBlock>
+                <TextBlock style={{ marginLeft: 15 }}>{language.FRIENDS.OUTGOING_FRIEND[currentLanguage]}</TextBlock>
                 <Seperator />
 
-                {friendsOut === null || friendsPets === null || friendsOut.length === 0 || isLoading ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>Keine Anfragen {friendsPets?.toString()}</TextBlock> :
+                {friendsOut === null || friendsPets === null || friendsOut.length === 0 || isLoading ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.FRIENDS.NO_REQUESTS[currentLanguage]} {friendsPets?.toString()}</TextBlock> :
                     friendsOut.map((friend: Relationship) => {
                         return (
                             <PetItem
@@ -118,7 +120,7 @@ export default function Freunde({ route, navigation }: any) {
                 }
                 <Seperator />
             </ScrollView>
-            <OwnButton title="Zurück" style={{ margin: 32, alignSelf: "flex-start" }} onPress={() => {
+            <OwnButton title={language.BTN_BACK[currentLanguage]} style={{ margin: 32, alignSelf: "flex-start" }} onPress={() => {
                 navigation.goBack();
             }} />
         </View>

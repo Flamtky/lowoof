@@ -63,27 +63,26 @@ export default function PetProfile({ route, navigation }: any) {
                     </View>
                     <View style={styles.row}>
                         <View style={{ width: "50%" }}>
-                            <TextBlock>Rufname: {petProfile?.NAME}</TextBlock>
-                            <TextBlock>Besitzer: {ownerProfile?.USERNAME}</TextBlock>
+                            <TextBlock>{language.PET.NAME[currentLanguage]}{petProfile?.NAME}</TextBlock>
+                            <TextBlock>{language.PET.OWNER[currentLanguage]}{ownerProfile?.USERNAME}</TextBlock>
                             <TextBlock> </TextBlock>
-                            <TextBlock>Wohnort: {ownerProfile?.PLZ}, {ownerProfile?.WOHNORT} </TextBlock>
-                            <TextBlock>Geschlecht: {petProfile?.GESCHLECHT}</TextBlock>
-                            <TextBlock>Geburtsdatum: {petProfile?.GEBURTSTAG}</TextBlock>
+                            <TextBlock>{language.PET.GENDER[currentLanguage]}{petProfile?.GESCHLECHT}</TextBlock>
+                            <TextBlock>{language.PET.BIRTHDAY[currentLanguage]}{petProfile?.GEBURTSTAG}</TextBlock>
                             <TextBlock> </TextBlock>
-                            <TextBlock>Art: {petProfile?.ART} </TextBlock>
-                            <TextBlock>Rasse: {petProfile?.RASSE} </TextBlock>
+                            <TextBlock>{language.PET.SPECIES[currentLanguage]}{petProfile?.ART} </TextBlock>
+                            <TextBlock>{language.PET.BREED[currentLanguage]}{petProfile?.RASSE} </TextBlock>
                             <TextBlock>Text... </TextBlock>
                             <TextBlock>Text... </TextBlock>
                         </View>
                         <View style={{ width: "50%" }}>
                             <TextBlock> </TextBlock>
-                            <TextBlock>Präferenzen: </TextBlock>
+                            <TextBlock>{language.PET.PREFERENCES[currentLanguage]}</TextBlock>
                             <TextBlock> </TextBlock>
-                            <TextBlock>Max. Entfernung: </TextBlock>
-                            <TextBlock>Geschlecht: </TextBlock>
-                            <TextBlock>Alter: </TextBlock>
+                            <TextBlock>{language.PET.DISTANCE[currentLanguage]}</TextBlock>
+                            <TextBlock>{language.PET.GENDER[currentLanguage]}</TextBlock>
+                            <TextBlock>{language.PET.AGE[currentLanguage]}</TextBlock>
                             <TextBlock> </TextBlock>
-                            <TextBlock>Besondere Merkmale: </TextBlock>
+                            <TextBlock>{language.PET.FEATURES[currentLanguage]}</TextBlock>
                             <TextBlock>Text... </TextBlock>
                             <TextBlock>Text... </TextBlock>
                             <TextBlock>Text... </TextBlock>
@@ -91,13 +90,13 @@ export default function PetProfile({ route, navigation }: any) {
                     </View>
                     <Seperator />
                     <View style={[styles.row, { marginVertical: 10, justifyContent: "space-around" }]}>
-                        <OwnButton title="Matches" onPress={() => {
+                        <OwnButton title={language.MATCHES.HEADER[currentLanguage]} onPress={() => {
                             navigation.navigate('Matches');
                         }} />
-                        <OwnButton title="Freunde" onPress={() => {
+                        <OwnButton title={language.FRIENDS.HEADER[currentLanguage]} onPress={() => {
                             navigation.navigate('Freunde');
                         }} />
-                        <OwnButton title="Chats" onPress={() => {
+                        <OwnButton title={language.CHATS.HEADER[currentLanguage]} onPress={() => {
                             navigation.navigate('Chats');
                         }} />
                     </View>

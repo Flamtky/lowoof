@@ -8,6 +8,8 @@ import { TextBlock } from "./styledText"
 import { Pet } from "../Api/interfaces"
 import { Api } from "../Api/lowoof-api"
 import { Buffer } from "buffer"
+import language from '../../language.json';
+import { currentLanguage } from '../../App';
 
 export default function PetItem(props: any) {
     const pet: Pet = props.pet; /* The pet to display */
@@ -22,11 +24,11 @@ export default function PetItem(props: any) {
             />
         </TouchableOpacity>
         <View style={{ marginLeft: 10, height: "100%", justifyContent: "space-between" }}>
-            <TextBlock>Besitzer: {pet.USERID /* TODO: Get Owner */}</TextBlock>
-            <TextBlock>Rufname: {pet.NAME}</TextBlock>
+            <TextBlock>{language.PET.OWNER[currentLanguage]}{pet.USERID /* TODO: Get Owner */}</TextBlock>
+            <TextBlock>{language.PET.NAME[currentLanguage]}{pet.NAME}</TextBlock>
             <View style={[styles.row, { marginTop: 0 }]}>
-                <TextBlock>Art: {pet.ART} </TextBlock>
-                <TextBlock>Rasse: {pet.RASSE}</TextBlock>
+                <TextBlock>{language.PET.SPECIES[currentLanguage]}{pet.ART} </TextBlock>
+                <TextBlock>{language.PET.BREED[currentLanguage]}{pet.RASSE}</TextBlock>
             </View>
         </View>
         <View style={[styles.row, { marginLeft: "auto", right: "5%" }]}>

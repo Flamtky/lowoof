@@ -104,7 +104,7 @@
             "EN": "Gender",
             "DE": "Geschlecht"
         },
-        "DATE_OF_BIRTH": {
+        "BIRTHDAY": {
             "EN": "Date of Birth",
             "DE": "Geburtstag"
         },
@@ -125,7 +125,7 @@
             "DE": "Beschreibung"
         },
         "FEATURES": {
-            "EN": "External Features",
+            "EN": "Special Features",
             "DE": "Besondere Merkmale"
         }
     },
@@ -157,6 +157,18 @@
         "OUTGOING_FRIEND": {
             "EN": "Outgoing Friend Request",
             "DE": "Ausgehende Freundschaftsanfragen"
+        },
+        "NO_REQUESTS": {
+            "EN": "No Requests",
+            "DE": "Keine Anfragen"
+        },
+        "NO_FRIENDS": {
+            "EN": "No Friends",
+            "DE": "Keine Freunde"
+        },
+        "": {
+            "EN": "",
+            "DE": ""
         }
     },
     "CHATS": {

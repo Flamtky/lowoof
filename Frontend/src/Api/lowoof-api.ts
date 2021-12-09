@@ -16,7 +16,7 @@ export class Api {
     */
     async getAuthTokenfromServer(username: string, password: string) {
         try {
-            return await axios.get(this.url + '/auth?username=' + username + '&password=' + password).then(response => { this.setAuthToken(response.data); });
+            return await axios.post(this.url + '/auth',{username:username,password:password}).then(response => { this.setAuthToken(response.data); });
         } catch (error) {
             this.setAuthToken("Error contact admin");
             return "Error"
@@ -75,9 +75,9 @@ export class Api {
      */
     async createNewUser(user: User): Promise<Response> {
         var hashedPassword: string;
-        var res: Response = { message: "Error" };
+        var res: Response ={status:500, message: "Error" };
         if (user["PASSWORD"] == null) {
-            return { message: "Password is missing" };
+            return {status:400, message: "Password is missing" };
         }
         await bcrypt.hash(user["PASSWORD"], 12, async (err: any, hash: any) => {
             if (err) throw err;
@@ -88,13 +88,9 @@ export class Api {
                 }
             })
                 .then(response => {
-                    if (response.status == 200) {
-                        res = response.data;
-                    } else {
-                        res = response.data;
-                    }
+                    res = response.data as Response;
                 })
-                .catch((error) => { res = error });
+                .catch((error) => { res = error.response.data as Response});
         });
         return res;
     }
@@ -105,13 +101,13 @@ export class Api {
      * @returns {User|Response} User Object if the user is found else a Response Object with the message from the server
      */
     async getProfileData(userId: number): Promise<User | Response> {
-        var res: User | Response = { message: "Something bad happend :(" };
+        var res: User | Response = {status:500, message: "Error" };
         await axios.get(this.url + '/getuser?userid=' + userId, {
             headers: {
                 'Authorization': `Beaver ${this.apiToken}`
             }
-        }).then(response => { if (response.data > 1) { res = { message: "Es wurden mehrere User gefunden" } }; res = response.data[0]; })
-            .catch((error) => { res = error; }); //TODO remove console log
+        }).then(response => { if (response.data > 1) { res = { status:404,message: "Es wurde kein eindeutiges Ergebnis gefunden" } }; res = response.data[0]; })
+            .catch((error) => { res = error.response.data as Response; });
         return res;
     }
 
@@ -122,7 +118,7 @@ export class Api {
      * @returns {Response} Response Object with message from the server
      */
     async updateProfile(newProfile: User): Promise<Response> {
-        var res: Response = { message: "Error" };
+        var res: Response = {status:500, message: "Error" };
         //newProfile["GEBURTSTAG"] = newProfile["GEBURTSTAG"].toISOString();
         await axios.post(this.url + '/updateuser', newProfile, {
             headers: {
@@ -130,13 +126,9 @@ export class Api {
             }
         })
             .then(response => {
-                if (response.status == 200) {
-                    res = response.data;
-                } else {
-                    res = response.data;
-                }
+                res = response.data as Response;
             })
-            .catch((error) => { res = error });
+            .catch((error) => {res = error.response.data as Response});
         return res;
     }
 
@@ -146,7 +138,7 @@ export class Api {
      * @returns {Relationship[] | Response} Array of Relationships or Response Object with the message from the server
      */
     async getPetRelationships(petId: number): Promise<Relationship[] | Response> {
-        var res: Relationship[] | Response = { message: "Error" };
+        var res: Relationship[] | Response = {status:500, message: "Error" };
         await axios.get(this.url + '/getpetrelationships?petid=' + petId, {
             headers: {
                 'Authorization': `Beaver ${this.apiToken}`
@@ -157,7 +149,7 @@ export class Api {
             } else {
                 res = response.data as Response;
             }
-        }).catch((error) => { res = error });
+        }).catch((error) => { res = error.response.data as Response });
         return res;
     }
 
@@ -167,7 +159,7 @@ export class Api {
      * @returns {Pet[] | Response} Array of owned Pets. If something goes wrong a Response Object with the message from the server will be returned
      */
     async getUserPets(userId: number): Promise<Pet[] | Response> {
-        var res: Pet[] | Response = { message: "Error" };
+        var res: Pet[] | Response = {status:500, message: "Error" };
         await axios.get(this.url + '/getuserpets?userid=' + userId, {
             headers: {
                 'Authorization': `Beaver ${this.apiToken}`
@@ -178,7 +170,7 @@ export class Api {
             } else {
                 res = response.data as Response;
             }
-        }).catch((error) => { res = error });
+        }).catch((error) => { res = error.response.data as Response });
         return res;
     }
 
@@ -188,7 +180,7 @@ export class Api {
      * @returns {Pet | Response} Pet Object if the pet is found else a Response Object with the message from the server
      */
     async getPetData(petId: number): Promise<Pet | Response> {
-        var res: Pet | Response = { message: "Error" };
+        var res: Pet | Response = {status:500, message: "Error" };
         await axios.get(this.url + '/getpet?petid=' + petId, {
             headers: {
                 'Authorization': `Beaver ${this.apiToken}`
@@ -199,10 +191,9 @@ export class Api {
             } else {
                 res = response.data as Response;
             }
-        }).catch((error) => { res = error });
+        }).catch((error) => { res = error.response.data as Response });
         return res;
     }
-
     /**
      * Deletes a User from the Database. If a User is deleted all his Pets and Relationships will be deleted too
      * @param userId :number UserID to delete from the database
@@ -210,16 +201,16 @@ export class Api {
      * @returns {Response} Response Object with message from the server
      */
     async deleteUser(userId: number, pwd: string): Promise<Response> {
-        var res: Response = { message: "Something bad happend :(" };
+        var res: Response = {status:500, message: "Error" };
         if(pwd.length < 1){
-            res = {message: "Password not set"};
+            res = {status:400, message: "No Password provided" };
         }else{
             await axios.post(this.url + '/deleteuser', { userid: userId, password: pwd }, {
                 headers: {
                     'Authorization': `Beaver ${this.apiToken}`
                 }
             }).then(response => { res = response.data as Response; })
-                .catch((error) => { res = error; });
+                .catch((error) => { res = error.response.data as Response; });
         }
         
         return res;
@@ -232,16 +223,16 @@ export class Api {
      * @returns {Response} Response Object with message from the server
      */
     async deletePet(petId: number,pwd:string): Promise<Response> {
-        var res:Response = { message: "Something bad happend :(" };
+        var res:Response = {status:500, message: "Error" };
         if(pwd.length < 1){
-            res = {message: "Password not set"};
+            res = {status:400, message: "Password not set"};
         }else{
             await axios.post(this.url + '/deletepet',{petid:petId,password:pwd}, {
                 headers: {
                     'Authorization': `Beaver ${this.apiToken}`
                 }
             }).then(response => {res = response.data as Response; })
-                .catch((error) => { res = error.response.data; });
+                .catch((error) => { res = error.response.data as Response; });
         }
         return res;
     }
@@ -258,13 +249,13 @@ export class Api {
      * @returns {Response} Response Object with message from the server
      */
     async sendFriendRequest(user:User, petId: number, friendId: number): Promise<Response> {
-        var res: Response = { message: "Error" };
+        var res: Response = {status:500, message: "Error" };
         await axios.post(this.url + '/sendfriendrequest',{user:user,petid:petId,friendid:friendId}, {
             headers: {
                 'Authorization': `Beaver ${this.apiToken}`
             }
         }).then(response => {res = response.data as Response; })
-            .catch((error) => { res = error.response.data; });
+            .catch((error) => { res = error.response.data as Response; });
         return res;
     }
 
@@ -276,13 +267,13 @@ export class Api {
      * @returns {Response} Response Object with message from the server
      */
     async acceptFriendRequest(user:User, petId: number, friendId: number): Promise<Response>{
-        var res: Response = { message: "Error" };
+        var res: Response = {status:500, message: "Error" };
         await axios.post(this.url + '/acceptfriendrequest',{user:user,petid:petId,friendid:friendId}, {
             headers: {
                 'Authorization': `Beaver ${this.apiToken}`
             }
         }).then(response => {res = response.data as Response; })
-            .catch((error) => { res = error.response.data; });
+            .catch((error) => { res = error.response.data as Response; });
         return res;
     }
 

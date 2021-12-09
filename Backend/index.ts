@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import bcrypt from 'bcrypt';
 import cors from 'cors';
-import { User } from './interfaces'
+import { User, Response, Pet } from './interfaces'
 dotenv.config({ path: './vars.env' });
 
 
@@ -40,13 +40,13 @@ app.get('/', (req, res) => {
     res.json({ message: 'Welcome to lowoof-API!' });
 });
 
-app.get('/auth', (req, res) => {
+app.post('/auth', (req, res) => {
     //TODO Add Login page and change token creation accordingly
     //Create Auth Token
-    if (req.query.username && req.query.password) {
+    if (req.body.username && req.body.password) {
         var hashedPassword: string;
         const connection: mysql.Pool = getConnection();
-        connection.query(`SELECT HASHEDPW FROM API_USER WHERE USERNAME = '${req.query.username}'`,
+        connection.query(`SELECT HASHEDPW FROM API_USER WHERE USERNAME = '${req.body.username}'`,
             (err, rows, fields) => {
                 if (err) {
                     console.log(err);
@@ -54,30 +54,32 @@ app.get('/auth', (req, res) => {
                 } else {
                     if (rows.length > 0) {
                         hashedPassword = rows[0].HASHEDPW;
-                        if (bcrypt.compareSync(req.query.password as string, hashedPassword)) {
+                        if (bcrypt.compareSync(req.body.password as string, hashedPassword)) {
                             const token: any = jwt.sign(
                                 {
-                                    username: req.query.username,
+                                    username: req.body.username,
                                     password: hashedPassword
                                 },
                                 process.env.JWT_SECRET ?? '',
                                 { expiresIn: '2h' });
                             res.status(201).json(token);
                         } else {
-                            res.status(401).json({ message: "Wrong Password" });
+                            res.status(401).json({ status: res.statusCode, message: "Wrong Password" } as Response);
                         }
                     } else {
-                        res.status(403).json({ message: "User not found, contact Admin to create an API account" });
+                        res.status(403).json({ status: res.statusCode, message: "User not found, contact Admin to create an API account" } as Response);
                     }
                 }
 
             }
         );
     } else {
-        res.status(401).json({ message: "Missing Username or Password" });
+        res.status(401).json({ status: res.statusCode, message: "Missing Username or Password" } as Response);
     }
 });
-
+/**
+ * This is the Middleware to Authenticate the User via JWT Token
+ */
 app.use((req, res, next) => {
     const authHeader = req.headers.authorization;
 
@@ -86,17 +88,16 @@ app.use((req, res, next) => {
 
         jwt.verify(token, process.env.JWT_SECRET ?? '', (err, user) => {
             if (err) {
-                return res.sendStatus(403);
+                return res.status(403).json({ status: res.statusCode, message: 'Invalid Authorization Token' } as Response);
             }
-
             req.user = user;
             next();
         });
     } else {
-        res.sendStatus(401);
+        res.status(401).json({ status: res.statusCode, message: "Missing Authorization Header" } as Response);
     }
 })
-
+//Allowed Users: All Users
 app.get('/users', (req, res) => {
 
     const connection: mysql.Pool = getConnection();
@@ -104,15 +105,15 @@ app.get('/users', (req, res) => {
         (err, rows, fields) => {
             if (err) {
                 console.log(err);
-                res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+                res.status(500).json({ status: res.statusCode, message: "Something went wrong, Try again or contact the administrator" });
             } else {
-                res.status(200).json(rows);
+                res.status(200).json(rows as User[]);
             }
         }
     );
 
 });
-
+//Allowed Users: All Users
 app.get('/getuser', (req, res) => {
     if (req.query.userid) {
         const connection: mysql.Pool = getConnection();
@@ -120,10 +121,10 @@ app.get('/getuser', (req, res) => {
             (err, rows, fields) => {
                 if (err) {
                     console.log(err);
-                    res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+                    res.status(500).json({ status: res.statusCode, message: "Something went wrong, Try again or contact the administrator" } as Response);
                 } else {
                     if (rows.length == 0) {
-                        res.status(500).json({ message: "Given userid doesnt exist" });
+                        res.status(404).json({ status: res.statusCode, message: "User not Found" } as Response);
                     } else {
                         delete rows[0]["PASSWORD"];
                         res.status(200).json(rows as User);
@@ -134,38 +135,38 @@ app.get('/getuser', (req, res) => {
 
     }
 });
-
+//Allowed Users: Everyone
 app.post('/adduser', (req, res) => {
     console.log(req.body);
     const user: User = req.body;
 
     const connection: mysql.Pool = getConnection();
-    connection.query(`INSERT INTO USER (USERNAME, HASHEDPASSWORD, EMAIL, VORNAME, NACHNAME, GEBURTSTAG, INSTITUTION, TELEFONNUMMER, PLZ, WOHNORT, GESCHLECHT, ONLINESTATUS, MITGLIEDSCHAFTPAUSIERT)
+    connection.query(`INSERT INTO USER (USERNAME, PASSWORD, EMAIL, VORNAME, NACHNAME, GEBURTSTAG, INSTITUTION, TELEFONNUMMER, PLZ, WOHNORT, GESCHLECHT, ONLINESTATUS, MITGLIEDSCHAFTPAUSIERT)
         VALUES ('${user["USERNAME"]}', '${user["PASSWORD"]}', '${user["EMAIL"]}', '${user["VORNAME"]}', '${user["NACHNAME"]}', '${user["GEBURTSTAG"]}', '${user["INSTITUTION"]}', '${user["TELEFONNUMMER"]}', '${user["PLZ"]}', '${user["WOHNORT"]}', '${user["GESCHLECHT"]}', 0, 0)`,
         (err, rows, fields) => {
             if (err) {
                 console.log(err);
-                res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+                res.status(500).json({ status: res.statusCode, message: "Something went wrong, Try again or contact the administrator" } as Response);
             } else {
-                res.status(200).json({ message: 'User added' });
+                res.status(200).json({ status: res.statusCode, message: 'User added' } as Response);
             }
         }
     );
 
 });
-
+//Allowed Users: User
 app.post('/updateuser', (req, res) => {
     console.log(req.body);
     const user: User = req.body;
     if (user.PASSWORD === undefined) {
-        return res.status(401).json({ message: "Missing Password" });
+        return res.status(401).json({ status: res.statusCode, message: "Missing Password" } as Response);
     }
     const connection: mysql.Pool = getConnection();
     connection.query(`SELECT PASSWORD FROM USER WHERE USERID = ${user.USERID}`,
         async (err, rows, fields) => {
             if (err) {
                 console.log(err);
-                res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+                res.status(500).json({ status: res.statusCode, message: "Something went wrong, Try again or contact the administrator" } as Response);
             }
             if (await bcrypt.compareSync(user.PASSWORD as string, rows[0].PASSWORD)) {
                 connection.query(`UPDATE USER SET SPRACHID = '${user["SPRACHID"]}', USERNAME = '${user["USERNAME"]}', EMAIL = '${user["EMAIL"]}', VORNAME = '${user["VORNAME"]}', NACHNAME = '${user["NACHNAME"]}', GEBURTSTAG = '${user["GEBURTSTAG"]}', INSTITUTION = '${user["INSTITUTION"]}',
@@ -173,14 +174,14 @@ app.post('/updateuser', (req, res) => {
                     (err, rows, fields) => {
                         if (err) {
                             console.log(err);
-                            res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+                            res.status(500).json({ status: res.statusCode, message: "Something went wrong, Try again or contact the administrator" } as Response);
                         } else {
-                            res.status(200).json({ message: 'User edited' });
+                            res.status(200).json({ status: res.statusCode, message: 'User edited' } as Response);
                         }
                     }
                 );
             } else {
-                return res.status(401).json({ message: "Wrong Password" });
+                return res.status(403).json({ status: res.statusCode, message: "Wrong Password" } as Response);
             }
 
 
@@ -188,7 +189,7 @@ app.post('/updateuser', (req, res) => {
         });
 });
 
-
+//Allowed Users: User
 app.get('/getpetrelationships', (req, res) => {
     if (req.query.petid) {
         const connection: mysql.Pool = getConnection();
@@ -196,13 +197,9 @@ app.get('/getpetrelationships', (req, res) => {
             (err, rows, fields) => {
                 if (err) {
                     console.log(err);
-                    res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+                    res.status(500).json({ status: res.statusCode, message: "Something went wrong, Try again or contact the administrator" } as Response);
                 } else {
-                    if (rows.length == 0) {
-                        res.status(500).json({ message: "Given userid doesnt exist" });
-                    } else {
-                        res.status(200).json(rows);
-                    }
+                    res.status(200).json(rows);//TODO: Add Pet Relationships as Interface
                 }
             }
         );
@@ -210,6 +207,7 @@ app.get('/getpetrelationships', (req, res) => {
     }
 });
 
+//Allowed Users: User
 app.get('/getuserpets', (req, res) => {
     if (req.query.userid) {
         const connection: mysql.Pool = getConnection();
@@ -217,16 +215,16 @@ app.get('/getuserpets', (req, res) => {
             (err, rows, fields) => {
                 if (err) {
                     console.log(err);
-                    res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+                    res.status(500).json({ status: res.statusCode, message: "Something went wrong, Try again or contact the administrator" } as Response);
                 } else {
-                    res.status(200).json(rows);
+                    res.status(200).json(rows as Pet[]);
                 }
             }
         );
 
     }
 });
-
+//Allowed Users: All Users
 app.get('/getpet', (req, res) => {
     if (req.query.petid) {
         const connection: mysql.Pool = getConnection();
@@ -234,12 +232,12 @@ app.get('/getpet', (req, res) => {
             (err, rows, fields) => {
                 if (err) {
                     console.log(err);
-                    res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+                    res.status(500).json({ status: res.statusCode, message: "Something went wrong, Try again or contact the administrator" } as Response);
                 } else {
                     if (rows.length == 0) {
-                        res.status(500).json({ message: "Given petid doesnt exist" });
+                        res.status(404).json({ status: res.statusCode, message: "Pet not Found" });
                     } else {
-                        res.status(200).json(rows);
+                        res.status(200).json(rows as Pet);
                     }
                 }
             }
@@ -247,7 +245,7 @@ app.get('/getpet', (req, res) => {
 
     }
 });
-
+//Allowed Users: User
 app.post('/deleteuser', (req, res) => {
     if (req.body.userid) {
         const connection: mysql.Pool = getConnection();
@@ -255,7 +253,7 @@ app.post('/deleteuser', (req, res) => {
             async (err, rows, fields) => {
                 if (err) {
                     console.log(err);
-                    res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+                    res.status(500).json({ status: res.statusCode, message: "Something went wrong, Try again or contact the administrator" } as Response);
                 }
                 if (await bcrypt.compareSync(req.body.password, rows[0].PASSWORD)) {
 
@@ -263,21 +261,21 @@ app.post('/deleteuser', (req, res) => {
                         (err, rows, fields) => {
                             if (err) {
                                 console.log(err);
-                                res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+                                res.status(500).json({ status: res.statusCode, message: "Something went wrong, Try again or contact the administrator" } as Response);
                             } else {
                                 connection.query(`DELETE FROM TIER WHERE USERID = '${req.body.userid}'`,
                                     (err, rows, fields) => {
                                         if (err) {
                                             console.log(err);
-                                            res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+                                            res.status(500).json({ status: res.statusCode, message: "Something went wrong, Try again or contact the administrator" } as Response);
                                         } else {
                                             connection.query(`DELETE FROM USER WHERE USERID = '${req.body.userid}'`,
                                                 (err, rows, fields) => {
                                                     if (err) {
                                                         console.log(err);
-                                                        return res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+                                                        return res.status(500).json({ status: res.statusCode, message: "Something went wrong, Try again or contact the administrator" } as Response);
                                                     } else {
-                                                        res.status(200).json({ message: 'User deleted' });
+                                                        res.status(200).json({ status: res.statusCode, message: 'User deleted' } as Response);
                                                     }
                                                 }
                                             );
@@ -289,13 +287,13 @@ app.post('/deleteuser', (req, res) => {
                         }
                     );
                 } else {
-                    return res.status(401).json({ message: "Wrong Password" });
+                    return res.status(401).json({ status: res.statusCode, message: "Wrong Password" } as Response);
                 }
             }
         );
     }
 });
-
+//Allowed Users: User
 app.post('/deletepet', (req, res) => {
     if (req.body.petid) {
         const connection: mysql.Pool = getConnection();
@@ -303,7 +301,7 @@ app.post('/deletepet', (req, res) => {
         connection.query(`SELECT USERID FROM TIER WHERE TIERID = '${req.body.petid}'`, (err, rows, fields) => {
             if (err) {
                 console.log(err);
-                res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+                res.status(500).json({ status: res.statusCode, message: "Something went wrong, Try again or contact the administrator" } as Response);
             } else {
                 console.log(rows);
                 userId = rows[0].USERID;
@@ -311,7 +309,7 @@ app.post('/deletepet', (req, res) => {
                     async (err, rows, fields) => {
                         if (err) {
                             console.log(err);
-                            return res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+                            return res.status(500).json({ status: res.statusCode, message: "Something went wrong, Try again or contact the administrator" } as Response);
                         }
                         console.log(rows);
                         console.log(req.body.password);
@@ -321,7 +319,7 @@ app.post('/deletepet', (req, res) => {
                                 (err, rows, fields) => {
                                     if (err) {
                                         console.log(err);
-                                        return res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+                                        return res.status(500).json({ status: res.statusCode, message: "Something went wrong, Try again or contact the administrator" } as Response);
                                     }
                                 }
                             );
@@ -329,15 +327,15 @@ app.post('/deletepet', (req, res) => {
                                 (err, rows, fields) => {
                                     if (err) {
                                         console.log(err);
-                                        return res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+                                        return res.status(500).json({ status: res.statusCode, message: "Something went wrong, Try again or contact the administrator" } as Response);
                                     } else {
                                         console.log("Pet deleted ID:" + req.body.petid);
-                                        res.status(200).json({ message: 'Pet deleted' });
+                                        res.status(200).json({ status: res.statusCode, message: 'Pet deleted' } as Response);
                                     }
                                 }
                             );
                         } else {
-                            return res.status(401).json({ message: "Wrong Password" });
+                            return res.status(401).json({ status: res.statusCode, message: "Wrong Password" } as Response);
                         }
 
 
@@ -348,7 +346,7 @@ app.post('/deletepet', (req, res) => {
 
     }
 });
-
+//Allowed Users: User
 app.post('/sendfriendrequest', (req, res) => {
     const user: User = req.body.user;
     if (req.body.petid && req.body.friendid && user) {
@@ -357,7 +355,7 @@ app.post('/sendfriendrequest', (req, res) => {
             (err, rows, fields) => {
                 if (err) {
                     console.log(err);
-                    res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+                    res.status(500).json({ status: res.statusCode, message: "Something went wrong, Try again or contact the administrator" } as Response);
                 } else if (rows[0].USERID === user.USERID) {
                     var TIER_A_ID: number;
                     var TIER_B_ID: number;
@@ -377,24 +375,24 @@ app.post('/sendfriendrequest', (req, res) => {
                         (err, rows, fields) => {
                             if (err) {
                                 console.log(err);
-                                res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+                                res.status(500).json({ status: res.statusCode, message: "Something went wrong, Try again or contact the administrator" } as Response);
                             } else {
-                                res.status(200).json({ message: 'Friend request sent' });
+                                res.status(200).json({ status: res.statusCode, message: 'Friend request sent' } as Response);
                             }
                         }
                     );
                 } else {
-                    res.status(401).json({ message: "You are not the owner of this pet" });
+                    res.status(401).json({ status: res.statusCode, message: "You are not the owner of this pet" } as Response);
                 }
 
             }
         );
 
     } else {
-        res.status(401).json({ message: "You are not the owner of this pet" });
+        res.status(401).json({ status: res.statusCode, message: "You are not the owner of this pet" } as Response);
     }
 });
-
+//Allowed Users: User
 app.post('/acceptfriendrequest', (req, res) => {
     const user: User = req.body.user;
     if (req.body.petid && req.body.friendid && user) {
@@ -403,7 +401,7 @@ app.post('/acceptfriendrequest', (req, res) => {
             (err, rows, fields) => {
                 if (err) {
                     console.log(err);
-                    res.status(500).json({ message: "Something went wrong, Try again or contact the administrator" });
+                    res.status(500).json({ status: res.statusCode, message: "Something went wrong, Try again or contact the administrator" } as Response);
                 } else if (rows[0].USERID === user.USERID) {
                     var TIER_A_ID: number;
                     var TIER_B_ID: number;
@@ -424,34 +422,34 @@ app.post('/acceptfriendrequest', (req, res) => {
                         (err, rows, fields) => {
                             if (err) {
                                 console.log(err);
-                                res.status(500).json({ message: "There isnt a active relationship between these Pets" });
+                                res.status(500).json({ status: res.statusCode, message: "Something went wrong, Try again or contact the administrator" } as Response);
                             } else if (((rows[0].RELATIONSHIP as string).startsWith("A") && TIER_B_ID == req.body.petid) || ((rows[0].RELATIONSHIP as string).startsWith("B") && TIER_A_ID == req.body.petid)) {
                                 RELATIONSHIP = "Friends";
                                 connection.query(`UPDATE TIER_RELATIONSHIPS SET RELATIONSHIP = '${RELATIONSHIP}' WHERE TIER_RELATIONSHIPS.RELATIONID = ${RELATIONID};`,
                                     (err, rows, fields) => {
                                         if (err) {
                                             console.log(err);
-                                            res.status(400).json({ message: "Something went wrong, Try again or contact the administrator" });
+                                            res.status(500).json({ status: res.statusCode, message: "Something went wrong, Try again or contact the administrator" } as Response);
                                         } else {
-                                            res.status(200).json({ message: 'Friend request accepted' });
+                                            res.status(200).json({ status: res.statusCode, message: 'Friend request accepted' } as Response);
                                         }
                                     }
                                 );
                             } else {
-                                res.status(400).json({ message: "There is no pendig Friend request between these Pets or you cant accept your own request" });
+                                res.status(404).json({ status: res.statusCode, message: "There is no pendig Friend request between these Pets or you cant accept your own request" } as Response);
                             }
                         });
 
 
                 } else {
-                    res.status(401).json({ message: "You are not the owner of this pet" });
+                    res.status(401).json({ status: res.statusCode, message: "You are not the owner of this pet" } as Response);
                 }
 
             }
         );
 
     } else {
-        res.status(400).json({ message: "You didnt provide the required informations" });
+        res.status(400).json({ status: res.statusCode, message: "You didnt provide the required informations" } as Response);
     }
 });
 

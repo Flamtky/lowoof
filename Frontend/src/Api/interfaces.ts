@@ -36,5 +36,6 @@ export interface Relationship {
 }
 
 export interface Response {
+    status: number;
     message: string;
 }

@@ -2,16 +2,14 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import React from 'react';
 import { useWindowDimensions } from 'react-native';
 import SearchBar from './searchbar';
-import Profile from '../Screens/MeinProfil';
-import Tierprofil from '../Screens/Tierprofil';
+import MyProfile from '../Screens/MeinProfil';
+import PetProfile from '../Screens/Tierprofil';
 import Matches from '../Screens/Matches';
-import Freunde from '../Screens/Freunde';
+import Friends from '../Screens/Freunde';
 import Chats from '../Screens/Chats';
-import Einstellungen from '../Screens/Einstellungen';
+import Settings from '../Screens/Einstellungen';
 import { BACKGROUNDCOLOR, BLACK, TITLECOLOR, WHITE } from '../Constants/colors';
 import ImagePickerExample from '../Screens/test';
-import language from '../../language.json';
-import { currentLanguage } from '../../App';
 
 const Drawer = createDrawerNavigator();
 
@@ -61,13 +59,13 @@ export default function Sidebar() {
             }}
             backBehavior='history'
         >
-            <Drawer.Screen name="MyProfile" component={Profile} initialParams={{ userID: 10 /* TODO: Give current UserID */ }} />
-            <Drawer.Screen name="PetProfile" component={Tierprofil} />
+            <Drawer.Screen name="MyProfile" component={MyProfile} initialParams={{ userID: 10 /* TODO: Give current UserID */ }} />
+            <Drawer.Screen name="PetProfile" component={PetProfile} />
             <Drawer.Screen name="ImagePickerExample" component={ImagePickerExample} />
             <Drawer.Screen name="Matches" component={Matches} />
-            <Drawer.Screen name="Friends" component={Freunde} initialParams={{ petID: 195 /* TODO: Give current UserID */ }} />
+            <Drawer.Screen name="Friends" component={Friends} initialParams={{ petID: 195 /* TODO: Give current UserID */ }} />
             <Drawer.Screen name="Chats" component={Chats} />
-            <Drawer.Screen name="Settings" component={Einstellungen} />
+            <Drawer.Screen name="Settings" component={Settings} />
         </Drawer.Navigator>
     );
 }

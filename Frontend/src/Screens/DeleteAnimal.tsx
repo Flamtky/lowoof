@@ -7,7 +7,7 @@ import OwnButton from '../Components/ownButton';
 import SearchBar from '../Components/searchbar';
 import { BACKGROUNDCOLOR, MAINCOLOR } from '../Constants/colors';
 
-export default function DeleteAnimal({ navigation, route }: any) {
+export default function DeletePet({ navigation, route }: any) {
     const dimensions = useWindowDimensions();
     const props = route.params;
     const isLargeScreen = dimensions.width >= 768;

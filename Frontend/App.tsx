@@ -2,10 +2,10 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import Sidebar from './src/Components/sidebar';
-import { EditProfile, EditAnimal } from './src/Screens/EditProfile';
+import { EditProfile, EditPet } from './src/Screens/EditProfile';
 import { BACKGROUNDCOLOR, TITLECOLOR } from './src/Constants/colors';
 import { Chat } from './src/Screens/Chat';
-import DeleteAnimal from './src/Screens/DeleteAnimal';
+import DeletePet from './src/Screens/DeleteAnimal';
 import language from './language.json';
 import { Api } from './src/Api/lowoof-api';
 import Login from './src/Screens/Login';
@@ -47,7 +47,7 @@ export default function App() {
 									fontWeight: "bold",
 								},
 							}} />
-							<Stack.Screen name="EditPet" component={EditAnimal} options={{
+							<Stack.Screen name="EditPet" component={EditPet} options={{
 								title: language.EDIT_PET.HEADER[currentLanguage],
 								headerStyle: {
 									backgroundColor: BACKGROUNDCOLOR,
@@ -69,7 +69,7 @@ export default function App() {
 									fontWeight: "bold",
 								},
 							}} />
-							<Stack.Screen name="DeletePet" component={DeleteAnimal} options={({ route }) => ({
+							<Stack.Screen name="DeletePet" component={DeletePet} options={({ route }) => ({
 								title: route?.params?.name ?? language.EDIT_PET.DELETE[currentLanguage],
 								headerStyle: {
 									backgroundColor: BACKGROUNDCOLOR,

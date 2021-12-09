@@ -14,7 +14,7 @@ export function EditProfile() {
     );
 }
 
-export function EditAnimal() {
+export function EditPet() {
     const dimensions = useWindowDimensions();
     const isLargeScreen = dimensions.width >= 768;
     return (

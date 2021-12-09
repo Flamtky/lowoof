@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, useWindowDimensions, ScrollView } from 'react-n
 import OwnButton from '../Components/ownButton';
 import { MAINCOLOR } from '../Constants/colors';
 
-export default function Einstellungen({ navigation }: any) {
+export default function Settings({ navigation }: any) {
     const dimensions = useWindowDimensions();
     const isLargeScreen = dimensions.width >= 768;
     return (

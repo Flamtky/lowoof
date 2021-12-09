@@ -12,7 +12,7 @@ import language from '../../language.json';
 import { currentLanguage } from '../../App';
 
 const api = new Api();
-export default function Freunde({ route, navigation }: any) {
+export default function Friends({ route, navigation }: any) {
     const dimensions = useWindowDimensions();
     const isLargeScreen = dimensions.width >= 768;
 

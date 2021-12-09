@@ -1,5 +1,5 @@
 export interface User {
-    USERID?: number;
+    USERID: number;
     SPRACHID: string;
     USERNAME: string;
     EMAIL: string;

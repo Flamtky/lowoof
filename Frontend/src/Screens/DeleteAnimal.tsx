@@ -17,7 +17,7 @@ export default function DeleteAnimal({ navigation, route }: any) {
     React.useEffect(() => {
         navigation.setParams({ name: petToDelete.NAME + " löschen" })
         if (petToDelete === undefined) {
-            props.navigation.navigate('Mein Profil');
+            props.navigation.navigate('MyProfile');
         }
     }, [petToDelete]);
     return (

@@ -24,7 +24,7 @@ export default function PetProfile({ route, navigation }: any) {
 
     React.useEffect(() => {
         if (petProfile === null) {
-            navigation.navigate('Mein Profil');
+            navigation.navigate('MyProfile');
         } else {
             api.getPetData(route.params.petID).then(data => {
                 if (!data.hasOwnProperty("message")) {
@@ -53,7 +53,7 @@ export default function PetProfile({ route, navigation }: any) {
                             source={{ uri: "https://puu.sh/IsTPQ/5d69029437.png" }}
                         />
                         <View style={[styles.row, { position: "absolute", right: "10%" }]}>
-                            <TouchableOpacity onPress={() => { navigation.navigate('EditAnimal') }} >
+                            <TouchableOpacity onPress={() => { navigation.navigate('EditPet') }} >
                                 <FontAwesomeIcon icon={faUserEdit} size={40} />
                             </TouchableOpacity>
                             <TouchableOpacity onPress={() => { alert("Tier gelöscht!")/*TODO: Delete*/ }} >
@@ -94,7 +94,7 @@ export default function PetProfile({ route, navigation }: any) {
                             navigation.navigate('Matches');
                         }} />
                         <OwnButton title={language.FRIENDS.HEADER[currentLanguage]} onPress={() => {
-                            navigation.navigate('Freunde');
+                            navigation.navigate('Friends');
                         }} />
                         <OwnButton title={language.CHATS.HEADER[currentLanguage]} onPress={() => {
                             navigation.navigate('Chats');

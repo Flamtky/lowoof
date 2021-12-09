@@ -27,7 +27,7 @@ export default function Freunde({ route, navigation }: any) {
 
     React.useEffect(() => {
         if (route.params.petID === null) {
-            navigation.navigate('Mein Profil');
+            navigation.navigate('MyProfile');
         } else {
             api.getPetRelationships(route.params.petID).then(data => {
                 if (!data.hasOwnProperty("message")) {

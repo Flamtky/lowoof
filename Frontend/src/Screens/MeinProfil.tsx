@@ -76,10 +76,10 @@ export default function Profile({ route, navigation }: any) {
                             <PetItem
                                 pet={pet}
                                 navigation={navigation}
-                                onPic={() => { navigation.navigate('Tierprofil') }}
-                                onEdit={() => { navigation.navigate('EditAnimal') }}
+                                onPic={() => { navigation.navigate('PetProfile') }}
+                                onEdit={() => { navigation.navigate('EditPet') }}
                                 onDelete={() => {
-                                    navigation.navigate('DeleteAnimal', { petToDelete: pet, api: api, navigation: navigation });
+                                    navigation.navigate('DeletePet', { petToDelete: pet, api: api, navigation: navigation });
                                 }}
                                 key={pet.TIERID}
                             />)

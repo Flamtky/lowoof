@@ -20,7 +20,7 @@ export default function Sidebar() {
     const isLargeScreen = dimensions.width >= 768;
     return (
         <Drawer.Navigator
-            initialRouteName="Mein Profil"
+            initialRouteName="MyProfile"
             screenOptions={{
                 drawerType: isLargeScreen ? 'permanent' : 'front',
                 drawerLabelStyle: {

@@ -17,7 +17,7 @@ export default function Chats({ navigation }: any) {
             >
                 <TouchableOpacity style={[styles.row, { marginTop: 0, height: "100%" }]} onPress={() => { navigation.navigate('Chat') }}>
                     <View style={[styles.row, {width:"100%", marginLeft: 15, height: 60 }]}>
-                        <TouchableOpacity onPress={() => { navigation.navigate('Mein Profil') }}>
+                        <TouchableOpacity onPress={() => { navigation.navigate('MyProfile') }}>
                             <Image style={styles.profilepicture}
                                 source={{ uri: "https://puu.sh/IsTPQ/5d69029437.png" }}
                             />

@@ -16,7 +16,7 @@ export default function Suche({ navigation }: any) {
                 keyboardDismissMode="on-drag"
             >
                 <View style={[styles.row, {marginLeft: 15, height: 60}]}>
-                    <TouchableOpacity onPress={() => { navigation.navigate('Mein Profil') }} >
+                    <TouchableOpacity onPress={() => { navigation.navigate('MyProfile') }} >
                         <Image style={styles.profilepicture}
                             source={{ uri: "https://puu.sh/IsTPQ/5d69029437.png" }}
                         />

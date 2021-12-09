@@ -21,6 +21,7 @@ export default function SearchBar(props: any) {
                 spellCheck={false}
                 onChange={props.onChange}
                 value={props.value}
+                secureTextEntry={props.secureTextEntry}
             />
         </View>
     );

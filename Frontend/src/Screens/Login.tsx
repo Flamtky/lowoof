@@ -1,0 +1,79 @@
+import React, { useState } from 'react';
+import { View, StyleSheet, useWindowDimensions, Image } from 'react-native';
+import { ScrollView } from 'react-native-gesture-handler';
+import OwnButton from '../Components/ownButton';
+import SearchBar from '../Components/searchbar';
+import { BACKGROUNDCOLOR, MAINCOLOR } from '../Constants/colors';
+import language from '../../language.json';
+import { currentLanguage } from '../../App';
+
+export default function Login(props: any) {
+    const dimensions = useWindowDimensions();
+    const isLargeScreen = dimensions.width >= 768;
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+
+    return (
+        <View style={{ backgroundColor: BACKGROUNDCOLOR, height: "100%" }}>
+            <Image source={require('../../assets/splash.png')} style={[styles.logo, {backgroundColor: MAINCOLOR}, isLargeScreen ? { width: '43%', left: "28%" } : null]} />
+            <View style={[styles.container, isLargeScreen ? { width: '43%', left: "28%" } : null]}>
+                <View style={{ width: "100%", flexDirection: 'row', height: "auto", alignItems: "center", alignSelf: "flex-start", justifyContent: 'center'}}>
+                    <View style={{ width: "auto", height: "auto", flexDirection: 'column', alignItems: 'center' }}>
+                        <SearchBar
+                            placeholder="Username"
+                            style={styles.input}
+                            value={username}
+                            onChange={(event: any) => {
+                                setUsername(event.nativeEvent.text);
+                            }}
+                        />
+                        <SearchBar
+                            placeholder="Password"
+                            style={styles.input}
+                            value={password}
+                            onChange={(event: any) => {
+                                setPassword(event.nativeEvent.text);
+                            }}
+                            secureTextEntry={true}
+                        />
+                    </View>
+                    
+                </View>
+                <OwnButton
+                        title="➤ Login"
+                        style={{ width: 88, padding: 0, minWidth: 0, borderRadius: 0 }}
+                        onPress={() => {
+                            console.log(username, password);
+                            /* TODO: Handle message */
+
+                            // Clears the input
+                            setUsername('');
+                            setPassword('');
+                        }}
+                    />
+            </View>
+        </View>
+    );
+}
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: MAINCOLOR,
+        alignItems: 'center',
+        height: "100%"
+    },
+    input: {
+        height: 42,
+        width: 300,
+        flexGrow: 1,
+        borderRadius: 0,
+        alignSelf: 'center',
+        marginBottom: 5,
+    },
+    logo: {
+        width: "100%",
+        height: "50%",
+        resizeMode: "contain"
+    }
+});

@@ -1,39 +1,127 @@
-import { faCommentDots, faExclamationTriangle, faHeart, faHeartBroken, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { faStar } from "@fortawesome/free-regular-svg-icons"
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import React from 'react';
 import { StyleSheet, View, Image, Text, useWindowDimensions, ScrollView, TouchableOpacity } from 'react-native';
 import OwnButton from '../Components/ownButton';
 import Seperator from '../Components/seperator';
 import { TextBlock } from '../Components/styledText';
 import { BLACK, MAINCOLOR } from '../Constants/colors';
+import { Api } from '../Api/lowoof-api';
+import { Pet, Relationship, User } from '../Api/interfaces';
 import PetItem from '../Components/petItem';
 
-export default function Freunde({ navigation }: any) {
+const api = new Api();
+export default function Freunde({ route, navigation }: any) {
     const dimensions = useWindowDimensions();
     const isLargeScreen = dimensions.width >= 768;
+
+    const [friends, setFriends] = React.useState<Relationship[] | null>(null);
+    const [friendsIn, setFriendsIn] = React.useState<Relationship[] | null>(null);
+    const [friendsOut, setFriendsOut] = React.useState<Relationship[] | null>(null);
+    const [friendsPets, setFriendsPets] = React.useState<Pet[] | null>(null);
+
+    const [isLoading, setIsLoading] = React.useState(true);
+
+    React.useEffect(() => {
+        if (route.params.petID === null) {
+            navigation.navigate('Mein Profil');
+        } else {
+            api.getAuthTokenfromServer("application", "W*rx*TMn]:NuP|ywN`z8aUcHeTpL5<5,").then((resp) => {
+                if (resp !== "Error") {
+                    api.getPetRelationships(route.params.petID).then(data => {
+                        if (!data.hasOwnProperty("message")) {
+                            console.log(data);
+                            setFriends((data as Relationship[]).filter(x => x.RELATIONSHIP === "Friends"));
+                            setFriendsIn((data as Relationship[]).filter(x => x.TIER_B_ID === route.params.petID && x.RELATIONSHIP !== "Friends"));
+                            setFriendsOut((data as Relationship[]).filter(x => x.TIER_A_ID === route.params.petID && x.RELATIONSHIP !== "Friends"));
+
+                            let temp: Pet[] = [];
+                            (data as Relationship[]).forEach(async rel => {
+                                await api.getPetData(rel.TIER_A_ID !== route.params.petID ? rel.TIER_A_ID : rel.TIER_B_ID).then((data2) => {
+                                    if (!data2.hasOwnProperty("message")) {
+                                        temp.push((data2 as Pet)[0]); /*TODO: FIX THIS (Remove Index / API Bug)*/
+                                    }
+                                });
+                                // if last iteration
+                                if (temp.length === (data as Relationship[]).length) {
+                                    setIsLoading(false);
+                                    setFriendsPets(temp);
+                                }
+                            });
+                        }
+
+                    });
+                }
+            });
+        }
+    }, [route]);
+
     return (
-        <View style={[styles.item, styles.container, isLargeScreen ? { width: '60%' } : { width: "100%" }]}>
+        <View style={[styles.item, styles.container, isLargeScreen ? { width: '60%' } : { width: "100%" }, isLoading ? { display: "none" } : null]}>
             <ScrollView style={{ width: '100%' }}
                 keyboardDismissMode="on-drag"
             >
                 <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>Eingehende Freundschaftsanfragen: </TextBlock>
-                <Seperator/>
-                <PetItem/>
-                <Seperator style={{ marginBottom: 50 }}/>
+                <Seperator />
 
-                <Seperator/>
-                <PetItem/>
-                <Seperator style={{ marginBottom: 50 }}/>
+                {friendsIn === null || friendsPets === null || friendsIn.length === 0 || isLoading ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>Keine Anfragen {friendsPets?.toString()}</TextBlock> :
+                    friendsIn.map((friend: Relationship) => {
+                        return (
+                            <PetItem
+                                key={friend.RELATIONID}
+                                pet={friendsPets.find(x => x.TIERID === friend.TIER_A_ID) as Pet}
+                                isFriend={false}
+                                hasRequested={true}
+                                hasOwnRequest={false}
+                                isMarkedAttractive={false /*TODO: add*/}
+                                navigation={navigation}
+                                api={api}
+                            />)
+                    })
+                }
 
+                <Seperator style={{ marginBottom: 50 }} />
+                <TextBlock style={{ marginLeft: 15 }}>Freunde: </TextBlock>
+                <Seperator />
+
+                {friends === null || friendsPets === null || friends.length === 0 || isLoading ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>Keine Freunde 😞 {friendsPets?.toString()}</TextBlock> :
+                    friends.map((friend: Relationship) => {
+                        return (
+                            <PetItem
+                                key={friend.RELATIONID}
+                                pet={friendsPets.find(x => x.TIERID === (friend.TIER_A_ID !== route.params.petID ? friend.TIER_A_ID : friend.TIER_B_ID)) as Pet}
+                                isFriend={true}
+                                hasRequested={false}
+                                hasOwnRequest={false}
+                                isMarkedAttractive={false /*TODO: add*/}
+                                navigation={navigation}
+                                api={api}
+                            />)
+                    })
+                }
+
+                <Seperator style={{ marginBottom: 50 }} />
                 <TextBlock style={{ marginLeft: 15 }}>Ausgehende Freundschaftsanfragen: </TextBlock>
-                <Seperator/>
-                <PetItem/>
-                <Seperator/>
+                <Seperator />
+
+                {friendsOut === null || friendsPets === null || friendsOut.length === 0 || isLoading ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>Keine Anfragen {friendsPets?.toString()}</TextBlock> :
+                    friendsOut.map((friend: Relationship) => {
+                        return (
+                            <PetItem
+                                key={friend.RELATIONID}
+                                pet={friendsPets.find(x => x.TIERID === friend.TIER_B_ID) as Pet}
+                                isFriend={false}
+                                hasRequested={false}
+                                hasOwnRequest={true}
+                                isMarkedAttractive={false /*TODO: add*/}
+                                navigation={navigation}
+                                api={api}
+                            />)
+                    })
+                }
+                <Seperator />
             </ScrollView>
             <OwnButton title="Zurück" style={{ margin: 32, alignSelf: "flex-start" }} onPress={() => {
                 navigation.goBack();
-            }}/>
+            }} />
         </View>
     );
 }

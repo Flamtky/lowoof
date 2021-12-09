@@ -17,14 +17,14 @@ export default function PetItem(props: any) {
     return (<View style={[styles.row, { marginLeft: 15, height: 60 }]}>
         <TouchableOpacity onPress={() => {/* Show profile */ }} >
             <Image style={styles.profilepicture}
-                 source={{ uri: pet.PROFILBILD != null ? "data:image/png;base64," + Buffer.from(pet.PROFILBILD, 'base64').toString('base64') : "https://puu.sh/IsTPQ/5d69029437.png" }}
+                source={{ uri: pet.PROFILBILD != null ? "data:image/png;base64," + Buffer.from(pet.PROFILBILD, 'base64').toString('base64') : "https://puu.sh/IsTPQ/5d69029437.png" }}
             />
         </TouchableOpacity>
-        <View style={{ marginLeft: 10, height: "100%", justifyContent: "space-between" /* TODO: In untenstehenden Textblocks Parameter für Daten übernehmen */ }}>
+        <View style={{ marginLeft: 10, height: "100%", justifyContent: "space-between" }}>
             <TextBlock>Besitzer: {pet.USERID /* TODO: Get Owner */}</TextBlock>
             <TextBlock>Rufname: {pet.NAME}</TextBlock>
             <View style={[styles.row, { marginTop: 0 }]}>
-                <TextBlock>Art: {pet.ART}</TextBlock>
+                <TextBlock>Art: {pet.ART} </TextBlock>
                 <TextBlock>Rasse: {pet.RASSE}</TextBlock>
             </View>
         </View>
@@ -32,7 +32,7 @@ export default function PetItem(props: any) {
             <TouchableOpacity onPress={() => { /* Freundschaftsanfrage */ }} style={[{ marginRight: 6 }, (!isFriend && !hasOwnRequest) || hasRequested ? null : { display: "none" }]}>
                 <FontAwesomeIcon icon={faHeart} size={32} color="#f00" />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => { alert("Tier aus Freundesliste entfernt")/* Unfriend */ }} style={[{ marginRight: 6 }, (isFriend || hasOwnRequest) || hasRequested ? null : { display: "none" }]}>
+            <TouchableOpacity onPress={() => { /* Unfriend */ }} style={[{ marginRight: 6 }, (isFriend || hasOwnRequest) || hasRequested ? null : { display: "none" }]}>
                 <FontAwesomeIcon icon={faHeartBroken} size={32} color="#555" />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => { /* Attraktiv bewerten */ }} style={[{ marginRight: 6 }, isMarkedAttractive ? { display: "none" } : null]}>

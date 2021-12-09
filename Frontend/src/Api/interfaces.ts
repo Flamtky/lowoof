@@ -26,6 +26,7 @@ export interface Pet {
     GESCHLECHT: string;
     GEBURTSTAG: Date;
     PROFILBILD: string;
+    USERNAME: string;
 }
 
 export interface Relationship {

@@ -154,7 +154,7 @@ export default class Queries {
     async getPetByID(petid: number): Promise<Response | Pet> {
         return new Promise<Response | Pet>((resolve, reject) => {
             const connection: mysql.Pool = this.getConnection();
-            connection.query(`SELECT * FROM TIER WHERE TIERID = ?;`, [petid],
+            connection.query(`SELECT TIER.*, USER.USERNAME FROM TIER LEFT JOIN USER on TIER.USERID = USER.USERID WHERE TIERID = ?; `, [petid],
                 (err, rows, fields) => {
                     if (err) {
                         console.log(err);

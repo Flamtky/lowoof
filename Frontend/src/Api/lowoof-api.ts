@@ -275,6 +275,11 @@ export class Api {
         return res;
     }
 
+    /**
+     * 
+     * @param userId :number UserID you want to get the Language of
+     * @returns 
+     */
     async getUserLanguage(userId: number): Promise<string | Response> {
         var res: string | Response = { status: 500, message: "Error" };
         await axios.get(this.url + '/getuserlanguage&userid=' + userId, {
@@ -312,10 +317,6 @@ export class Api {
     }
 
     removeChat(deletingUserId: number, userId: number): void {
-        return;
-    }
-
-    getPets(userId: number): any {
         return;
     }
 

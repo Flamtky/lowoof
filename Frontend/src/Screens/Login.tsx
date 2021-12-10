@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, useWindowDimensions, Image } from 'react-native';
-import { ScrollView } from 'react-native-gesture-handler';
+import { View, StyleSheet, useWindowDimensions, Image, Touchable, TouchableOpacity } from 'react-native';
 import OwnButton from '../Components/ownButton';
 import SearchBar from '../Components/searchbar';
 import { BACKGROUNDCOLOR, MAINCOLOR } from '../Constants/colors';
 import language from '../../language.json';
 import { currentLanguage } from '../Constants/language';
 import { API } from '../Constants/api';
+import { TextBlock } from '../Components/styledText';
 
 
 export default function Login({ route, navigation }:any) {
@@ -21,6 +21,7 @@ export default function Login({ route, navigation }:any) {
             <View style={[styles.container, isLargeScreen ? { width: '43%', left: "28%" } : null]}>
                 <View style={{ width: "100%", flexDirection: 'row', height: "auto", alignItems: "center", alignSelf: "flex-start", justifyContent: 'center'}}>
                     <View style={{ width: "auto", height: "auto", flexDirection: 'column', alignItems: 'center' }}>
+                        <TextBlock>Noch nicht registriert? Dann klick <TouchableOpacity onPress={()=>{navigation.navigate("Register")}}><TextBlock style={{color: "#00f"}}>hier</TextBlock></TouchableOpacity>!</TextBlock>
                         <SearchBar
                             placeholder={language.PLACEHOLDER.USERNAME[currentLanguage]}
                             style={styles.input}

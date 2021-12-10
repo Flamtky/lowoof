@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, useWindowDimensions, Image, Platform } from 'react-native';
+import { View, StyleSheet, useWindowDimensions, Image, Platform, TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import OwnButton from '../Components/ownButton';
 import SearchBar from '../Components/searchbar';
@@ -10,6 +10,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import ImagePickerField from '../Components/ImagePicker';
 import { User } from '../Api/interfaces';
 import { API } from '../Constants/api';
+import { TextBlock } from '../Components/styledText';
 
 export default function Register({ route, navigation }: any) {
     const dimensions = useWindowDimensions();
@@ -88,6 +89,7 @@ export default function Register({ route, navigation }: any) {
                 <Image source={require('../../assets/splash.png')} style={[styles.logo, { backgroundColor: MAINCOLOR }]} />
                 <View style={{ backgroundColor: MAINCOLOR, height: "100%" }}>
                     <View style={styles.inputContainer}>
+                        <TextBlock>Bereits registriert? Dann klick <TouchableOpacity onPress={()=>{navigation.navigate("Login")}}><TextBlock style={{color: "#00f"}}>hier</TextBlock></TouchableOpacity>!</TextBlock>
                         <SearchBar style={styles.input} placeholder="E-Mail" keyboardType='email-address' value={email} onChange={(event: any) => { setEmail(event.nativeEvent.text); }} />
                         <SearchBar style={styles.input} placeholder="Username" value={username} onChange={(event: any) => { setUsername(event.nativeEvent.text); }} />
                         <SearchBar style={styles.input} placeholder="Surename" value={surename} onChange={(event: any) => { setSurename(event.nativeEvent.text); }} />

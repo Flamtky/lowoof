@@ -20,14 +20,23 @@ export default function App() {
 		<NavigationContainer>
 			<Stack.Navigator>
 				{!login ? (
-					<Stack.Screen
-						name="Login"
-						component={Register}
-						initialParams={{ setLogin }}
-						options={{
-							headerShown: false,
-						}}
-					/>) : (
+					<Stack.Group>
+						<Stack.Screen
+							name="Login"
+							component={Login}
+							initialParams={{ setLogin }}
+							options={{
+								headerShown: false,
+						}}/>
+						<Stack.Screen
+							name="Register"
+							component={Register}
+							initialParams={{ setLogin }}
+							options={{
+								headerShown: false,
+						}}/>
+					</Stack.Group>
+					) : (
 					<>
 						<Stack.Screen name="Root" component={Sidebar} options={{ headerShown: false }} />
 						<Stack.Group screenOptions={{ presentation: 'modal' }}>

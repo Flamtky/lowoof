@@ -66,8 +66,11 @@ export class Api {
             user["GEBURTSTAG"] = user["GEBURTSTAG"].split("T")[0];
         }
         var res: Response = { status: 500, message: "Error" };
-        if (user["PASSWORD"] == null) {
-            return { status: 400, message: "Password is missing" };
+        if (user["PASSWORD"] == null || (user["PASSWORD"].length >= 6 && user["PASSWORD"].includes(" ") == false)) {
+            return { status: 400, message: "Password is invalid" };
+        }
+        if(user["USERNAME"].length >5  && user["USERNAME"].includes(" ") == false){
+            return { status: 400, message: "Username is invalid" };
         }
         //TODO Somehow gets called twice
         await bcrypt.hash(user["PASSWORD"], 12, async (err: any, hash: any) => {

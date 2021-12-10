@@ -11,6 +11,7 @@ import { Api } from './src/Api/lowoof-api';
 import Login from './src/Screens/Login';
 import Register from './src/Screens/Register';
 import { currentLanguage } from './src/Constants/language';
+import PetProfile from './src/Screens/PetProfile';
 
 const Stack = createNativeStackNavigator<any>();
 
@@ -27,16 +28,16 @@ export default function App() {
 							initialParams={{ setLogin }}
 							options={{
 								headerShown: false,
-						}}/>
+							}} />
 						<Stack.Screen
 							name="Register"
 							component={Register}
 							initialParams={{ setLogin }}
 							options={{
 								headerShown: false,
-						}}/>
+							}} />
 					</Stack.Group>
-					) : (
+				) : (
 					<>
 						<Stack.Screen name="Root" component={Sidebar} options={{ headerShown: false }} />
 						<Stack.Group screenOptions={{ presentation: 'modal' }}>
@@ -84,6 +85,18 @@ export default function App() {
 									fontWeight: "bold",
 								},
 							})} />
+							<Stack.Screen name="PetProfile" component={PetProfile} options={{
+								title: language.PET.HEADER[currentLanguage],
+								headerStyle: {
+									backgroundColor: BACKGROUNDCOLOR,
+								},
+								headerTitleStyle: {
+									fontSize: 24,
+									color: TITLECOLOR,
+									fontWeight: "bold",
+								},
+							}} />
+
 						</Stack.Group>
 					</>
 				)}

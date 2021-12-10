@@ -73,7 +73,13 @@ export default class Queries {
                         console.log(err + "\n---------NOT FATAL----------\n");
                         resolve(this.errorResponse);
                     } else {
-                        resolve(rows[0].SPRACHE as string);
+                        if(rows.length > 0 && rows[0].SPRACHE != null) {
+                            resolve(rows[0].SPRACHE as string);
+                        }else{
+                            resolve({status: 404, message: "User has invalid SPRACHID"} as Response);
+                        }
+
+                        
                     }
                 });
         });

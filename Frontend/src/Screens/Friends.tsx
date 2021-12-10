@@ -29,13 +29,21 @@ export default function Friends({ route, navigation }: any) {
         } else {
             API.getPetRelationships(route.params.petID).then(data => {
                 if (!data.hasOwnProperty("message")) {
+
                     setFriends((data as Relationship[]).filter(x => x.RELATIONSHIP === "Friends"));
                     setFriendsIn((data as Relationship[]).filter(x => x.TIER_B_ID === route.params.petID && x.RELATIONSHIP !== "Friends"));
                     setFriendsOut((data as Relationship[]).filter(x => x.TIER_A_ID === route.params.petID && x.RELATIONSHIP !== "Friends"));
 
+                    if ((data as Relationship[]).length === 0) {
+                        setMatchedFriends([]);
+                        setFriendsPets([]);
+                        setIsLoading(false);
+                    }
+
                     let temp: Pet[] = [];
                     (data as Relationship[]).forEach(async rel => {
                         await API.getPetData(rel.TIER_A_ID !== route.params.petID ? rel.TIER_A_ID : rel.TIER_B_ID).then((data2) => {
+
                             if (!data2.hasOwnProperty("message")) {
                                 temp.push((data2 as Pet));
                             }
@@ -64,7 +72,7 @@ export default function Friends({ route, navigation }: any) {
                 <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.FRIENDS.INCOMING_FRIEND[currentLanguage]}:</TextBlock>
                 <Seperator />
 
-                {friendsIn === null || friendsPets === null || matchedFriends === null || friendsIn.length === 0 || isLoading ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.FRIENDS.NO_REQUESTS[currentLanguage]}</TextBlock> :
+                {friendsIn === null || friendsPets === null || matchedFriends === null || friendsIn.length === 0 || isLoading ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.FRIENDS.NO_REQUESTS[currentLanguage]} 😢</TextBlock> :
                     friendsIn.map((friend: Relationship) => {
                         return (
                             <PetItem
@@ -85,7 +93,7 @@ export default function Friends({ route, navigation }: any) {
                 <TextBlock style={{ marginLeft: 15 }}>{language.FRIENDS.HEADER[currentLanguage]}:</TextBlock>
                 <Seperator />
 
-                {friends === null || friendsPets === null || matchedFriends === null || friends.length === 0 || isLoading ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.FRIENDS.NO_FRIENDS[currentLanguage]} {friendsPets?.toString()}</TextBlock> :
+                {friends === null || friendsPets === null || matchedFriends === null || friends.length === 0 || isLoading ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.FRIENDS.NO_FRIENDS[currentLanguage]} </TextBlock> :
                     friends.map((friend: Relationship) => {
                         return (
                             <PetItem
@@ -106,7 +114,7 @@ export default function Friends({ route, navigation }: any) {
                 <TextBlock style={{ marginLeft: 15 }}>{language.FRIENDS.OUTGOING_FRIEND[currentLanguage]}:</TextBlock>
                 <Seperator />
 
-                {friendsOut === null || friendsPets === null || matchedFriends === null || friendsOut.length === 0 || isLoading ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.FRIENDS.NO_REQUESTS[currentLanguage]} {friendsPets?.toString()}</TextBlock> :
+                {friendsOut === null || friendsPets === null || matchedFriends === null || friendsOut.length === 0 || isLoading ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.FRIENDS.NO_REQUESTS[currentLanguage]}</TextBlock> :
                     friendsOut.map((friend: Relationship) => {
                         return (
                             <PetItem

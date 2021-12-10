@@ -4,7 +4,6 @@ import { max } from 'react-native-reanimated';
 import { BLUE, WHITE } from '../Constants/colors';
 import { TextBlock } from './styledText';
 
-// TODO: Add type for props
 export default function OwnButton(props: any) {
     return <View style={[{ borderRadius: 5, minWidth: 100, width: "auto" }, props.style]}>
         <TouchableOpacity onPress={props.onPress}>

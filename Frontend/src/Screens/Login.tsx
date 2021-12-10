@@ -21,7 +21,7 @@ export default function Login({ route, navigation }:any) {
             <View style={[styles.container, isLargeScreen ? { width: '43%', left: "28%" } : null]}>
                 <View style={{ width: "100%", flexDirection: 'row', height: "auto", alignItems: "center", alignSelf: "flex-start", justifyContent: 'center'}}>
                     <View style={{ width: "auto", height: "auto", flexDirection: 'column', alignItems: 'center' }}>
-                        <TextBlock>Noch nicht registriert? Dann klick <TouchableOpacity onPress={()=>{navigation.navigate("Register")}}><TextBlock style={{color: "#00f"}}>hier</TextBlock></TouchableOpacity>!</TextBlock>
+                        <TextBlock>{language.LOGIN.NOT_REG[currentLanguage]}<TouchableOpacity onPress={()=>{navigation.navigate("Register")}}><TextBlock style={{color: "#00f"}}>{language.LOGIN.HERE[currentLanguage]}</TextBlock></TouchableOpacity>!</TextBlock>
                         <SearchBar
                             placeholder={language.PLACEHOLDER.USERNAME[currentLanguage]}
                             style={styles.input}
@@ -43,15 +43,15 @@ export default function Login({ route, navigation }:any) {
                     
                 </View>
                 <OwnButton
-                        title={language.LOGIN[currentLanguage]}
+                        title={language.LOGIN.LOGIN[currentLanguage]}
                         style={{ width: 88, padding: 0, minWidth: 0, borderRadius: 0 }}
                         onPress={() => {
                             if (username.trim().length < 3 || password.trim().length < 6 || username.trim().includes(' ') || password.trim().includes(' ')) {
-                                alert(language.LOGIN_ERR[currentLanguage]);
+                                alert(language.LOGIN.LOGIN_ERR[currentLanguage]);
                             } else {
                                 API.getAuthTokenfromServer(username, password).then((resp: void | "Error" ) => {{
                                     if (resp === "Error") {
-                                        alert(language.LOGIN_ERR[currentLanguage]);
+                                        alert(language.LOGIN.LOGIN_ERR[currentLanguage]);
                                     } else {
                                         route.params.setLogin(true);
                                     }

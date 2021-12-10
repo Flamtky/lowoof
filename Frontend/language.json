@@ -12,16 +12,66 @@
         "DE": "Löschen"
     },
     "LOGIN": {
-        "EN": "➤ Login",
-        "DE": "➤ Einloggen"
-    },
-    "LOGIN_ERR": {
-        "EN": "Error while logging in",
-        "DE": "Fehler beim Einloggen"
-    },
-    "WRONG_PWD": {
-        "EN": "Wrong Password!",
-        "DE": "Falsches Passwort!"
+        "LOGIN": {
+            "EN": "➤ Login",
+            "DE": "➤ Einloggen"
+        },
+        "LOGIN_ERR": {
+            "EN": "Error while logging in",
+            "DE": "Fehler beim Einloggen"
+        },
+        "WRONG_PWD": {
+            "EN": "Wrong Password!",
+            "DE": "Falsches Passwort!"
+        },
+        "NOT_REG": {
+            "EN": "Not registered yet? Then click ",
+            "DE": "Noch nicht registriert? Dann klick "
+        },
+        "HERE": {
+            "EN": "here",
+            "DE": "hier"
+        },
+        "NO_MATCH": {
+            "EN": "Passwords do not match.",
+            "DE": "Passwörter stimmen nicht überein."
+        },
+        "INV_EMAIL": {
+            "EN": "Invalid email address",
+            "DE": "Ungültige Email-adresse"
+        },
+        "INV_GENDER": {
+            "EN": "Invalid gender",
+            "DE": "Ungültiges Geschlecht"
+        },
+        "INV_BIRTHDATE": {
+            "EN": "Invalid date of birth",
+            "DE": "Ungültiges Geburtsdatum"
+        },
+        "INV_ZIP": {
+            "EN": "Invalid zip code",
+            "DE": "Ungültige Postleitzahl "
+        },
+        "INV_PHONE": {
+            "EN": "Invalid phone number",
+            "DE": "Ungültige Telefonnummer"
+        },
+        "REGISTER": {
+            "EN": "➤ Register",
+            "DE": "➤ Registrieren"
+        },
+        "REG_ERR": {
+            "EN": "Delete",
+            "DE": "Löschen"
+        },
+        "AUTH_ERR": {
+            "EN": "Delete",
+            "DE": "Löschen"
+        },
+        "DELETE": {
+            "EN": "Delete",
+            "DE": "Löschen"
+        }
     },
     "PLACEHOLDER": {
         "Search": {
@@ -50,13 +100,33 @@
             "EN": "Name",
             "DE": "Name"
         },
+        "FIRST_NAME": {
+            "EN": "First Name",
+            "DE": "Vorname"
+        },
+        "LAST_NAME": {
+            "EN": "Last Name",
+            "DE": "Nachname"
+        },
         "ADDRESS": {
             "EN": "Address",
             "DE": "Adresse"
         },
+        "ZIP": {
+            "EN": "Zip Code",
+            "DE": "PLZ"
+        },
+        "CITY": {
+            "EN": "City",
+            "DE": "Ort"
+        },
         "GENDER": {
             "EN": "Gender",
             "DE": "Geschlecht"
+        },
+        "GENDER_PICK": {
+            "EN": "Gender | Male, Female, Other",
+            "DE": "Geschlecht | Männlich, Weiblich, Diverse"
         },
         "MALE": {
             "EN": "Male",
@@ -65,6 +135,10 @@
         "FEMALE": {
             "EN": "Female",
             "DE": "Weiblich"
+        },
+        "OTHER": {
+            "EN": "Other",
+            "DE": "Diverse"
         },
         "BIRTHDAY": {
             "EN": "Date of Birth",
@@ -78,9 +152,21 @@
             "EN": "Phone Number",
             "DE": "Telefonnummer"
         },
+        "INSTITUTION": {
+            "EN": "Institution",
+            "DE": "Institution"
+        },
         "PASSWORD": {
             "EN": "Password",
             "DE": "Passwort"
+        },
+        "REPEAT_PASSWORD": {
+            "EN": "Repeat Password",
+            "DE": "Passwort wiederholen"
+        },
+        "PIC_PICK": {
+            "EN": "Pick Profile Picture",
+            "DE": "Profilbild auswählen"
         },
         "YOURPETS": {
             "EN": "Your Pets",

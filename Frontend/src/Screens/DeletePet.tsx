@@ -38,7 +38,7 @@ export default function DeletePet({ navigation, route }: any) {
                     <OwnButton title={language.DELETE[currentLanguage]} onPress={() => {
                         api.deletePet(petToDelete.TIERID, password).then((resp) => {
                             if (resp.message === "Wrong Password") {
-                                alert(language.WRONG_PWD[currentLanguage]);
+                                alert(language.LOGIN.WRONG_PWD[currentLanguage]);
                             } else if (resp.message === "Pet deleted") {
                                 alert(language.EDIT_PET.SUCCESS_DELETE[currentLanguage]);
                                 window.location.reload();

@@ -31,19 +31,19 @@ export default function Register({ route, navigation }: any) {
 
     const register = () => {
         if (username.trim().length < 3 || password.trim().length < 6 || username.trim().includes(' ') || password.trim().includes(' ')) {
-            alert('Invalid username or password.');
+            alert(language.LOGIN.LOGIN_ERR[currentLanguage]);
         } else if (password !== password2) {
-            alert('Passwords do not match.');
+            alert(language.LOGIN.NO_MATCH[currentLanguage]);
         } else if (email.trim().length < 5 || !email.trim().includes('@') || !email.trim().includes('.')) {
-            alert('Invalid email.');
+            alert(language.LOGIN.INV_EMAIL[currentLanguage]);
         } else if (['Male', 'Female', 'Other'].indexOf(gender.trim()) >= 0) {
-            alert('Invalid gender.')
+            alert(language.LOGIN.INV_GENDER[currentLanguage])
         } else if (birthdate.trim().length !== 10) {
-            alert('Invalid birthdate.');
+            alert(language.LOGIN.INV_BIRTHDATE[currentLanguage]);
         } else if (zip.trim().length !== 5 || isNaN(Number(zip))) {
-            alert('Invalid zip.');
+            alert(language.LOGIN.INV_ZIP[currentLanguage]);
         } else if (number.trim().length !== 10 || isNaN(Number(number))) {
-            alert('Invalid number.');
+            alert(language.LOGIN.INV_PHONE[currentLanguage]);
         } else {
             // new user
             const user: User = {
@@ -67,12 +67,12 @@ export default function Register({ route, navigation }: any) {
 
             API.createNewUser(user).then((resp: any) => {
                 if (resp.status !== 201) {
-                    alert('Error on creating user.');
+                    alert(language.LOGIN.REG_ERR[currentLanguage]);
                     console.log(resp);
                 } else {
                     API.getAuthTokenfromServer(username, password).then((resp2: void | "Error") => {
                         if (resp2 === "Error") {
-                            alert('Error on authentication');
+                            alert(language.LOGIN.AUTH_ERR[currentLanguage]);
                         } else {
                             route.params.setLogin(true);
                         }
@@ -90,26 +90,26 @@ export default function Register({ route, navigation }: any) {
                 <View style={{ backgroundColor: MAINCOLOR, height: "100%" }}>
                     <View style={styles.inputContainer}>
                         <TextBlock>Bereits registriert? Dann klick <TouchableOpacity onPress={()=>{navigation.navigate("Login")}}><TextBlock style={{color: "#00f"}}>hier</TextBlock></TouchableOpacity>!</TextBlock>
-                        <SearchBar style={styles.input} placeholder="E-Mail" keyboardType='email-address' value={email} onChange={(event: any) => { setEmail(event.nativeEvent.text); }} />
-                        <SearchBar style={styles.input} placeholder="Username" value={username} onChange={(event: any) => { setUsername(event.nativeEvent.text); }} />
-                        <SearchBar style={styles.input} placeholder="Surename" value={surename} onChange={(event: any) => { setSurename(event.nativeEvent.text); }} />
-                        <SearchBar style={styles.input} placeholder="Firstname" value={firstname} onChange={(event: any) => { setFirstname(event.nativeEvent.text); }} />
-                        <SearchBar style={styles.input} placeholder="Institution" value={institution} onChange={(event: any) => { setInstitution(event.nativeEvent.text); }} />
-                        <SearchBar style={styles.input} placeholder="Gender | Male, Female, Other" onChange={(event: any) => {setGender(event.nativeEvent.text.trim())}}/>
+                        <SearchBar style={styles.input} placeholder={language.PROFILE.EMAIL[currentLanguage]} keyboardType='email-address' value={email} onChange={(event: any) => { setEmail(event.nativeEvent.text); }} />
+                        <SearchBar style={styles.input} placeholder={language.PROFILE.USERNAME[currentLanguage]} value={username} onChange={(event: any) => { setUsername(event.nativeEvent.text); }} />
+                        <SearchBar style={styles.input} placeholder={language.PROFILE.LAST_NAME[currentLanguage]} value={surename} onChange={(event: any) => { setSurename(event.nativeEvent.text); }} />
+                        <SearchBar style={styles.input} placeholder={language.PROFILE.FIRST_NAME[currentLanguage]} value={firstname} onChange={(event: any) => { setFirstname(event.nativeEvent.text); }} />
+                        <SearchBar style={styles.input} placeholder={language.PROFILE.INSTITUTION[currentLanguage]} value={institution} onChange={(event: any) => { setInstitution(event.nativeEvent.text); }} />
+                        <SearchBar style={styles.input} placeholder={language.PROFILE.GENDER_PICK[currentLanguage]} onChange={(event: any) => {setGender(event.nativeEvent.text.trim())}}/>
                         <View style={{ flexDirection: "row", width: "100%", marginBottom: 5, backgroundColor: "#f5f5f5" }}>
-                            <ImagePickerField showPreview={false} onChange={setProfilePic} title="Pick Profile Picture" />
+                            <ImagePickerField showPreview={false} onChange={setProfilePic} title={language.PROFILE.PIC_PICK[currentLanguage]} />
                             {profilePic !== '' ? <Image source={{ uri: profilePic }} style={{ width: 35, height: 35, alignSelf:"center" }} /> : null}
                         </View>
-                        <SearchBar style={styles.input} placeholder="Birthdate" maxLength={2 + 1 + 2 + 1 + 4} value={birthdate} onChange={(event: any) => { setBirthdate(event.nativeEvent.text); }} />
-                        <SearchBar style={styles.input} placeholder="Zip" keyboardType='number-pad' onChange={(event: any) => { setZip(event.nativeEvent.text); }} />
-                        <SearchBar style={styles.input} placeholder="City" value={city} onChange={(event: any) => { setCity(event.nativeEvent.text); }} />
-                        <SearchBar style={styles.input} placeholder="Number" keyboardType='phone-pad' onChange={(event: any) => { event.nativeEvent.text.replace(/[^0-9]/g, ''); setNumber(event.nativeEvent.text); }} />
-                        <SearchBar style={styles.input} placeholder="Password" secureTextEntry={true} value={password} onChange={(event: any) => { setPassword(event.nativeEvent.text); }} />
-                        <SearchBar style={styles.input} placeholder="Repeat password" secureTextEntry={true} value={password2} onChange={(event: any) => { setPassword2(event.nativeEvent.text); }} />
+                        <SearchBar style={styles.input} placeholder={language.PROFILE.BIRTHDAY[currentLanguage]} maxLength={2 + 1 + 2 + 1 + 4} value={birthdate} onChange={(event: any) => { setBirthdate(event.nativeEvent.text); }} />
+                        <SearchBar style={styles.input} placeholder={language.PROFILE.ZIP[currentLanguage]} keyboardType='number-pad' onChange={(event: any) => { setZip(event.nativeEvent.text); }} />
+                        <SearchBar style={styles.input} placeholder={language.PROFILE.CITY[currentLanguage]} value={city} onChange={(event: any) => { setCity(event.nativeEvent.text); }} />
+                        <SearchBar style={styles.input} placeholder={language.PROFILE.PHONE[currentLanguage]} keyboardType='phone-pad' onChange={(event: any) => { event.nativeEvent.text.replace(/[^0-9]/g, ''); setNumber(event.nativeEvent.text); }} />
+                        <SearchBar style={styles.input} placeholder={language.PROFILE.PASSWORD[currentLanguage]} secureTextEntry={true} value={password} onChange={(event: any) => { setPassword(event.nativeEvent.text); }} />
+                        <SearchBar style={styles.input} placeholder={language.PROFILE.REPEAT_PASSWORD[currentLanguage]} secureTextEntry={true} value={password2} onChange={(event: any) => { setPassword2(event.nativeEvent.text); }} />
                     </View>
                 </View>
                 <OwnButton
-                    title="➤ Register"
+                    title={language.LOGIN.REGISTER[currentLanguage]}
                     style={{ width: 120, padding: 0, minWidth: 0, borderRadius: 0, alignSelf: "center", marginTop: 5, paddingBottom: 20 }}
                     onPress={register}
                 />
@@ -138,9 +138,9 @@ export function DropDown(props: any) {
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState(null);
     const [items, setItems] = useState([
-        { label: 'Male', value: 'm' },
-        { label: 'Woman', value: 'w' },
-        { label: 'Other', value: 'o' }
+        { label: language.PROFILE.MALE[currentLanguage], value: 'm' },
+        { label: language.PROFILE.FEMALE[currentLanguage], value: 'w' },
+        { label: language.PROFILE.OTHER[currentLanguage], value: 'o' }
     ]);
     React.useEffect(() => {
         props.onChange(value);
@@ -155,7 +155,7 @@ export function DropDown(props: any) {
             setOpen={setOpen}
             setValue={setValue}
             setItems={setItems}
-            placeholder="Gender"
+            placeholder={language.PROFILE.GENDER[currentLanguage]}
             dropDownDirection='AUTO'
             showArrowIcon={false}
             containerStyle={{

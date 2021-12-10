@@ -9,11 +9,15 @@ import OwnButton from '../Components/ownButton';
 import PetItem from '../Components/petItem';
 import language from '../../language.json';
 import { currentLanguage } from '../Constants/language';
+import { Api } from '../Api/lowoof-api';
+import { API } from '../Constants/api';
 
 
 export default function Matches({navigation}:any) {
     const dimensions = useWindowDimensions();
     const isLargeScreen = dimensions.width >= 768;
+    const api:Api = API;
+
     return (
         <View style={[styles.item, styles.container, isLargeScreen ? { width: '60%' } : { width: "100%" }]}>
             <ScrollView style={{ width: '100%' }}

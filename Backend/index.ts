@@ -327,7 +327,7 @@ app.post('/removefriend', async (req, res) => {
         var response: Response = { status: 500, message: "Internal Server Error" };
         var relation = await queries.getRelationshipBetweenPets(req.body.petid as unknown as number, req.body.friendid as unknown as number);
         if ("status" in relation) {
-            res.status(400).json({ status: res.statusCode, message: "There is no relationship" } as Response);
+            return res.status(400).json({ status: res.statusCode, message: "There is no relationship" } as Response);
         } else {
             response = await queries.removeFriend(relation.RELATIONID);
         }

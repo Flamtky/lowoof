@@ -12,6 +12,7 @@ import Login from './src/Screens/Login';
 import Register from './src/Screens/Register';
 import { currentLanguage } from './src/Constants/language';
 import PetProfile from './src/Screens/PetProfile';
+import Report from './src/Screens/Report';
 
 const Stack = createNativeStackNavigator<any>();
 
@@ -41,6 +42,17 @@ export default function App() {
 					<>
 						<Stack.Screen name="Root" component={Sidebar} options={{ headerShown: false }} />
 						<Stack.Group screenOptions={{ presentation: 'modal' }}>
+							<Stack.Screen name="PetProfile" component={PetProfile} options={{
+								title: language.PET.HEADER[currentLanguage],
+								headerStyle: {
+									backgroundColor: BACKGROUNDCOLOR,
+								},
+								headerTitleStyle: {
+									fontSize: 24,
+									color: TITLECOLOR,
+									fontWeight: "bold",
+								},
+							}} />
 							<Stack.Screen name="EditProfile" component={EditProfile} options={{
 								title: language.EDIT_PROFILE.HEADER[currentLanguage],
 								headerStyle: {
@@ -85,8 +97,8 @@ export default function App() {
 									fontWeight: "bold",
 								},
 							})} />
-							<Stack.Screen name="PetProfile" component={PetProfile} options={{
-								title: language.PET.HEADER[currentLanguage],
+							<Stack.Screen name="Report" component={Report} options={({ route }) => ({
+								title: route?.params?.name ?? "Report",
 								headerStyle: {
 									backgroundColor: BACKGROUNDCOLOR,
 								},
@@ -95,7 +107,7 @@ export default function App() {
 									color: TITLECOLOR,
 									fontWeight: "bold",
 								},
-							}} />
+							})} />
 
 						</Stack.Group>
 					</>

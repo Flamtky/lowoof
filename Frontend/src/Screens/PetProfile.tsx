@@ -23,7 +23,7 @@ export default function PetProfile({ route, navigation }: any) {
     const api: Api = API;
 
     React.useEffect(() => {
-        if (route.params.petID === null) {
+        if (route.params?.petID == null) {
             navigation.navigate('MyProfile');
         } else {
             api.getPetData(route.params.petID).then(data => {

@@ -77,7 +77,7 @@ export default function MyProfile({ route, navigation }: any) {
                             <PetItem
                                 pet={pet}
                                 navigation={navigation}
-                                onPic={() => { navigation.navigate('PetProfile') }}
+                                onPic={() => { navigation.navigate('PetProfile', {petID: pet.TIERID}) }}
                                 onEdit={() => { navigation.navigate('EditPet') }}
                                 onDelete={() => {
                                     navigation.navigate('DeletePet', { petToDelete: pet, api: api, navigation: navigation });

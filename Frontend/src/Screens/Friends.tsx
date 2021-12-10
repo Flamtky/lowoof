@@ -26,12 +26,11 @@ export default function Friends({ route, navigation }: any) {
     const api:Api = API;
 
     React.useEffect(() => {
-        if (route.params.petID === null) {
+        if (route.params.petID == undefined) {
             navigation.navigate('MyProfile');
         } else {
             api.getPetRelationships(route.params.petID).then(data => {
                 if (!data.hasOwnProperty("message")) {
-                    console.log(data);
                     setFriends((data as Relationship[]).filter(x => x.RELATIONSHIP === "Friends"));
                     setFriendsIn((data as Relationship[]).filter(x => x.TIER_B_ID === route.params.petID && x.RELATIONSHIP !== "Friends"));
                     setFriendsOut((data as Relationship[]).filter(x => x.TIER_A_ID === route.params.petID && x.RELATIONSHIP !== "Friends"));
@@ -60,7 +59,7 @@ export default function Friends({ route, navigation }: any) {
             <ScrollView style={{ width: '100%' }}
                 keyboardDismissMode="on-drag"
             >
-                <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.FRIENDS.INCOMING_FRIEND[currentLanguage]}</TextBlock>
+                <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.FRIENDS.INCOMING_FRIEND[currentLanguage]}:</TextBlock>
                 <Seperator />
 
                 {friendsIn === null || friendsPets === null || friendsIn.length === 0 || isLoading ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.FRIENDS.NO_REQUESTS[currentLanguage]} {friendsPets?.toString()}</TextBlock> :
@@ -68,6 +67,7 @@ export default function Friends({ route, navigation }: any) {
                         return (
                             <PetItem
                                 key={friend.RELATIONID}
+                                myPetID={route.params.petID}
                                 pet={friendsPets.find(x => x.TIERID === friend.TIER_A_ID) as Pet}
                                 isFriend={false}
                                 hasRequested={true}
@@ -80,7 +80,7 @@ export default function Friends({ route, navigation }: any) {
                 }
 
                 <Seperator style={{ marginBottom: 50 }} />
-                <TextBlock style={{ marginLeft: 15 }}>{language.FRIENDS.HEADER[currentLanguage]/*TODO: add ": " to string. needs testing. check other strings in this file as well*/}</TextBlock>
+                <TextBlock style={{ marginLeft: 15 }}>{language.FRIENDS.HEADER[currentLanguage]}:</TextBlock>
                 <Seperator />
 
                 {friends === null || friendsPets === null || friends.length === 0 || isLoading ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.FRIENDS.NO_FRIENDS[currentLanguage]} {friendsPets?.toString()}</TextBlock> :
@@ -88,6 +88,7 @@ export default function Friends({ route, navigation }: any) {
                         return (
                             <PetItem
                                 key={friend.RELATIONID}
+                                myPetID={route.params.petID}
                                 pet={friendsPets.find(x => x.TIERID === (friend.TIER_A_ID !== route.params.petID ? friend.TIER_A_ID : friend.TIER_B_ID)) as Pet}
                                 isFriend={true}
                                 hasRequested={false}
@@ -100,7 +101,7 @@ export default function Friends({ route, navigation }: any) {
                 }
 
                 <Seperator style={{ marginBottom: 50 }} />
-                <TextBlock style={{ marginLeft: 15 }}>{language.FRIENDS.OUTGOING_FRIEND[currentLanguage]}</TextBlock>
+                <TextBlock style={{ marginLeft: 15 }}>{language.FRIENDS.OUTGOING_FRIEND[currentLanguage]}:</TextBlock>
                 <Seperator />
 
                 {friendsOut === null || friendsPets === null || friendsOut.length === 0 || isLoading ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.FRIENDS.NO_REQUESTS[currentLanguage]} {friendsPets?.toString()}</TextBlock> :
@@ -108,6 +109,7 @@ export default function Friends({ route, navigation }: any) {
                         return (
                             <PetItem
                                 key={friend.RELATIONID}
+                                myPetID={route.params.petID}
                                 pet={friendsPets.find(x => x.TIERID === friend.TIER_B_ID) as Pet}
                                 isFriend={false}
                                 hasRequested={false}

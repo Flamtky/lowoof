@@ -1,7 +1,6 @@
 import mysql, { Pool } from 'mysql';
 import dotenv from 'dotenv';
 import { User, Response, Pet, Relationship } from './interfaces'
-import { resolveSoa } from 'dns';
 dotenv.config({ path: './vars.env' });
 
 export default class Queries {
@@ -333,6 +332,22 @@ export default class Queries {
 
     }
 
+    async removeFriend(relationid: number): Promise<Response> {
+        return new Promise<Response>((resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            connection.query(`DELETE FROM TIER_RELATIONSHIPS WHERE RELATIONID = ?;`, [relationid],
+                (err, rows, fields) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(this.errorResponse);
+                    } else {
+                        resolve({ status: 200, message: 'Friend removed' } as Response);
+                    }
+                }
+            );
+        });
+    }
+
     async authenticateByUserObject(tokenUser: any, user: User): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
             const connection: mysql.Pool = this.getConnection();
@@ -342,8 +357,12 @@ export default class Queries {
                         console.log(err);
                         resolve(false);
                     } else {
-                        if (tokenUser.username === user.USERNAME && tokenUser.password === rows[0].PASSWORD) {
-                            resolve(true);
+                        if (rows.length != 0) {
+                            if (tokenUser.username === rows[0].USERNAME && tokenUser.password === rows[0].PASSWORD) {
+                                resolve(true);
+                            } else {
+                                resolve(false);
+                            }
                         } else {
                             resolve(false);
                         }
@@ -363,11 +382,16 @@ export default class Queries {
                         console.log(err);
                         resolve(false);
                     } else {
-                        if (tokenUser.username === rows[0].USERNAME && tokenUser.password === rows[0].PASSWORD) {
-                            resolve(true);
+                        if (rows.length != 0) {
+                            if (tokenUser.username === rows[0].USERNAME && tokenUser.password === rows[0].PASSWORD) {
+                                resolve(true);
+                            } else {
+                                resolve(false);
+                            }
                         } else {
                             resolve(false);
                         }
+
 
                     }
                 }
@@ -384,8 +408,13 @@ export default class Queries {
                         console.log(err);
                         resolve(false);
                     } else {
-                        var isLoggedIn: boolean = await this.authenticateByUserId(tokenUser, rows[0].USERID);
-                        resolve(isLoggedIn);
+                        if (rows.length != 0) {
+                            var isLoggedIn: boolean = await this.authenticateByUserId(tokenUser, rows[0].USERID);
+                            resolve(isLoggedIn);
+                        } else {
+                            resolve(false);
+                        }
+
                     }
                 }
             );
@@ -444,9 +473,9 @@ export default class Queries {
             const connection: mysql.Pool = this.getConnection();
             var relation: Relationship | Response = await this.getMatchBetweenPets(petid, friendid);
             if ("status" in relation) {
-                if(relation.status != 404) {
+                if (relation.status != 404) {
                     resolve(relation);
-                }else{
+                } else {
                     var TIER_A_ID: number;
                     var TIER_B_ID: number;
                     var RELATIONSHIP: string;
@@ -472,7 +501,7 @@ export default class Queries {
                         }
                     );
                 }
-                
+
             } else {
                 var RELATIONSHIP: string = "";
                 if (relation.RELATIONSHIP == "Matched") {
@@ -488,16 +517,16 @@ export default class Queries {
                 } else {
                     resolve({ status: 500, message: "Someone messed Up" });
                 }
-                connection.query(`UPDATE TIER_MATCHES SET RELATIONSHIP=? WHERE RELATIONID = ?;`, [RELATIONSHIP,relation.RELATIONID],
-                        (err, rows, fields) => {
-                            if (err) {
-                                console.log(err);
-                                resolve(this.errorResponse);
-                            } else {
-                                resolve({ status: 200, message: 'You just matched' } as Response);
-                            }
+                connection.query(`UPDATE TIER_MATCHES SET RELATIONSHIP=? WHERE RELATIONID = ?;`, [RELATIONSHIP, relation.RELATIONID],
+                    (err, rows, fields) => {
+                        if (err) {
+                            console.log(err);
+                            resolve(this.errorResponse);
+                        } else {
+                            resolve({ status: 200, message: 'You just matched' } as Response);
                         }
-                    );
+                    }
+                );
 
             }
         });
@@ -509,16 +538,16 @@ export default class Queries {
             var relation: Relationship | Response = await this.getMatchBetweenPets(petid, friendid);
             if ("status" in relation) {
                 resolve(relation);
-            }else {
+            } else {
                 var removeRelation: boolean = false;
                 var RELATIONSHIP: string = "";
                 if (relation.RELATIONSHIP == "Matched") {
-                    if(relation.TIER_B_ID == petid){
+                    if (relation.TIER_B_ID == petid) {
                         RELATIONSHIP = "B removed A";
-                    }else if (relation.TIER_A_ID == petid) {
+                    } else if (relation.TIER_A_ID == petid) {
                         RELATIONSHIP = "A removed B";
                     }
-                    connection.query(`UPDATE TIER_MATCHES SET RELATIONSHIP=? WHERE RELATIONID = ?;`, [RELATIONSHIP,relation.RELATIONID],
+                    connection.query(`UPDATE TIER_MATCHES SET RELATIONSHIP=? WHERE RELATIONID = ?;`, [RELATIONSHIP, relation.RELATIONID],
                         (err, rows, fields) => {
                             if (err) {
                                 console.log(err);
@@ -528,7 +557,7 @@ export default class Queries {
                             }
                         }
                     );
-                    
+
                 } else if (relation.RELATIONSHIP == "A requested B" && relation.TIER_A_ID == petid) {
                     removeRelation = true;
                 } else if (relation.RELATIONSHIP == "B requested A" && relation.TIER_B_ID == petid) {
@@ -540,7 +569,7 @@ export default class Queries {
                 } else {
                     resolve({ status: 500, message: "Someone messed Up" });
                 }
-                if(removeRelation){
+                if (removeRelation) {
                     connection.query(`DELETE FROM TIER_MATCHES WHERE RELATIONID = ?;`, [relation.RELATIONID],
                         (err, rows, fields) => {
                             if (err) {
@@ -553,6 +582,22 @@ export default class Queries {
                     );
                 }
             }
+        });
+    }
+
+    async addPet(pet: Pet): Promise<Response> {
+        return new Promise<Response>(async (resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            connection.query(`INSERT INTO TIER (USERID, NAME, ART, RASSE, GESCHLECHT, GEBURTSTAG, PROFILBILD) VALUES (?, ?, ?, ?, ?, ?, BINARY(?));`, [pet.USERID, pet.NAME, pet.ART, pet.RASSE, pet.GESCHLECHT, pet.GEBURTSTAG, pet.PROFILBILD],
+                (err, rows, fields) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(this.errorResponse);
+                    } else {
+                        resolve({ status: 200, message: 'Pet added' } as Response);
+                    }
+                }
+            );
         });
     }
 }

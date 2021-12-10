@@ -62,8 +62,6 @@ export default function Sidebar() {
             backBehavior='history'
         >
             <Drawer.Screen name="MyProfile" component={MyProfile} options={{ title: language.PROFILE.HEADER[currentLanguage] }} initialParams={{ userID: 10 /* TODO: Give current UserID */ }} />
-            <Drawer.Screen name="PetProfile" component={PetProfile} options={{ title: language.PET.HEADER[currentLanguage] }}/>
-            <Drawer.Screen name="ImagePickerExample" component={ImagePickerExample} />
             <Drawer.Screen name="Matches" component={Matches} options={{ title: language.MATCHES.HEADER[currentLanguage] }}/>
             <Drawer.Screen name="Friends" component={Friends} options={{ title: language.FRIENDS.HEADER[currentLanguage] }} initialParams={{ petID: 195 /* TODO: Give current UserID */ }} />
             <Drawer.Screen name="Chats" component={Chats} options={{ title: language.CHATS.HEADER[currentLanguage] }}/>

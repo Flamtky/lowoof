@@ -9,44 +9,46 @@ import { BACKGROUNDCOLOR, MAINCOLOR } from '../Constants/colors';
 import language from '../../language.json';
 import { currentLanguage } from '../Constants/language';
 
-export default function DeletePet({ navigation, route }: any) {
+export default function Report({ navigation, route }: any) {
     const dimensions = useWindowDimensions();
     const props = route.params;
     const isLargeScreen = dimensions.width >= 768;
     const api: Api = props.api;
-    const petToDelete: Pet = props.petToDelete;
-    const [password, setPassword] = React.useState('');
+    const petToReport: Pet = props.petToReport;
+    const [reasson, setReasson] = React.useState('');
     React.useEffect(() => {
-        navigation.setParams({ name: petToDelete.NAME + " löschen" })
-        if (petToDelete == undefined) {
+        navigation.setParams({ name: petToReport.USERNAME + " reporten" })
+        if (petToReport == undefined) {
             props.navigation.navigate('MyProfile');
         }
-    }, [petToDelete]);
+    }, [petToReport]);
     return (
         <View style={{ backgroundColor: BACKGROUNDCOLOR, height: "100%" }}>
             <View style={[styles.container, isLargeScreen ? { width: '43%', left: "28%" } : { width: "100%" }]}>
                 <View style={styles.innerContainer}>
-                    <Text style={{ alignSelf: 'center', fontSize: 16 }}>{language.EDIT_PET.CONFRIM_DELETE[currentLanguage]} <Text style={styles.name}>'{petToDelete.NAME}'</Text></Text>
+                    <Text style={{ alignSelf: 'center', fontSize: 16 }}>Möchtest du wirklich <Text style={styles.name}>'{petToReport.USERNAME}'</Text> melden?</Text>
                     <SearchBar
-                        placeholder={language.PLACEHOLDER.PASSWORD[currentLanguage]}
+                        placeholder="Reasson"
                         style={styles.input}
-                        value={password}
+                        value={reasson}
                         onChange={(event: any) => {
-                            setPassword(event.nativeEvent.text);
+                            setReasson(event.nativeEvent.text);
                         }}
                     />
-                    <OwnButton title={language.DELETE[currentLanguage]} onPress={() => {
-                        api.deletePet(petToDelete.TIERID, password).then((resp) => {
-                            if (resp.message === "Wrong Password") {
-                                alert(language.LOGIN.WRONG_PWD[currentLanguage]);
-                            } else if (resp.message === "Pet deleted") {
-                                alert(language.EDIT_PET.SUCCESS_DELETE[currentLanguage]);
-                                window.location.reload();
-                            } else {
-                                console.log(resp);
-                            }
-                            setPassword('');
-                        });
+                    <OwnButton title="Melden" onPress={() => {
+                        if (reasson.trim() === '') {
+                            alert("Bitte geben Sie einen Grund an!");
+                        } else {
+                            api.addReport(petToReport.USERID, reasson.trim()).then((resp) => {
+                                if (resp.message === "/* TODO: ADD */") {
+                                    alert("Reported!");
+                                    window.location.reload();
+                                } else {
+                                    console.log(resp);
+                                }
+                                setReasson('');
+                            });
+                        }
                     }} />
                 </View>
             </View>

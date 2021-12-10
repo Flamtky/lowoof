@@ -18,8 +18,8 @@ export default function DeletePet({ navigation, route }: any) {
     const [password, setPassword] = React.useState('');
     React.useEffect(() => {
         navigation.setParams({ name: petToDelete.NAME + " löschen" })
-        if (petToDelete === undefined) {
-            //props.navigation.navigate('MyProfile');
+        if (petToDelete == undefined) {
+            props.navigation.navigate('MyProfile');
         }
     }, [petToDelete]);
     return (

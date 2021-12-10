@@ -26,7 +26,7 @@ export default function Friends({ route, navigation }: any) {
     const api:Api = API;
 
     React.useEffect(() => {
-        if (route.params.petID === null) {
+        if (route.params.petID == undefined) {
             navigation.navigate('MyProfile');
         } else {
             api.getPetRelationships(route.params.petID).then(data => {
@@ -67,6 +67,7 @@ export default function Friends({ route, navigation }: any) {
                         return (
                             <PetItem
                                 key={friend.RELATIONID}
+                                myPetID={route.params.petID}
                                 pet={friendsPets.find(x => x.TIERID === friend.TIER_A_ID) as Pet}
                                 isFriend={false}
                                 hasRequested={true}
@@ -87,6 +88,7 @@ export default function Friends({ route, navigation }: any) {
                         return (
                             <PetItem
                                 key={friend.RELATIONID}
+                                myPetID={route.params.petID}
                                 pet={friendsPets.find(x => x.TIERID === (friend.TIER_A_ID !== route.params.petID ? friend.TIER_A_ID : friend.TIER_B_ID)) as Pet}
                                 isFriend={true}
                                 hasRequested={false}
@@ -107,6 +109,7 @@ export default function Friends({ route, navigation }: any) {
                         return (
                             <PetItem
                                 key={friend.RELATIONID}
+                                myPetID={route.params.petID}
                                 pet={friendsPets.find(x => x.TIERID === friend.TIER_B_ID) as Pet}
                                 isFriend={false}
                                 hasRequested={false}

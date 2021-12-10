@@ -18,7 +18,7 @@ export default function Report({ navigation, route }: any) {
     const [reasson, setReasson] = React.useState('');
     React.useEffect(() => {
         navigation.setParams({ name: petToReport.USERNAME + " reporten" })
-        if (petToReport === undefined) {
+        if (petToReport == undefined) {
             props.navigation.navigate('MyProfile');
         }
     }, [petToReport]);

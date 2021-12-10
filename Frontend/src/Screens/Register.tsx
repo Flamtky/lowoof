@@ -37,6 +37,8 @@ export default function Register({ route, navigation }: any) {
             alert('Passwords do not match.');
         } else if (email.trim().length < 5 || !email.trim().includes('@') || !email.trim().includes('.')) {
             alert('Invalid email.');
+        } else if (['Male', 'Female', 'Other'].indexOf(gender.trim()) >= 0) {
+            alert('Invalid gender.')
         } else if (birthdate.trim().length !== 10) {
             alert('Invalid birthdate.');
         } else if (zip.trim().length !== 5 || isNaN(Number(zip))) {
@@ -93,10 +95,10 @@ export default function Register({ route, navigation }: any) {
                         <SearchBar style={styles.input} placeholder="Surename" value={surename} onChange={(event: any) => { setSurename(event.nativeEvent.text); }} />
                         <SearchBar style={styles.input} placeholder="Firstname" value={firstname} onChange={(event: any) => { setFirstname(event.nativeEvent.text); }} />
                         <SearchBar style={styles.input} placeholder="Institution" value={institution} onChange={(event: any) => { setInstitution(event.nativeEvent.text); }} />
+                        <SearchBar style={styles.input} placeholder="Gender | Male, Female, Other" onChange={(event: any) => {setGender(event.nativeEvent.text.trim())}}/>
                         <View style={{ flexDirection: "row", width: "100%", marginBottom: 5, backgroundColor: "#f5f5f5" }}>
-                            <DropDown onChange={setGender} />
-                            {profilePic !== '' ? <Image source={{ uri: profilePic }} style={{ width: 35, height: 35, alignSelf:"center" }} /> : null}
                             <ImagePickerField showPreview={false} onChange={setProfilePic} title="Pick Profile Picture" />
+                            {profilePic !== '' ? <Image source={{ uri: profilePic }} style={{ width: 35, height: 35, alignSelf:"center" }} /> : null}
                         </View>
                         <SearchBar style={styles.input} placeholder="Birthdate" maxLength={2 + 1 + 2 + 1 + 4} value={birthdate} onChange={(event: any) => { setBirthdate(event.nativeEvent.text); }} />
                         <SearchBar style={styles.input} placeholder="Zip" keyboardType='number-pad' onChange={(event: any) => { setZip(event.nativeEvent.text); }} />
@@ -108,7 +110,7 @@ export default function Register({ route, navigation }: any) {
                 </View>
                 <OwnButton
                     title="➤ Register"
-                    style={{ width: 120, padding: 0, minWidth: 0, borderRadius: 0, alignSelf: "center", marginTop: 5 }}
+                    style={{ width: 120, padding: 0, minWidth: 0, borderRadius: 0, alignSelf: "center", marginTop: 5, paddingBottom: 20 }}
                     onPress={register}
                 />
             </ScrollView>

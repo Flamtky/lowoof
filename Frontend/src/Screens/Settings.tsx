@@ -2,6 +2,8 @@ import React from 'react';
 import { StyleSheet, View, Text, useWindowDimensions, ScrollView } from 'react-native';
 import OwnButton from '../Components/ownButton';
 import { MAINCOLOR } from '../Constants/colors';
+import language from '../../language.json';
+import { currentLanguage } from '../../App';
 
 export default function Settings({ navigation }: any) {
     const dimensions = useWindowDimensions();
@@ -13,10 +15,10 @@ export default function Settings({ navigation }: any) {
                 keyboardDismissMode="on-drag"
             >
                 <View>
-                    <Text>Einstellungen</Text>
+                    <Text>{language.SETTINGS.HEADER[currentLanguage]}</Text>
                 </View>
             </ScrollView>
-            <OwnButton title="Zurück" style={{ margin: 32, alignSelf: "flex-start" }} onPress={() => {
+            <OwnButton title={language.BACK[currentLanguage]} style={{ margin: 32, alignSelf: "flex-start" }} onPress={() => {
                 navigation.goBack();
             }} />
         </View>

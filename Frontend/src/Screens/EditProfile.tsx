@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { View, Text, StyleSheet, useWindowDimensions } from 'react-native';
 import { BACKGROUNDCOLOR, MAINCOLOR } from '../Constants/colors';
+import language from '../../language.json';
+import { currentLanguage } from '../../App';
 
 export function EditProfile() {
     const dimensions = useWindowDimensions();
@@ -8,7 +10,7 @@ export function EditProfile() {
     return (
         <View style={{ backgroundColor: BACKGROUNDCOLOR, height: "100%" }}>
             <View style={[styles.container, isLargeScreen ? { width: '43%', left: "28%" } : { width: "100%" }]}>
-                <Text>Profil bearbeiten</Text>
+                <Text>{language.EDIT_PROFILE.HEADER[currentLanguage]}</Text>
             </View>
         </View>
     );
@@ -20,7 +22,7 @@ export function EditPet() {
     return (
         <View style={{ backgroundColor: BACKGROUNDCOLOR, height: "100%" }}>
             <View style={[styles.container, isLargeScreen ? { width: '43%', left: "28%" } : { width: "100%" }]}>
-                <Text>Animal bearbeiten</Text>
+                <Text>{language.EDIT_PET.HEADER[currentLanguage]}</Text>
             </View>
         </View>
     );

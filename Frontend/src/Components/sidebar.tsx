@@ -10,6 +10,9 @@ import Chats from '../Screens/Chats';
 import Settings from '../Screens/Settings';
 import { BACKGROUNDCOLOR, BLACK, TITLECOLOR, WHITE } from '../Constants/colors';
 import ImagePickerExample from '../Screens/test';
+import language from '../../language.json';
+import { currentLanguage } from '../../App';
+import Search from '../Screens/Search';
 
 const Drawer = createDrawerNavigator();
 
@@ -59,13 +62,13 @@ export default function Sidebar() {
             }}
             backBehavior='history'
         >
-            <Drawer.Screen name="MyProfile" component={MyProfile} initialParams={{ userID: 10 /* TODO: Give current UserID */ }} />
-            <Drawer.Screen name="PetProfile" component={PetProfile} />
+            <Drawer.Screen name="MyProfile" component={MyProfile} options={{ title: language.PROFILE.HEADER[currentLanguage] }} initialParams={{ userID: 10 /* TODO: Give current UserID */ }} />
+            <Drawer.Screen name="PetProfile" component={PetProfile} options={{ title: language.PET.HEADER[currentLanguage] }}/>
             <Drawer.Screen name="ImagePickerExample" component={ImagePickerExample} />
-            <Drawer.Screen name="Matches" component={Matches} />
-            <Drawer.Screen name="Friends" component={Friends} initialParams={{ petID: 195 /* TODO: Give current UserID */ }} />
-            <Drawer.Screen name="Chats" component={Chats} />
-            <Drawer.Screen name="Settings" component={Settings} />
+            <Drawer.Screen name="Matches" component={Matches} options={{ title: language.MATCHES.HEADER[currentLanguage] }}/>
+            <Drawer.Screen name="Friends" component={Friends} options={{ title: language.FRIENDS.HEADER[currentLanguage] }} initialParams={{ petID: 195 /* TODO: Give current UserID */ }} />
+            <Drawer.Screen name="Chats" component={Chats} options={{ title: language.CHATS.HEADER[currentLanguage] }}/>
+            <Drawer.Screen name="Settings" component={Settings} options={{ title: language.SETTINGS.HEADER[currentLanguage] }}/>
         </Drawer.Navigator>
     );
 }

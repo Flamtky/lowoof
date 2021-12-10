@@ -20,7 +20,7 @@ export default function Login({ route, navigation }:any) {
                 <View style={{ width: "100%", flexDirection: 'row', height: "auto", alignItems: "center", alignSelf: "flex-start", justifyContent: 'center'}}>
                     <View style={{ width: "auto", height: "auto", flexDirection: 'column', alignItems: 'center' }}>
                         <SearchBar
-                            placeholder="Username"
+                            placeholder={language.PLACEHOLDER.USERNAME[currentLanguage]}
                             style={styles.input}
                             value={username}
                             onChange={(event: any) => {
@@ -28,7 +28,7 @@ export default function Login({ route, navigation }:any) {
                             }}
                         />
                         <SearchBar
-                            placeholder="Password"
+                            placeholder={language.PLACEHOLDER.PASSWORD[currentLanguage]}
                             style={styles.input}
                             value={password}
                             onChange={(event: any) => {
@@ -40,15 +40,15 @@ export default function Login({ route, navigation }:any) {
                     
                 </View>
                 <OwnButton
-                        title="➤ Login"
+                        title={language.LOGIN[currentLanguage]}
                         style={{ width: 88, padding: 0, minWidth: 0, borderRadius: 0 }}
                         onPress={() => {
                             if (username.trim().length < 3 || password.trim().length < 6 || username.trim().includes(' ') || password.trim().includes(' ')) {
-                                alert('Invalid username or password.');
+                                alert(language.LOGIN_ERR[currentLanguage]);
                             } else {
                                 API.getAuthTokenfromServer(username, password).then((resp: void | "Error" ) => {{
                                     if (resp === "Error") {
-                                        alert('Invalid username or password.');
+                                        alert(language.LOGIN_ERR[currentLanguage]);
                                     } else {
                                         route.params.setLogin(true);
                                     }

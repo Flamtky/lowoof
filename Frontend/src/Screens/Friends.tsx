@@ -80,7 +80,7 @@ export default function Friends({ route, navigation }: any) {
                 }
 
                 <Seperator style={{ marginBottom: 50 }} />
-                <TextBlock style={{ marginLeft: 15 }}>{language.FRIENDS.INCOMING_FRIEND[currentLanguage]/*TODO: add ": " to string. needs testing. check other strings in this file as well*/}</TextBlock>
+                <TextBlock style={{ marginLeft: 15 }}>{language.FRIENDS.HEADER[currentLanguage]/*TODO: add ": " to string. needs testing. check other strings in this file as well*/}</TextBlock>
                 <Seperator />
 
                 {friends === null || friendsPets === null || friends.length === 0 || isLoading ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.FRIENDS.NO_FRIENDS[currentLanguage]} {friendsPets?.toString()}</TextBlock> :
@@ -120,7 +120,7 @@ export default function Friends({ route, navigation }: any) {
                 }
                 <Seperator />
             </ScrollView>
-            <OwnButton title={language.BTN_BACK[currentLanguage]} style={{ margin: 32, alignSelf: "flex-start" }} onPress={() => {
+            <OwnButton title={language.BACK[currentLanguage]} style={{ margin: 32, alignSelf: "flex-start" }} onPress={() => {
                 navigation.goBack();
             }} />
         </View>

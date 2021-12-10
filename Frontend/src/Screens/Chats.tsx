@@ -6,6 +6,8 @@ import { BLACK, MAINCOLOR } from '../Constants/colors';
 import { TextBlock } from '../Components/styledText';
 import Seperator from '../Components/seperator';
 import OwnButton from '../Components/ownButton';
+import language from '../../language.json';
+import { currentLanguage } from '../../App';
 
 export default function Chats({ navigation }: any) {
     const dimensions = useWindowDimensions();
@@ -23,9 +25,9 @@ export default function Chats({ navigation }: any) {
                             />
                         </TouchableOpacity>
                         <View style={{ marginLeft: 10, height: "100%", justifyContent: "space-between" }}>
-                            <TextBlock>Besitzer: </TextBlock>
-                            <TextBlock>Rufname: </TextBlock>
-                            <TextBlock>Letzte Nachricht: </TextBlock>
+                            <TextBlock>{language.PET.OWNER[currentLanguage]}: </TextBlock>
+                            <TextBlock>{language.PET.NAME[currentLanguage]}: </TextBlock>
+                            <TextBlock>{language.CHATS.LAST_MSG[currentLanguage]}: </TextBlock>
                         </View>
                         <TouchableOpacity onPress={() => { /* Delete */ }} style={{ marginLeft: "auto", alignSelf: "center", right: 20 }}>
                             <FontAwesomeIcon icon={faTrashAlt} size={32} color="#555" />
@@ -34,7 +36,7 @@ export default function Chats({ navigation }: any) {
                 </TouchableOpacity>
                 <Seperator />
             </ScrollView>
-            <OwnButton title="Zurück" style={{ margin: 32, alignSelf: "flex-start" }} onPress={() => {
+            <OwnButton title={language.BACK[currentLanguage]} style={{ margin: 32, alignSelf: "flex-start" }} onPress={() => {
                 navigation.goBack();
             }} />
         </View>

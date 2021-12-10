@@ -23,7 +23,7 @@ export default function Matches({navigation}:any) {
                 <PetItem/>
                 <Seperator/>
             </ScrollView>
-            <OwnButton title={language.BTN_BACK[currentLanguage]} style={{ margin: 32, alignSelf: "flex-start" }} onPress={() => {
+            <OwnButton title={language.BACK[currentLanguage]} style={{ margin: 32, alignSelf: "flex-start" }} onPress={() => {
                 navigation.goBack();
             }} />
         </View>

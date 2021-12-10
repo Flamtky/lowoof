@@ -63,28 +63,28 @@ export default function PetProfile({ route, navigation }: any) {
                     </View>
                     <View style={styles.row}>
                         <View style={{ width: "50%" }}>
-                            <TextBlock>{language.PET.NAME[currentLanguage]}{petProfile?.NAME}</TextBlock>
-                            <TextBlock>{language.PET.OWNER[currentLanguage]}{ownerProfile?.USERNAME}</TextBlock>
+                            <TextBlock>{language.PET.NAME[currentLanguage]}: {petProfile?.NAME}</TextBlock>
+                            <TextBlock>{language.PET.OWNER[currentLanguage]}: {ownerProfile?.USERNAME}</TextBlock>
                             <TextBlock> </TextBlock>
-                            <TextBlock>{language.PET.GENDER[currentLanguage]}{petProfile?.GESCHLECHT}</TextBlock>
-                            <TextBlock>{language.PET.BIRTHDAY[currentLanguage]}{petProfile?.GEBURTSTAG}</TextBlock>
+                            <TextBlock>{language.PET.GENDER[currentLanguage]}: {petProfile?.GESCHLECHT}</TextBlock>
+                            <TextBlock>{language.PET.BIRTHDAY[currentLanguage]}: {petProfile?.GEBURTSTAG}</TextBlock>
                             <TextBlock> </TextBlock>
-                            <TextBlock>{language.PET.SPECIES[currentLanguage]}{petProfile?.ART} </TextBlock>
-                            <TextBlock>{language.PET.BREED[currentLanguage]}{petProfile?.RASSE} </TextBlock>
-                            <TextBlock>Text... </TextBlock>
+                            <TextBlock>{language.PET.SPECIES[currentLanguage]}: {petProfile?.ART} </TextBlock>
+                            <TextBlock>{language.PET.BREED[currentLanguage]}: {petProfile?.RASSE} </TextBlock>
+                            <TextBlock>{language.PET.DESCRIPTION[currentLanguage]}: </TextBlock>
+                            <TextBlock>Text... </TextBlock> {/* TODO: Beschreibung einfügen */}
                             <TextBlock>Text... </TextBlock>
                         </View>
                         <View style={{ width: "50%" }}>
                             <TextBlock> </TextBlock>
-                            <TextBlock>{language.PET.PREFERENCES[currentLanguage]}</TextBlock>
+                            <TextBlock>{language.PET.PREFERENCES[currentLanguage]}: </TextBlock>
                             <TextBlock> </TextBlock>
-                            <TextBlock>{language.PET.DISTANCE[currentLanguage]}</TextBlock>
-                            <TextBlock>{language.PET.GENDER[currentLanguage]}</TextBlock>
-                            <TextBlock>{language.PET.AGE[currentLanguage]}</TextBlock>
+                            <TextBlock>{language.PET.DISTANCE[currentLanguage]}: </TextBlock> {/* TODO: Präferenzen-werte einfügen */}
+                            <TextBlock>{language.PET.GENDER[currentLanguage]}: </TextBlock>
+                            <TextBlock>{language.PET.AGE[currentLanguage]}: </TextBlock>
                             <TextBlock> </TextBlock>
                             <TextBlock>{language.PET.FEATURES[currentLanguage]}</TextBlock>
-                            <TextBlock>Text... </TextBlock>
-                            <TextBlock>Text... </TextBlock>
+                            <TextBlock>Text... </TextBlock> {/* TODO: Text Merkmale einfügen */}
                             <TextBlock>Text... </TextBlock>
                         </View>
                     </View>
@@ -103,7 +103,7 @@ export default function PetProfile({ route, navigation }: any) {
                     <Seperator />
                 </View>
             </ScrollView>
-            <OwnButton title={language.BTN_BACK[currentLanguage]} style={{ margin: 32, alignSelf: "flex-start" }} onPress={() => {
+            <OwnButton title={language.BACK[currentLanguage]} style={{ margin: 32, alignSelf: "flex-start" }} onPress={() => {
                 navigation.goBack();
             }} />
         </View>

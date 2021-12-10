@@ -1,15 +1,41 @@
 {
-    "Search": {
-        "EN": "Search...",
-        "DE": "Suchen..."
-    },
-    "BTN_BACK": {
+    "BACK": {
         "EN": "Back",
         "DE": "Zurück"
     },
-    "BTN_SAVE": {
+    "SAVE": {
         "EN": "Save",
         "DE": "Speichern"
+    },
+    "DELETE": {
+        "EN": "Delete",
+        "DE": "Löschen"
+    },
+    "LOGIN": {
+        "EN": "➤ Login",
+        "DE": "➤ Einloggen"
+    },
+    "LOGIN_ERR": {
+        "EN": "Error while logging in",
+        "DE": "Fehler beim Einloggen"
+    },
+    "WRONG_PWD": {
+        "EN": "Wrong Password!",
+        "DE": "Falsches Passwort!"
+    },
+    "PLACEHOLDER": {
+        "Search": {
+            "EN": "Search...",
+            "DE": "Suchen..."
+        },
+        "USERNAME": {
+            "EN": "Username",
+            "DE": "Benutzername"
+        },
+        "PASSWORD": {
+            "EN": "Password",
+            "DE": "Passwort"
+        }
     },
     "PROFILE": {
         "HEADER": {
@@ -20,21 +46,13 @@
             "EN": "Username",
             "DE": "Benutzername"
         },
-        "LASTNAME": {
-            "EN": "Last Name",
-            "DE": "Nachname"
+        "NAME": {
+            "EN": "Name",
+            "DE": "Name"
         },
-        "FIRSTNAME": {
-            "EN": "First Name",
-            "DE": "Vorname"
-        },
-        "POSTCODE": {
-            "EN": "Zip Code",
-            "DE": "PLZ"
-        },
-        "CITY": {
-            "EN": "City",
-            "DE": "Ort"
+        "ADDRESS": {
+            "EN": "Address",
+            "DE": "Adresse"
         },
         "GENDER": {
             "EN": "Gender",
@@ -137,6 +155,14 @@
         "DELETE": {
             "EN": "Delete Pet",
             "DE": "Haustier löschen"
+        },
+        "CONFRIM_DELETE": {
+            "EN": "Do you really want to delete this pet?",
+            "DE": "Wollen Sie dieses Haustier wirklich löschen?"
+        },
+        "SUCCESS_DELETE": {
+            "EN": "Pet was successfully deleted.",
+            "DE": "Haustier wurde erfolgreich gelöscht."
         }
     },
     "MATCHES": {
@@ -165,10 +191,6 @@
         "NO_FRIENDS": {
             "EN": "No Friends",
             "DE": "Keine Freunde"
-        },
-        "": {
-            "EN": "",
-            "DE": ""
         }
     },
     "CHATS": {
@@ -183,12 +205,30 @@
         "MESSAGE": {
             "EN": "Message...",
             "DE": "Nachricht..."
+        },
+        "LAST_MSG": {
+            "EN": "Last Message",
+            "DE": "Letzte Nachricht"
         }
     },
     "SETTINGS": {
         "HEADER": {
             "EN": "Settings",
             "DE": "Einstellungen"
+        }
+    },
+    "IMAGE_PICKER": {
+        "HEADER": {
+            "EN": "Image Picker",
+            "DE": "Foto Auswählen"
+        },
+        "NEED_PERM": {
+            "EN": "Sorry, we need camera roll permissions to make this work!",
+            "DE": "Tut uns Leid, ohne Zugriff auf die Galerie kann kein Bild ausgeählt werden!"
+        },
+        "PICK_IMAGE": {
+            "EN": "Pick an image from camera roll",
+            "DE": "Wähle ein Bild aus deiner Galerie aus"
         }
     }
 }

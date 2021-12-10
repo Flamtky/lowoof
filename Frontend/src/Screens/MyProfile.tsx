@@ -55,18 +55,18 @@ export default function MyProfile({ route, navigation }: any) {
                         </View>
                     </View>
                     <View style={styles.column}>
-                        <TextBlock>{profile?.USERNAME ?? "<Username>"}</TextBlock>
-                        <TextBlock>{profile?.NACHNAME ?? "<Last Name>"}, {profile?.VORNAME ?? "<First Name>"} </TextBlock>
+                        <TextBlock>{language.PROFILE.USERNAME[currentLanguage]}: {profile?.USERNAME ?? "<Username>"}</TextBlock>
+                        <TextBlock>{language.PROFILE.NAME[currentLanguage]}: {profile?.NACHNAME ?? "<Last Name>"}, {profile?.VORNAME ?? "<First Name>"} </TextBlock>
                     </View>
                     <View style={styles.row}>
                         <View style={{ width: "50%" }}>
-                            <TextBlock>{profile?.PLZ ?? "<Zip Code>"}, {profile?.WOHNORT ?? "<City>"} </TextBlock>
-                            <TextBlock>{profile?.GESCHLECHT ?? "<Gender>"} </TextBlock>
-                            <TextBlock>{moment(profile?.GEBURTSTAG).format("MM/DD/YYYY") ?? "<Date Of Birth>"} </TextBlock>
+                            <TextBlock>{language.PROFILE.ADDRESS[currentLanguage]}: {profile?.PLZ ?? "<Zip Code>"}, {profile?.WOHNORT ?? "<City>"} </TextBlock>
+                            <TextBlock>{language.PROFILE.GENDER[currentLanguage]}: {profile?.GESCHLECHT ?? "<Gender>"} </TextBlock>
+                            <TextBlock>{language.PROFILE.BIRTHDAY[currentLanguage]}: {moment(profile?.GEBURTSTAG).format("MM/DD/YYYY") ?? "<Date Of Birth>"} </TextBlock>
                         </View>
                         <View style={{ width: "50%" }}>
-                            <TextBlock>{profile?.EMAIL ?? "<E-Mail>"}</TextBlock>
-                            <TextBlock>{profile?.TELEFONNUMMER ?? "<Phone Number>"} </TextBlock>
+                            <TextBlock>{language.PROFILE.EMAIL[currentLanguage]}: {profile?.EMAIL ?? "<E-Mail>"}</TextBlock>
+                            <TextBlock>{language.PROFILE.PHONE[currentLanguage]}: {profile?.TELEFONNUMMER ?? "<Phone Number>"} </TextBlock>
                         </View>
                     </View>
                     <Seperator />
@@ -105,12 +105,12 @@ function PetItem(props: any) {
                     />
                 </TouchableOpacity>
                 <View style={{ marginLeft: 10 }}>
-                    <TextBlock>Matches: </TextBlock>
+                    <TextBlock>{language.MATCHES.HEADER[currentLanguage]/* TODO: add Matches Number */}: </TextBlock>
                     <TextBlock>{pet.NAME ?? "<Name>"}</TextBlock>
                     <TextBlock>{pet.ART ?? "<Species>"} </TextBlock>
                     <TextBlock>{pet.RASSE ?? "<Breet>"}</TextBlock>
                 </View>
-                <View style={[styles.row, { marginLeft: "auto", right: "10%" }]}>
+                <View style={[styles.row, { marginTop: 0, marginLeft: "auto", right: "10%" }]}>
                     <TouchableOpacity onPress={props.onEdit}>
                         <FontAwesomeIcon icon={faUserEdit} size={40} />
                     </TouchableOpacity>

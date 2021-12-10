@@ -17,19 +17,17 @@ export default function PetItem(props: any) {
     const hasRequested = props.hasRequested; /* Has this pet requested to become my friend? */
     const hasOwnRequest = props.hasOwnRequest; /* Have I requested to become this pet's friend? */
     const isMarkedAttractive = props.isMarkedAttractive; /* Have I marked this pet as attractive? */
-    return (<View style={[styles.row, { marginLeft: 15, height: 60 }]}>
+    return (<View style={[styles.row, { marginLeft: 15, height: 70 }]}>
         <TouchableOpacity onPress={() => {/* Show profile */ }} >
             <Image style={styles.profilepicture}
                 source={{ uri: pet.PROFILBILD != null ? "data:image/png;base64," + Buffer.from(pet.PROFILBILD, 'base64').toString('base64') : "https://puu.sh/IsTPQ/5d69029437.png" }}
             />
         </TouchableOpacity>
-        <View style={{ marginLeft: 10, height: "100%", justifyContent: "space-between" }}>
-            <TextBlock>{language.PET.OWNER[currentLanguage]}{pet.USERID /* TODO: Get Owner */}</TextBlock>
-            <TextBlock>{language.PET.NAME[currentLanguage]}{pet.NAME}</TextBlock>
-            <View style={[styles.row, { marginTop: 0 }]}>
-                <TextBlock>{language.PET.SPECIES[currentLanguage]}{pet.ART} </TextBlock>
-                <TextBlock>{language.PET.BREED[currentLanguage]}{pet.RASSE}</TextBlock>
-            </View>
+        <View style={{ marginLeft: 10, height: 20, justifyContent: "space-between" }}>
+            <TextBlock>{language.PET.OWNER[currentLanguage]}: {pet.USERID /* TODO: Get Owner */}</TextBlock>
+            <TextBlock>{language.PET.NAME[currentLanguage]}: {pet.NAME}</TextBlock>
+            <TextBlock>{language.PET.SPECIES[currentLanguage]}: {pet.ART}</TextBlock>
+            <TextBlock>{language.PET.BREED[currentLanguage]}: {pet.RASSE}</TextBlock>
         </View>
         <View style={[styles.row, { marginLeft: "auto", right: "5%" }]}>
             <TouchableOpacity onPress={() => { /* Freundschaftsanfrage */ }} style={[{ marginRight: 6 }, (!isFriend && !hasOwnRequest) || hasRequested ? null : { display: "none" }]}>

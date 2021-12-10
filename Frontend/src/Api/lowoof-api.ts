@@ -328,7 +328,7 @@ export class Api {
      */
     async getUserLanguage(userId: number): Promise<string | Response> {
         var res: string | Response = { status: 500, message: "Error" };
-        await axios.get(this.url + '/getuserlanguage&userid=' + userId, {
+        await axios.get(this.url + '/getuserlanguage?userid=' + userId, {
             headers: {
                 'Authorization': `Beaver ${this.apiToken}`
             }

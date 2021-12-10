@@ -8,7 +8,8 @@ import Seperator from '../Components/seperator';
 import OwnButton from '../Components/ownButton';
 import PetItem from '../Components/petItem';
 import language from '../../language.json';
-import { currentLanguage } from '../../App';
+import { currentLanguage } from '../Constants/language';
+
 
 export default function Matches({navigation}:any) {
     const dimensions = useWindowDimensions();

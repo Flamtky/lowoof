@@ -2,7 +2,8 @@ import * as React from 'react';
 import { View, Text, StyleSheet, useWindowDimensions } from 'react-native';
 import { BACKGROUNDCOLOR, MAINCOLOR } from '../Constants/colors';
 import language from '../../language.json';
-import { currentLanguage } from '../../App';
+import { currentLanguage } from '../Constants/language';
+
 
 export function EditProfile() {
     const dimensions = useWindowDimensions();

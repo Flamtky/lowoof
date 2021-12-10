@@ -5,7 +5,7 @@ import OwnButton from '../Components/ownButton';
 import SearchBar from '../Components/searchbar';
 import { BACKGROUNDCOLOR, MAINCOLOR } from '../Constants/colors';
 import language from '../../language.json';
-import { currentLanguage } from '../../App';
+import { currentLanguage } from '../Constants/language';
 
 export function Chat(props: any) {
     const dimensions = useWindowDimensions();

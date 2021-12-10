@@ -12,8 +12,9 @@ import { User, Pet } from '../Api/interfaces';
 import moment from 'moment';
 import { Buffer } from "buffer"
 import language from '../../language.json';
-import { currentLanguage } from '../../App';
-import { API } from '../../App';
+import { currentLanguage } from '../Constants/language';
+import { API } from '../Constants/api';
+
 
 export default function MyProfile({ route, navigation }: any) {
     const dimensions = useWindowDimensions();

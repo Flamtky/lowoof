@@ -5,10 +5,11 @@ import OwnButton from '../Components/ownButton';
 import SearchBar from '../Components/searchbar';
 import { BACKGROUNDCOLOR, BLACK, MAINCOLOR } from '../Constants/colors';
 import language from '../../language.json';
-import { API, currentLanguage } from '../../App';
+import { currentLanguage } from '../Constants/language';
 import DropDownPicker from 'react-native-dropdown-picker';
 import ImagePickerField from '../Components/ImagePicker';
 import { User } from '../Api/interfaces';
+import { API } from '../Constants/api';
 
 type Gender = "Male" | "Female" | "Other";
 

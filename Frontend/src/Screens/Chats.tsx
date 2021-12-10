@@ -7,7 +7,7 @@ import { TextBlock } from '../Components/styledText';
 import Seperator from '../Components/seperator';
 import OwnButton from '../Components/ownButton';
 import language from '../../language.json';
-import { currentLanguage } from '../../App';
+import { currentLanguage } from '../Constants/language';
 
 export default function Chats({ navigation }: any) {
     const dimensions = useWindowDimensions();

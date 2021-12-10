@@ -10,15 +10,9 @@ import language from './language.json';
 import { Api } from './src/Api/lowoof-api';
 import Login from './src/Screens/Login';
 import Register from './src/Screens/Register';
+import { currentLanguage } from './src/Constants/language';
 
 const Stack = createNativeStackNavigator<any>();
-
-export let currentLanguage: "EN" | "DE" = 'EN';
-export const setLanguage = (lang: "EN" | "DE") => {
-	currentLanguage = lang;
-};
-
-export const API = new Api();
 
 export default function App() {
 	const [login, setLogin] = React.useState<boolean>(false);

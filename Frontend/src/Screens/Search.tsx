@@ -8,7 +8,8 @@ import Seperator from '../Components/seperator';
 import { TextBlock } from '../Components/styledText';
 import { BLACK, MAINCOLOR } from '../Constants/colors';
 import language from '../../language.json';
-import { currentLanguage } from '../../App';
+import { currentLanguage } from '../Constants/language';
+
 
 export default function Suche({ navigation }: any) {
     const dimensions = useWindowDimensions();

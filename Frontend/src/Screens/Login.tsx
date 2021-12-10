@@ -5,7 +5,9 @@ import OwnButton from '../Components/ownButton';
 import SearchBar from '../Components/searchbar';
 import { BACKGROUNDCOLOR, MAINCOLOR } from '../Constants/colors';
 import language from '../../language.json';
-import { API, currentLanguage } from '../../App';
+import { currentLanguage } from '../Constants/language';
+import { API } from '../Constants/api';
+
 
 export default function Login({ route, navigation }:any) {
     const dimensions = useWindowDimensions();

@@ -3,7 +3,8 @@ import { StyleSheet, useWindowDimensions } from "react-native";
 import { View, TextInput } from "react-native";
 import { BLACK, GRAY, LIGHTGRAY } from '../Constants/colors';
 import language from '../../language.json';
-import { currentLanguage } from '../../App';
+import { currentLanguage } from '../Constants/language';
+
 
 export default function SearchBar(props: any) {
     const dimensions = useWindowDimensions();

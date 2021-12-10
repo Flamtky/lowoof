@@ -1,6 +1,5 @@
 import React from "react";
-import { ColorValue, StyleSheet, View } from "react-native";
-import { BACKGROUNDCOLOR } from "../Constants/colors";
+import { StyleSheet, View } from "react-native";
 
 
 export default function Seperator(props: any) {

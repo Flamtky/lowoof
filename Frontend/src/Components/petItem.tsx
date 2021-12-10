@@ -6,10 +6,9 @@ import { StyleSheet, View, Image, TouchableOpacity } from "react-native"
 import { BLACK, MAINCOLOR } from "../Constants/colors"
 import { TextBlock } from "./styledText"
 import { Pet } from "../Api/interfaces"
-import { Api } from "../Api/lowoof-api"
 import { Buffer } from "buffer"
 import language from '../../language.json';
-import { currentLanguage } from '../../App';
+import { currentLanguage } from '../Constants/language';
 
 export default function PetItem(props: any) {
     const pet: Pet = props.pet; /* The pet to display */

@@ -10,10 +10,10 @@ import OwnButton from '../Components/ownButton';
 import { Pet, User } from '../Api/interfaces';
 import { Api } from '../Api/lowoof-api';
 import language from '../../language.json';
-import { currentLanguage } from '../../App';
-import { API } from '../../App';
+import { currentLanguage } from '../Constants/language';
+import { API } from '../Constants/api';
 
-const api = new Api();
+
 export default function PetProfile({ route, navigation }: any) {
     const dimensions = useWindowDimensions();
     const isLargeScreen = dimensions.width >= 768;

@@ -7,11 +7,11 @@ import { BLACK, MAINCOLOR } from '../Constants/colors';
 import { Api } from '../Api/lowoof-api';
 import { Pet, Relationship, User } from '../Api/interfaces';
 import PetItem from '../Components/petItem';
-import { API } from '../../App';
 import language from '../../language.json';
-import { currentLanguage } from '../../App';
+import { currentLanguage } from '../Constants/language';
+import { API } from '../Constants/api';
 
-const api = new Api();
+
 export default function Friends({ route, navigation }: any) {
     const dimensions = useWindowDimensions();
     const isLargeScreen = dimensions.width >= 768;

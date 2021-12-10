@@ -9,10 +9,9 @@ import Friends from '../Screens/Friends';
 import Chats from '../Screens/Chats';
 import Settings from '../Screens/Settings';
 import { BACKGROUNDCOLOR, BLACK, TITLECOLOR, WHITE } from '../Constants/colors';
-import ImagePickerField from './ImagePicker';
 import language from '../../language.json';
-import { currentLanguage } from '../../App';
-import Search from '../Screens/Search';
+import { currentLanguage } from '../Constants/language';
+
 
 const Drawer = createDrawerNavigator();
 

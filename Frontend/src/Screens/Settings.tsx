@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, useWindowDimensions, ScrollView } from 'react-n
 import OwnButton from '../Components/ownButton';
 import { MAINCOLOR } from '../Constants/colors';
 import language from '../../language.json';
-import { currentLanguage } from '../../App';
+import { currentLanguage } from '../Constants/language';
 
 export default function Settings({ navigation }: any) {
     const dimensions = useWindowDimensions();

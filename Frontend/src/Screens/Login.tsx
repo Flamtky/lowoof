@@ -43,15 +43,17 @@ export default function Login({ route, navigation }:any) {
                         title="➤ Login"
                         style={{ width: 88, padding: 0, minWidth: 0, borderRadius: 0 }}
                         onPress={() => {
-                            console.log(username, password);
-                            API.getAuthTokenfromServer(username, password).then((resp: void | "Error" ) => {{
-                                if (resp === "Error") {
-                                    alert("Error");
-                                } else {
-                                    route.params.setLogin(true);
-                                }
-                            }});
-
+                            if (username.trim().length < 3 || password.trim().length < 6 || username.trim().includes(' ') || password.trim().includes(' ')) {
+                                alert('Invalid username or password.');
+                            } else {
+                                API.getAuthTokenfromServer(username, password).then((resp: void | "Error" ) => {{
+                                    if (resp === "Error") {
+                                        alert('Invalid username or password.');
+                                    } else {
+                                        route.params.setLogin(true);
+                                    }
+                                }});
+                            }
                             setUsername('');
                             setPassword('');
                         }}

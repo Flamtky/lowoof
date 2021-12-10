@@ -244,7 +244,6 @@ export class Api {
 
     /**
      * 
-     * @param user :User User Object of the User who wants the pet
      * @param petId :number PetID of the Pet who wants to send the friend request
      * @param friendId :number PeterID of the Pet who recieves the friend request
      * @returns {Response} Response Object with message from the server
@@ -262,7 +261,6 @@ export class Api {
 
     /**
      * 
-     * @param user :User User Object of the User who wants the pet
      * @param petId :number PetID of the Pet who wants to accept the friend request
      * @param friendId :number PerterID of the User who sent the friend request
      * @returns {Response} Response Object with message from the server

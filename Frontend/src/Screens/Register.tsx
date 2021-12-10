@@ -20,7 +20,7 @@ export default function Register({ route, navigation }: any) {
     const [surename, setSurename] = useState<string>('');
     const [firstname, setFirstname] = useState<string>('');
     const [institution, setInstitution] = useState<string>('');
-    const [gender, setGender] = useState<string>("Male");
+    const [gender, setGender] = useState<string>(language.PROFILE.EMAIL[currentLanguage]);
     const [profilePic, setProfilePic] = useState<string>('');
     const [birthdate, setBirthdate] = useState<string>('');
     const [zip, setZip] = useState<string>('');
@@ -89,7 +89,7 @@ export default function Register({ route, navigation }: any) {
                 <Image source={require('../../assets/splash.png')} style={[styles.logo, { backgroundColor: MAINCOLOR }]} />
                 <View style={{ backgroundColor: MAINCOLOR, height: "100%" }}>
                     <View style={styles.inputContainer}>
-                        <TextBlock>Bereits registriert? Dann klick <TouchableOpacity onPress={()=>{navigation.navigate("Login")}}><TextBlock style={{color: "#00f"}}>hier</TextBlock></TouchableOpacity>!</TextBlock>
+                        <TextBlock>{language.LOGIN.ALREADY_REG[currentLanguage]}<TouchableOpacity onPress={()=>{navigation.navigate("Login")}}><TextBlock style={{color: "#00f"}}>hier</TextBlock></TouchableOpacity>!</TextBlock>
                         <SearchBar style={styles.input} placeholder={language.PROFILE.EMAIL[currentLanguage]} keyboardType='email-address' value={email} onChange={(event: any) => { setEmail(event.nativeEvent.text); }} />
                         <SearchBar style={styles.input} placeholder={language.PROFILE.USERNAME[currentLanguage]} value={username} onChange={(event: any) => { setUsername(event.nativeEvent.text); }} />
                         <SearchBar style={styles.input} placeholder={language.PROFILE.LAST_NAME[currentLanguage]} value={surename} onChange={(event: any) => { setSurename(event.nativeEvent.text); }} />

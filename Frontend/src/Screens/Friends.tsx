@@ -4,7 +4,6 @@ import OwnButton from '../Components/ownButton';
 import Seperator from '../Components/seperator';
 import { TextBlock } from '../Components/styledText';
 import { BLACK, MAINCOLOR } from '../Constants/colors';
-import { Api } from '../Api/lowoof-api';
 import { Pet, Relationship, User } from '../Api/interfaces';
 import PetItem from '../Components/petItem';
 import language from '../../language.json';
@@ -20,16 +19,15 @@ export default function Friends({ route, navigation }: any) {
     const [friendsIn, setFriendsIn] = React.useState<Relationship[] | null>(null);
     const [friendsOut, setFriendsOut] = React.useState<Relationship[] | null>(null);
     const [friendsPets, setFriendsPets] = React.useState<Pet[] | null>(null);
+    const [matchedFriends, setMatchedFriends] = React.useState<Relationship[] | null>(null);
 
     const [isLoading, setIsLoading] = React.useState(true);
-
-    const api:Api = API;
 
     React.useEffect(() => {
         if (route.params.petID == undefined) {
             navigation.navigate('MyProfile');
         } else {
-            api.getPetRelationships(route.params.petID).then(data => {
+            API.getPetRelationships(route.params.petID).then(data => {
                 if (!data.hasOwnProperty("message")) {
                     setFriends((data as Relationship[]).filter(x => x.RELATIONSHIP === "Friends"));
                     setFriendsIn((data as Relationship[]).filter(x => x.TIER_B_ID === route.params.petID && x.RELATIONSHIP !== "Friends"));
@@ -37,19 +35,23 @@ export default function Friends({ route, navigation }: any) {
 
                     let temp: Pet[] = [];
                     (data as Relationship[]).forEach(async rel => {
-                        await api.getPetData(rel.TIER_A_ID !== route.params.petID ? rel.TIER_A_ID : rel.TIER_B_ID).then((data2) => {
+                        await API.getPetData(rel.TIER_A_ID !== route.params.petID ? rel.TIER_A_ID : rel.TIER_B_ID).then((data2) => {
                             if (!data2.hasOwnProperty("message")) {
                                 temp.push((data2 as Pet));
                             }
                         });
                         // if last iteration
                         if (temp.length === (data as Relationship[]).length) {
-                            setIsLoading(false);
                             setFriendsPets(temp);
+                            API.getPetRelationships(route.params.petID).then(data3 => {     //TODO: change to get matches. Needs API update
+                                if (!data.hasOwnProperty("message")) {
+                                    setMatchedFriends((data3 as Relationship[]).filter(x => temp.some(t => t.TIERID === x.TIER_A_ID) || temp.some(t => t.TIERID === x.TIER_B_ID)));
+                                    setIsLoading(false);
+                                }
+                            });
                         }
                     });
                 }
-
             });
         }
     }, [route]);
@@ -62,7 +64,7 @@ export default function Friends({ route, navigation }: any) {
                 <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.FRIENDS.INCOMING_FRIEND[currentLanguage]}:</TextBlock>
                 <Seperator />
 
-                {friendsIn === null || friendsPets === null || friendsIn.length === 0 || isLoading ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.FRIENDS.NO_REQUESTS[currentLanguage]} {friendsPets?.toString()}</TextBlock> :
+                {friendsIn === null || friendsPets === null || matchedFriends === null || friendsIn.length === 0 || isLoading ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.FRIENDS.NO_REQUESTS[currentLanguage]}</TextBlock> :
                     friendsIn.map((friend: Relationship) => {
                         return (
                             <PetItem
@@ -72,9 +74,9 @@ export default function Friends({ route, navigation }: any) {
                                 isFriend={false}
                                 hasRequested={true}
                                 hasOwnRequest={false}
-                                isMarkedAttractive={false /*TODO: add*/}
+                                isMarkedAttractive={matchedFriends.some(x => x.TIER_A_ID === (friend.TIER_A_ID !== route.params.petID ? friend.TIER_A_ID : friend.TIER_B_ID) || x.TIER_B_ID === (friend.TIER_A_ID !== route.params.petID ? friend.TIER_A_ID : friend.TIER_B_ID))}
                                 navigation={navigation}
-                                api={api}
+                                api={API}
                             />)
                     })
                 }
@@ -83,7 +85,7 @@ export default function Friends({ route, navigation }: any) {
                 <TextBlock style={{ marginLeft: 15 }}>{language.FRIENDS.HEADER[currentLanguage]}:</TextBlock>
                 <Seperator />
 
-                {friends === null || friendsPets === null || friends.length === 0 || isLoading ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.FRIENDS.NO_FRIENDS[currentLanguage]} {friendsPets?.toString()}</TextBlock> :
+                {friends === null || friendsPets === null || matchedFriends === null || friends.length === 0 || isLoading ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.FRIENDS.NO_FRIENDS[currentLanguage]} {friendsPets?.toString()}</TextBlock> :
                     friends.map((friend: Relationship) => {
                         return (
                             <PetItem
@@ -93,9 +95,9 @@ export default function Friends({ route, navigation }: any) {
                                 isFriend={true}
                                 hasRequested={false}
                                 hasOwnRequest={false}
-                                isMarkedAttractive={false /*TODO: add*/}
+                                isMarkedAttractive={matchedFriends.some(x => x.TIER_A_ID === (friend.TIER_A_ID !== route.params.petID ? friend.TIER_A_ID : friend.TIER_B_ID) || x.TIER_B_ID === (friend.TIER_A_ID !== route.params.petID ? friend.TIER_A_ID : friend.TIER_B_ID))}
                                 navigation={navigation}
-                                api={api}
+                                api={API}
                             />)
                     })
                 }
@@ -104,7 +106,7 @@ export default function Friends({ route, navigation }: any) {
                 <TextBlock style={{ marginLeft: 15 }}>{language.FRIENDS.OUTGOING_FRIEND[currentLanguage]}:</TextBlock>
                 <Seperator />
 
-                {friendsOut === null || friendsPets === null || friendsOut.length === 0 || isLoading ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.FRIENDS.NO_REQUESTS[currentLanguage]} {friendsPets?.toString()}</TextBlock> :
+                {friendsOut === null || friendsPets === null || matchedFriends === null || friendsOut.length === 0 || isLoading ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.FRIENDS.NO_REQUESTS[currentLanguage]} {friendsPets?.toString()}</TextBlock> :
                     friendsOut.map((friend: Relationship) => {
                         return (
                             <PetItem
@@ -114,9 +116,9 @@ export default function Friends({ route, navigation }: any) {
                                 isFriend={false}
                                 hasRequested={false}
                                 hasOwnRequest={true}
-                                isMarkedAttractive={false /*TODO: add*/}
+                                isMarkedAttractive={matchedFriends.some(x => x.TIER_A_ID === (friend.TIER_A_ID !== route.params.petID ? friend.TIER_A_ID : friend.TIER_B_ID) || x.TIER_B_ID === (friend.TIER_A_ID !== route.params.petID ? friend.TIER_A_ID : friend.TIER_B_ID))}
                                 navigation={navigation}
-                                api={api}
+                                api={API}
                             />)
                     })
                 }

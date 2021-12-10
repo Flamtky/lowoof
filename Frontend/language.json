@@ -28,6 +28,10 @@
             "EN": "Not registered yet? Then click ",
             "DE": "Noch nicht registriert? Dann klick "
         },
+        "ALREADY_REG": {
+            "EN": "Already registered? Then click ",
+            "DE": "Bereits registriert? Dann klick "
+        },
         "HERE": {
             "EN": "here",
             "DE": "hier"
@@ -221,8 +225,8 @@
             "DE": "Max. Entfernung"
         },
         "AGE": {
-            "EN": "AGE",
-            "DE": "ALTER"
+            "EN": "Age",
+            "DE": "Alter"
         },
         "DESCRIPTION": {
             "EN": "Description",
@@ -255,6 +259,10 @@
         "HEADER": {
             "EN": "Matches",
             "DE": "Matches"
+        },
+        "NO_MATCHES": {
+            "EN": "No Matches",
+            "DE": "Keine Matches"
         }
     },
     "FRIENDS": {

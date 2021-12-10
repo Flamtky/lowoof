@@ -1,7 +1,6 @@
 import mysql, { Pool } from 'mysql';
 import dotenv from 'dotenv';
 import { User, Response, Pet, Relationship } from './interfaces'
-import { resolveSoa } from 'dns';
 dotenv.config({ path: './vars.env' });
 
 export default class Queries {
@@ -342,9 +341,13 @@ export default class Queries {
                         console.log(err);
                         resolve(false);
                     } else {
-                        if (tokenUser.username === user.USERNAME && tokenUser.password === rows[0].PASSWORD) {
-                            resolve(true);
-                        } else {
+                        if(rows.length != 0){
+                            if (tokenUser.username === rows[0].USERNAME && tokenUser.password === rows[0].PASSWORD) {
+                                resolve(true);
+                            } else {
+                                resolve(false);
+                            }
+                        }else{
                             resolve(false);
                         }
 
@@ -363,11 +366,16 @@ export default class Queries {
                         console.log(err);
                         resolve(false);
                     } else {
-                        if (tokenUser.username === rows[0].USERNAME && tokenUser.password === rows[0].PASSWORD) {
-                            resolve(true);
-                        } else {
+                        if(rows.length != 0){
+                            if (tokenUser.username === rows[0].USERNAME && tokenUser.password === rows[0].PASSWORD) {
+                                resolve(true);
+                            } else {
+                                resolve(false);
+                            }
+                        }else{
                             resolve(false);
                         }
+                        
 
                     }
                 }
@@ -384,8 +392,13 @@ export default class Queries {
                         console.log(err);
                         resolve(false);
                     } else {
-                        var isLoggedIn: boolean = await this.authenticateByUserId(tokenUser, rows[0].USERID);
-                        resolve(isLoggedIn);
+                        if(rows.length != 0){
+                            var isLoggedIn: boolean = await this.authenticateByUserId(tokenUser, rows[0].USERID);
+                            resolve(isLoggedIn);
+                        }else{
+                            resolve(false);
+                        }
+                        
                     }
                 }
             );

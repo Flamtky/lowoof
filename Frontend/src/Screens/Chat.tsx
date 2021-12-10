@@ -63,7 +63,7 @@ export function Chat(props: any) {
                         style={{ width: 40, padding: 0, minWidth: 0, borderRadius: 0 }}
                         onPress={() => {
                             console.log("=>" + message);
-                            API.sendMessage(message, targetPet.USERID).then((resp) => { //TODO: Change API Call, waiting for update
+                            API.sendMessage(message, ownPet.TIERID, targetPet.TIERID).then((resp) => { //TODO: Change API Call, waiting for update
                                 if (resp.message === "/* TODO:  ADD*/") {
                                     setMessageHistory([...messageHistory, message]);
                                     setMessage('');

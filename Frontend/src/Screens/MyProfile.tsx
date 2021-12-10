@@ -120,7 +120,6 @@ function PetItem(props: any) {
                     </TouchableOpacity>
                 </View>
             </View>
-            <Seperator />
         </View>
     );
 }

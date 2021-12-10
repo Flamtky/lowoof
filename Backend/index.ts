@@ -47,7 +47,7 @@ app.post('/auth', (req, res) => {
     if (req.body.username && req.body.password) {
         var hashedPassword: string;
         const connection: mysql.Pool = getConnection();
-        connection.query(`SELECT PASSWORD FROM USER WHERE USERNAME = ?`, [req.body.username],
+        connection.query(`SELECT * FROM USER WHERE USERNAME = ?`, [req.body.username],
             (err, rows, fields) => {
                 if (err) {
                     console.log(err);
@@ -63,7 +63,7 @@ app.post('/auth', (req, res) => {
                                 },
                                 process.env.JWT_SECRET ?? '',
                                 { expiresIn: '2h' });
-                            res.status(201).json(token);
+                            res.status(201).json({token:token, user: rows[0] as User});
                         } else {
                             res.status(401).json({ status: res.statusCode, message: "Wrong Password" } as Response);
                         }

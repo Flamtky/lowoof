@@ -1,9 +1,11 @@
 import axios from 'axios';
+import { useReducer } from 'react';
 import bcrypt from 'react-native-bcrypt';
 import { User, Response, Pet, Relationship } from './interfaces';
 export class Api {
     private apiToken: string = "";
     private url: string = "http://server.it-humke.de:8080";
+    private currentUser?: User;
     constructor() { }
 
     /**
@@ -16,7 +18,8 @@ export class Api {
     */
     async getAuthTokenfromServer(username: string, password: string) {
         try {
-            return await axios.post(this.url + '/auth', { username: username, password: password }).then(response => { this.setAuthToken(response.data); });
+            return await axios.post(this.url + '/auth', { username: username, password: password }).then(response => { this.setAuthToken(response.data.token); this.setCurrentUser(response.data.user);})
+            .catch((error) => { throw new Error("Error while connecting to server. Are you authorized?"); });
         } catch (error) {
             return "Error"
         }
@@ -24,6 +27,19 @@ export class Api {
 
     private setAuthToken(token: string) {
         this.apiToken = token;
+    }
+
+    setCurrentUser(user: User) {
+        this.currentUser = user;
+    }
+
+    getCurrentUser(): User | null {
+        if(this.currentUser != null) {
+            return this.currentUser;
+        }
+        else{
+            return null;
+        }
     }
 
     /**
@@ -331,13 +347,7 @@ export class Api {
         return;
     }
 
-    likePet(linkingPetId: number, petId: number): void {
-        return;
-    }
 
-    dislikePet(dislinkingPetId: number, petId: number): void {
-        return;
-    }
 
     getChats(userId: number): any {
         return;

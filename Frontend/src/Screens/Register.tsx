@@ -11,8 +11,6 @@ import ImagePickerField from '../Components/ImagePicker';
 import { User } from '../Api/interfaces';
 import { API } from '../Constants/api';
 
-type Gender = "Male" | "Female" | "Other";
-
 export default function Register({ route, navigation }: any) {
     const dimensions = useWindowDimensions();
     const isLargeScreen = dimensions.width >= 768;
@@ -21,7 +19,7 @@ export default function Register({ route, navigation }: any) {
     const [surename, setSurename] = useState<string>('');
     const [firstname, setFirstname] = useState<string>('');
     const [institution, setInstitution] = useState<string>('');
-    const [gender, setGender] = useState<Gender>("Male");
+    const [gender, setGender] = useState<string>("Male");
     const [profilePic, setProfilePic] = useState<string>('');
     const [birthdate, setBirthdate] = useState<string>('');
     const [zip, setZip] = useState<string>('');
@@ -123,7 +121,7 @@ export default function Register({ route, navigation }: any) {
         setSurename('');
         setFirstname('');
         setInstitution('');
-        setGender("Male");
+        setGender('');
         setProfilePic('');
         setBirthdate('');
         setZip('');

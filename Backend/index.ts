@@ -188,22 +188,28 @@ app.get('/getuserpets', async (req, res) => {
 //Allowed Users: User
 app.post('/updateuser', async (req, res) => {
     console.log(req.body);
-    const user: User = req.body;
-    var isCorrectUser: boolean = await queries.authenticateByUserObject(req.user, user);
-    if (!isCorrectUser) {
-        return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
+    if ("username" in req.body) {
+        const user: User = req.body;
+        var isCorrectUser: boolean = await queries.authenticateByUserObject(req.user, user);
+        if (!isCorrectUser) {
+            return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
+        }
+        var response: Response = await queries.updateUser(user);
+        return res.status(response.status).json(response);
+    } else {
+        return res.status(400).json({ status: res.statusCode, message: "We didnt get a valid user object" } as Response);
     }
-    var response: Response = await queries.updateUser(user);
-    return res.status(response.status).json(response);
+
 });
 
 //Allowed Users: User
 app.get('/getpetrelationships', async (req, res) => {
-    var isCorrectUser: boolean = await queries.authenticateByPetId(req.user, req.query.petid as unknown as number);
-    if (!isCorrectUser) {
-        return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
-    }
+
     if (req.query.petid) {
+        var isCorrectUser: boolean = await queries.authenticateByPetId(req.user, req.query.petid as unknown as number);
+        if (!isCorrectUser) {
+            return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
+        }
         var response: Response | Relationship[] = await queries.getPetRelationships(req.query.petid as unknown as number);
         if ("status" in response) {
             res.status(response.status).json(response);
@@ -219,12 +225,13 @@ app.get('/getpetrelationships', async (req, res) => {
 
 //Allowed Users: User
 app.post('/deleteuser', async (req, res) => {
-    var isCorrectUser: boolean = await queries.authenticateByUserId(req.user, req.body.userid as unknown as number);
-    if (!isCorrectUser) {
-        return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
-    }
+
     console.log("Delete User " + req.body.userid + "...");
     if (req.body.userid) {
+        var isCorrectUser: boolean = await queries.authenticateByUserId(req.user, req.body.userid as unknown as number);
+        if (!isCorrectUser) {
+            return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
+        }
         const connection: mysql.Pool = getConnection();
         var pets: Response | Pet[] = await queries.getUserPets(req.body.userid as unknown as number);
         if ("status" in pets) {
@@ -247,11 +254,12 @@ app.post('/deleteuser', async (req, res) => {
 });
 //Allowed Users: User
 app.post('/deletepet', async (req, res) => {
-    var isCorrectUser: boolean = await queries.authenticateByPetId(req.user, req.body.petid as unknown as number);
-    if (!isCorrectUser) {
-        return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
-    }
+
     if (req.body.petid) {
+        var isCorrectUser: boolean = await queries.authenticateByPetId(req.user, req.body.petid as unknown as number);
+        if (!isCorrectUser) {
+            return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
+        }
         await queries.deletePetRelationships(req.body.petid as unknown as number);
         var response: Response = await queries.deletePet(req.body.petid as unknown as number);
         return res.status(response.status).json(response);
@@ -261,11 +269,12 @@ app.post('/deletepet', async (req, res) => {
 });
 //Allowed Users: User
 app.post('/sendfriendrequest', async (req, res) => {
-    var isCorrectUser: boolean = await queries.authenticateByPetId(req.user, req.body.petid as unknown as number);
-    if (!isCorrectUser) {
-        return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
-    }
+
     if (req.body.petid && req.body.friendid) {
+        var isCorrectUser: boolean = await queries.authenticateByPetId(req.user, req.body.petid as unknown as number);
+        if (!isCorrectUser) {
+            return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
+        }
         var response: Response = { status: 500, message: "Internal Server Error" };
         var relation = await queries.getRelationshipBetweenPets(req.body.petid as unknown as number, req.body.friendid as unknown as number);
         if ("status" in relation) {
@@ -282,11 +291,13 @@ app.post('/sendfriendrequest', async (req, res) => {
 });
 //Allowed Users: User
 app.post('/acceptfriendrequest', async (req, res) => {
-    var isCorrectUser: boolean = await queries.authenticateByPetId(req.user, req.body.petid as unknown as number);
-    if (!isCorrectUser) {
-        return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
-    }
+
     if (req.body.petid && req.body.friendid) {
+        var isCorrectUser: boolean = await queries.authenticateByPetId(req.user, req.body.petid as unknown as number);
+        if (!isCorrectUser) {
+            return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
+        }
+
         var relation: Relationship | Response = await queries.getRelationshipBetweenPets(req.body.petid as unknown as number, req.body.friendid as unknown as number);
         if ("status" in relation) {
             return res.status(relation.status).json(relation);
@@ -305,13 +316,35 @@ app.post('/acceptfriendrequest', async (req, res) => {
     }
 });
 
+app.post('/removefriend', async (req, res) => {
+
+    if (req.body.petid && req.body.friendid) {
+        var isCorrectUser: boolean = await queries.authenticateByPetId(req.user, req.body.petid as unknown as number);
+        if (!isCorrectUser) {
+            return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
+        }
+
+        var response: Response = { status: 500, message: "Internal Server Error" };
+        var relation = await queries.getRelationshipBetweenPets(req.body.petid as unknown as number, req.body.friendid as unknown as number);
+        if ("status" in relation) {
+            res.status(400).json({ status: res.statusCode, message: "There is no relationship" } as Response);
+        } else {
+            response = await queries.removeFriend(relation.RELATIONID);
+        }
+        res.status(response.status).json(response);
+    } else {
+        res.status(400).json({ status: res.statusCode, message: "You are missing atleast one of two arguments" } as Response);
+    }
+});
+
 //Allowed Users: User
 app.post('/sendattraktivrequest', async (req, res) => {
-    var isCorrectUser: boolean = await queries.authenticateByPetId(req.user, req.body.petid as unknown as number);
-    if (!isCorrectUser) {
-        return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
-    }
+
     if (req.body.petid && req.body.friendid) {
+        var isCorrectUser: boolean = await queries.authenticateByPetId(req.user, req.body.petid as unknown as number);
+        if (!isCorrectUser) {
+            return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
+        }
         var response: Response = await queries.sendAttraktivRequest(req.body.petid as unknown as number, req.body.friendid as unknown as number);
         return res.status(response.status).json(response);
     } else {
@@ -321,11 +354,12 @@ app.post('/sendattraktivrequest', async (req, res) => {
 
 //Allowed Users: User
 app.post('/removeattraktivrequest', async (req, res) => {
-    var isCorrectUser: boolean = await queries.authenticateByPetId(req.user, req.body.petid as unknown as number);
-    if (!isCorrectUser) {
-        return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
-    }
+
     if (req.body.petid && req.body.friendid) {
+        var isCorrectUser: boolean = await queries.authenticateByPetId(req.user, req.body.petid as unknown as number);
+        if (!isCorrectUser) {
+            return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
+        }
         var response: Response = await queries.removeAttraktivRequest(req.body.petid as unknown as number, req.body.friendid as unknown as number);
         return res.status(response.status).json(response);
     } else {
@@ -334,11 +368,12 @@ app.post('/removeattraktivrequest', async (req, res) => {
 });
 
 app.get('/getpetmatches', async (req, res) => {
-    var isCorrectUser: boolean = await queries.authenticateByPetId(req.user, req.query.petid as unknown as number);
-    if (!isCorrectUser) {
-        return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
-    }
+
     if (req.query.petid) {
+        var isCorrectUser: boolean = await queries.authenticateByPetId(req.user, req.query.petid as unknown as number);
+        if (!isCorrectUser) {
+            return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
+        }
         var response: Response | Relationship[] = await queries.getPetMatches(req.query.petid as unknown as number);
         if ("status" in response) {
             res.status(response.status).json(response);

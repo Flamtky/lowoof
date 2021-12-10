@@ -332,6 +332,22 @@ export default class Queries {
 
     }
 
+    async removeFriend(relationid: number): Promise<Response> {
+        return new Promise<Response>((resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            connection.query(`DELETE FROM TIER_RELATIONSHIPS WHERE RELATIONID = ?;`, [relationid],
+                (err, rows, fields) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(this.errorResponse);
+                    } else {
+                        resolve({ status: 200, message: 'Friend removed' } as Response);
+                    }
+                }
+            );
+        });
+    }
+
     async authenticateByUserObject(tokenUser: any, user: User): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
             const connection: mysql.Pool = this.getConnection();
@@ -341,13 +357,13 @@ export default class Queries {
                         console.log(err);
                         resolve(false);
                     } else {
-                        if(rows.length != 0){
+                        if (rows.length != 0) {
                             if (tokenUser.username === rows[0].USERNAME && tokenUser.password === rows[0].PASSWORD) {
                                 resolve(true);
                             } else {
                                 resolve(false);
                             }
-                        }else{
+                        } else {
                             resolve(false);
                         }
 
@@ -366,16 +382,16 @@ export default class Queries {
                         console.log(err);
                         resolve(false);
                     } else {
-                        if(rows.length != 0){
+                        if (rows.length != 0) {
                             if (tokenUser.username === rows[0].USERNAME && tokenUser.password === rows[0].PASSWORD) {
                                 resolve(true);
                             } else {
                                 resolve(false);
                             }
-                        }else{
+                        } else {
                             resolve(false);
                         }
-                        
+
 
                     }
                 }
@@ -392,13 +408,13 @@ export default class Queries {
                         console.log(err);
                         resolve(false);
                     } else {
-                        if(rows.length != 0){
+                        if (rows.length != 0) {
                             var isLoggedIn: boolean = await this.authenticateByUserId(tokenUser, rows[0].USERID);
                             resolve(isLoggedIn);
-                        }else{
+                        } else {
                             resolve(false);
                         }
-                        
+
                     }
                 }
             );
@@ -457,9 +473,9 @@ export default class Queries {
             const connection: mysql.Pool = this.getConnection();
             var relation: Relationship | Response = await this.getMatchBetweenPets(petid, friendid);
             if ("status" in relation) {
-                if(relation.status != 404) {
+                if (relation.status != 404) {
                     resolve(relation);
-                }else{
+                } else {
                     var TIER_A_ID: number;
                     var TIER_B_ID: number;
                     var RELATIONSHIP: string;
@@ -485,7 +501,7 @@ export default class Queries {
                         }
                     );
                 }
-                
+
             } else {
                 var RELATIONSHIP: string = "";
                 if (relation.RELATIONSHIP == "Matched") {
@@ -501,16 +517,16 @@ export default class Queries {
                 } else {
                     resolve({ status: 500, message: "Someone messed Up" });
                 }
-                connection.query(`UPDATE TIER_MATCHES SET RELATIONSHIP=? WHERE RELATIONID = ?;`, [RELATIONSHIP,relation.RELATIONID],
-                        (err, rows, fields) => {
-                            if (err) {
-                                console.log(err);
-                                resolve(this.errorResponse);
-                            } else {
-                                resolve({ status: 200, message: 'You just matched' } as Response);
-                            }
+                connection.query(`UPDATE TIER_MATCHES SET RELATIONSHIP=? WHERE RELATIONID = ?;`, [RELATIONSHIP, relation.RELATIONID],
+                    (err, rows, fields) => {
+                        if (err) {
+                            console.log(err);
+                            resolve(this.errorResponse);
+                        } else {
+                            resolve({ status: 200, message: 'You just matched' } as Response);
                         }
-                    );
+                    }
+                );
 
             }
         });
@@ -522,16 +538,16 @@ export default class Queries {
             var relation: Relationship | Response = await this.getMatchBetweenPets(petid, friendid);
             if ("status" in relation) {
                 resolve(relation);
-            }else {
+            } else {
                 var removeRelation: boolean = false;
                 var RELATIONSHIP: string = "";
                 if (relation.RELATIONSHIP == "Matched") {
-                    if(relation.TIER_B_ID == petid){
+                    if (relation.TIER_B_ID == petid) {
                         RELATIONSHIP = "B removed A";
-                    }else if (relation.TIER_A_ID == petid) {
+                    } else if (relation.TIER_A_ID == petid) {
                         RELATIONSHIP = "A removed B";
                     }
-                    connection.query(`UPDATE TIER_MATCHES SET RELATIONSHIP=? WHERE RELATIONID = ?;`, [RELATIONSHIP,relation.RELATIONID],
+                    connection.query(`UPDATE TIER_MATCHES SET RELATIONSHIP=? WHERE RELATIONID = ?;`, [RELATIONSHIP, relation.RELATIONID],
                         (err, rows, fields) => {
                             if (err) {
                                 console.log(err);
@@ -541,7 +557,7 @@ export default class Queries {
                             }
                         }
                     );
-                    
+
                 } else if (relation.RELATIONSHIP == "A requested B" && relation.TIER_A_ID == petid) {
                     removeRelation = true;
                 } else if (relation.RELATIONSHIP == "B requested A" && relation.TIER_B_ID == petid) {
@@ -553,7 +569,7 @@ export default class Queries {
                 } else {
                     resolve({ status: 500, message: "Someone messed Up" });
                 }
-                if(removeRelation){
+                if (removeRelation) {
                     connection.query(`DELETE FROM TIER_MATCHES WHERE RELATIONID = ?;`, [relation.RELATIONID],
                         (err, rows, fields) => {
                             if (err) {

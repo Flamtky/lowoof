@@ -9,6 +9,7 @@ import DeletePet from './src/Screens/DeletePet';
 import language from './language.json';
 import { Api } from './src/Api/lowoof-api';
 import Login from './src/Screens/Login';
+import Register from './src/Screens/Register';
 
 const Stack = createNativeStackNavigator<any>();
 
@@ -27,7 +28,7 @@ export default function App() {
 				{!login ? (
 					<Stack.Screen
 						name="Login"
-						component={Login}
+						component={Register}
 						initialParams={{ setLogin }}
 						options={{
 							headerShown: false,

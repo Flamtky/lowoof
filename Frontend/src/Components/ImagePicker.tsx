@@ -1,11 +1,9 @@
 //https://docs.expo.dev/versions/latest/sdk/imagepicker/
 import React, { useState, useEffect } from 'react';
-import { Button, Image, View, Platform } from 'react-native';
+import { Button, Image, View, Platform, StyleSheet } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import language from '../../language.json';
-import { currentLanguage } from '../../App';
 
-export default function ImagePickerExample() {
+export default function ImagePickerField(props:any) {
     const [image, setImage] = useState("");
 
     useEffect(() => {
@@ -13,7 +11,7 @@ export default function ImagePickerExample() {
             if (Platform.OS !== 'web') {
                 const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
                 if (status !== 'granted') {
-                    alert(language.IMAGE_PICKER.NEED_PERM[currentLanguage]);
+                    alert('Sorry, we need camera roll permissions to make this work!');
                 }
             }
         })();
@@ -27,17 +25,16 @@ export default function ImagePickerExample() {
             quality: 1,
         });
 
-        console.log(result);
-
         if (!result.cancelled) {
+            props.onChange(result.uri);
             setImage(result.uri);
         }
     };
 
     return (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            <Button title={language.IMAGE_PICKER.PICK_IMAGE[currentLanguage]} onPress={pickImage} />
-            {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+        <View style={{alignItems: 'center', justifyContent: 'center' }}>
+            <Button title={props.title ?? "Pick an Image"} onPress={pickImage} color={"#0f70e6"}/>
+            {image && (props.showPreview ?? true) ? <Image source={{ uri: image }} style={{ width: 32, height: 32 }} /> : <></>}
         </View>
     );
 }

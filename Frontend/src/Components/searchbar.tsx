@@ -22,6 +22,8 @@ export default function SearchBar(props: any) {
                 onChange={props.onChange}
                 value={props.value}
                 secureTextEntry={props.secureTextEntry}
+                keyboardType={props.keyboardType}
+                maxLength={props.maxLength}
             />
         </View>
     );

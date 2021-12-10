@@ -584,6 +584,22 @@ export default class Queries {
             }
         });
     }
+
+    async addPet(pet: Pet): Promise<Response> {
+        return new Promise<Response>(async (resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            connection.query(`INSERT INTO TIER (USERID, NAME, ART, RASSE, GESCHLECHT, GEBURTSTAG, PROFILBILD) VALUES (?, ?, ?, ?, ?, ?, BINARY(?));`, [pet.USERID, pet.NAME, pet.ART, pet.RASSE, pet.GESCHLECHT, pet.GEBURTSTAG, pet.PROFILBILD],
+                (err, rows, fields) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(this.errorResponse);
+                    } else {
+                        resolve({ status: 200, message: 'Pet added' } as Response);
+                    }
+                }
+            );
+        });
+    }
 }
 
 

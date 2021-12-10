@@ -185,10 +185,28 @@ app.get('/getuserpets', async (req, res) => {
 
 });
 
+app.post('/addpet', async (req, res) => {
+    console.log(req.body);
+    const pet: Pet = req.body;
+    if ("USERID" in req.body){
+        var isLoggedIn: boolean = await queries.authenticateByUserId(req.user,pet.USERID as unknown as number);
+        if (!isLoggedIn){
+            return res.status(403).json({ status: res.statusCode, message: "You are not allowed to add a Pet to this user" } as Response);
+        }else{
+            var response: Response = await queries.addPet(pet);
+            console.log(response);
+            return res.status(response.status).json(response);
+        }
+    }else{
+        return res.status(400).json({ status: res.statusCode, message: "Invalid Pet object" } as Response);
+    }
+    
+});
+
 //Allowed Users: User
 app.post('/updateuser', async (req, res) => {
     console.log(req.body);
-    if ("username" in req.body) {
+    if ("USERNAME" in req.body) {
         const user: User = req.body;
         var isCorrectUser: boolean = await queries.authenticateByUserObject(req.user, user);
         if (!isCorrectUser) {

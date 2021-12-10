@@ -238,8 +238,19 @@ export class Api {
         return res;
     }
 
-    createPetProfile(newPet: Pet): void {
-        return;
+    async createPetProfile(newPet: Pet): Promise<Response> {
+        if (newPet["GEBURTSTAG"].includes("T")) {
+            newPet["GEBURTSTAG"] = newPet["GEBURTSTAG"].split("T")[0];
+        }
+        var res: Response = { status: 500, message: "Error" };
+        await axios.post(this.url + '/addpet', newPet, {
+            headers: {
+                'Authorization': `Beaver ${this.apiToken}`
+            }
+        }).then(response => {
+            res = response.data as Response;
+        }).catch((error) => { res = error.response.data as Response });
+        return res;
     }
 
     /**

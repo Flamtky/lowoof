@@ -25,7 +25,10 @@ export default function MyProfile({ route, navigation }: any) {
     const [isLoading, setIsLoading] = React.useState(true);
     const api: Api = API;
     React.useEffect(() => {
-        setOwnProfile(route.params.userID === API.getCurrentUser());
+        if (route.params.userID == undefined) {
+            navigation.navigate('MyProfile', { userID: api.getCurrentUser()?.USERID });
+        }
+        setOwnProfile(route.params.userID === API.getCurrentUser()?.USERID);
         api.getProfileData(route.params.userID).then(data => {
             // If data has message as key, then the user does not exist or multiple users with the same username exist
             if (!data.hasOwnProperty("message")) {

@@ -51,7 +51,7 @@ export default function Friends({ route, navigation }: any) {
                         // if last iteration
                         if (temp.length === (data as Relationship[]).length) {
                             setFriendsPets(temp);
-                            API.getPetMatches(route.params.petID).then(data3 => { 
+                            API.getPetMatches(route.params.petID).then(data3 => { //TODO: TEST
                                 if (!data.hasOwnProperty("message")) {
                                     setMatchedFriends((data3 as Relationship[]).filter(x => temp.some(t => t.TIERID === x.TIER_A_ID) || temp.some(t => t.TIERID === x.TIER_B_ID)));
                                     setIsLoading(false);
@@ -80,7 +80,7 @@ export default function Friends({ route, navigation }: any) {
                         return (
                             <PetItem
                                 key={friend.RELATIONID}
-                                myPetID={route.params.petID}
+                                petID={route.params.petID}
                                 pet={friendsPets.find(x => x.TIERID === friend.TIER_A_ID) as Pet}
                                 isFriend={false}
                                 hasRequested={true}
@@ -101,7 +101,7 @@ export default function Friends({ route, navigation }: any) {
                         return (
                             <PetItem
                                 key={friend.RELATIONID}
-                                myPetID={route.params.petID}
+                                petID={route.params.petID}
                                 pet={friendsPets.find(x => x.TIERID === (friend.TIER_A_ID !== route.params.petID ? friend.TIER_A_ID : friend.TIER_B_ID)) as Pet}
                                 isFriend={true}
                                 hasRequested={false}
@@ -122,7 +122,7 @@ export default function Friends({ route, navigation }: any) {
                         return (
                             <PetItem
                                 key={friend.RELATIONID}
-                                myPetID={route.params.petID}
+                                petID={route.params.petID}
                                 pet={friendsPets.find(x => x.TIERID === friend.TIER_B_ID) as Pet}
                                 isFriend={false}
                                 hasRequested={false}

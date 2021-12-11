@@ -32,7 +32,7 @@ export default function PetItem(props: any) {
         <View style={[styles.row, { marginLeft: "auto", right: "5%" }]}>
             <TouchableOpacity onPress={() => {
                 API.acceptFriendRequest(props.petID, pet.TIERID).then((resp: any) => {
-                    //TODO: TEST THIS
+                    //TODO: TEST THIS || NOT WORKING
                     if (resp.status === 200) {
                         hasOwnRequest = true;
                     } else {
@@ -45,7 +45,7 @@ export default function PetItem(props: any) {
             <TouchableOpacity onPress={() => {
                 () => {
                     API.removeFriend(props.petID, pet.TIERID).then((resp: any) => {
-                        //TODO: TEST THIS
+                        //TODO: TEST THIS || NOT WORKING
                         if (resp.status === 200) {
                             hasOwnRequest = true;
                         } else {
@@ -62,7 +62,7 @@ export default function PetItem(props: any) {
             <TouchableOpacity onPress={() => { /* Unattraktiv bewerten */ }} style={[{ marginRight: 6 }, isMarkedAttractive ? null : { display: "none" }]}>
                 <FontAwesomeIcon icon={farStar} size={32} color="#555" />
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => { props.navigation.navigate('Chat', { petID: pet.TIERID }); }} style={{ marginRight: 6 }}>
+            <TouchableOpacity onPress={() => { props.navigation.navigate('Chat', { ownPet: props.petID, targetPet: pet.TIERID }); }} style={{ marginRight: 6 }}>
                 <FontAwesomeIcon icon={faCommentDots} size={32} color="#0a0" />
             </TouchableOpacity>
             <TouchableOpacity onPress={() => { props.navigation.navigate('Report', { petToReport: pet }); }} style={{ marginRight: 6 }}>

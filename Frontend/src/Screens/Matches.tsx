@@ -25,7 +25,7 @@ export default function Matches({ route, navigation }:any) {
         if (route.params.petID == undefined) {
             navigation.navigate('MyProfile');
         } else {
-            API.getPetMatches(route.params.petID).then((data: any) => { 
+            API.getPetMatches(route.params.petID).then((data: any) => { //TODO: TEST
                 if (!data.hasOwnProperty("message")) {
                     setmatches(data as Relationship[]);
                     
@@ -68,7 +68,7 @@ export default function Matches({ route, navigation }:any) {
                         return (
                             <PetItem
                                 key={match.RELATIONID}
-                                myPetID={route.params.petID}
+                                petID={route.params.petID}
                                 pet={matchesPets.find(x => x.TIERID === (match.TIER_A_ID !== route.params.petID ? match.TIER_A_ID : match.TIER_B_ID)) as Pet}
                                 isFriend={matchedFriends.filter(x => x.RELATIONSHIP === "Friends").some(x => x.TIER_A_ID === (match.TIER_A_ID !== route.params.petID ? match.TIER_A_ID : match.TIER_B_ID) || x.TIER_B_ID === (match.TIER_A_ID !== route.params.petID ? match.TIER_A_ID : match.TIER_B_ID))}
                                 hasRequested={matchedFriends.filter(x => x.TIER_B_ID === route.params.petID && x.RELATIONSHIP !== "Friends").some(x => x.TIER_A_ID === (match.TIER_A_ID !== route.params.petID ? match.TIER_A_ID : match.TIER_B_ID) || x.TIER_B_ID === (match.TIER_A_ID !== route.params.petID ? match.TIER_A_ID : match.TIER_B_ID))}

@@ -10,14 +10,34 @@ import language from './language.json';
 import { Api } from './src/Api/lowoof-api';
 import Login from './src/Screens/Login';
 import Register from './src/Screens/Register';
-import { currentLanguage } from './src/Constants/language';
+import { currentLanguage, setLanguage } from './src/Constants/language';
 import PetProfile from './src/Screens/PetProfile';
 import Report from './src/Screens/Report';
+import { API } from './src/Constants/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createNativeStackNavigator<any>();
 
 export default function App() {
 	const [login, setLogin] = React.useState<boolean>(false);
+	AsyncStorage.getItem('language').then((res) => {
+		if (res) {
+			setLanguage(JSON.parse(res));
+		}
+	});
+	React.useEffect(() => {
+		let user = API.getCurrentUser();
+		if (user) {
+			API.getUserLanguage(user.USERID).then((res) => {
+				if (!res.hasOwnProperty('message')) {
+					setLanguage(res as any);
+					AsyncStorage.setItem('language', JSON.stringify(res));
+				} else {
+					alert(res);
+				}
+			});
+		}
+	},[login]);
 	return (
 		<NavigationContainer>
 			<Stack.Navigator>
@@ -75,8 +95,8 @@ export default function App() {
 									fontWeight: "bold",
 								},
 							}} />
-							<Stack.Screen name="Chat" component={Chat} options={{
-								title: language.CHATS.CHAT_WITH[currentLanguage] + "XY", //TODO: Replace XY with name
+							<Stack.Screen name="Chat" component={Chat} options={({ route }) => ({
+								title: route?.params?.name ?? language.CHATS.CHAT_WITH[currentLanguage] + "XY",
 								headerStyle: {
 									backgroundColor: BACKGROUNDCOLOR,
 								},
@@ -85,7 +105,7 @@ export default function App() {
 									color: TITLECOLOR,
 									fontWeight: "bold",
 								},
-							}} />
+							})} />
 							<Stack.Screen name="DeletePet" component={DeletePet} options={({ route }) => ({
 								title: route?.params?.name ?? language.EDIT_PET.DELETE[currentLanguage],
 								headerStyle: {

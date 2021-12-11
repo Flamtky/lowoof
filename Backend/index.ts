@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import bcrypt from 'bcrypt';
 import cors from 'cors';
-import { User, Response, Pet, Relationship, Message, Preference } from './interfaces'
+import { User, Response, Pet, Relationship, Message, Preference, Report } from './interfaces'
 import Queries from "./sqlqueries"
 dotenv.config({ path: './vars.env' });
 
@@ -54,7 +54,11 @@ app.post('/auth', (req, res) => {
                     res.status(500).json({ message: "Something went wrong, contact the administrator" });
                 } else {
                     if (rows.length > 0) {
+                        if(rows[0].MITGLIEDSCHAFTPAUSIERT == 1){
+                            return res.status(401).json({ message: "User is banned" });
+                        }
                         hashedPassword = rows[0].PASSWORD;
+                        delete rows[0].PASSWORD;
                         if (bcrypt.compareSync(req.body.password as string, hashedPassword)) {
                             const token: any = jwt.sign(
                                 {
@@ -63,7 +67,7 @@ app.post('/auth', (req, res) => {
                                 },
                                 process.env.JWT_SECRET ?? '',
                                 { expiresIn: '2h' });
-                            res.status(201).json({token:token, user: rows[0] as User});
+                            res.status(201).json({ token: token, user: rows[0] as User });
                         } else {
                             res.status(401).json({ status: res.statusCode, message: "Wrong Password" } as Response);
                         }
@@ -188,19 +192,19 @@ app.get('/getuserpets', async (req, res) => {
 app.post('/addpet', async (req, res) => {
     console.log(req.body);
     const pet: Pet = req.body;
-    if ("USERID" in req.body){
-        var isLoggedIn: boolean = await queries.authenticateByUserId(req.user,pet.USERID as unknown as number);
-        if (!isLoggedIn){
+    if ("USERID" in req.body) {
+        var isLoggedIn: boolean = await queries.authenticateByUserId(req.user, pet.USERID as unknown as number);
+        if (!isLoggedIn) {
             return res.status(403).json({ status: res.statusCode, message: "You are not allowed to add a Pet to this user" } as Response);
-        }else{
+        } else {
             var response: Response = await queries.addPet(pet);
             console.log(response);
             return res.status(response.status).json(response);
         }
-    }else{
+    } else {
         return res.status(400).json({ status: res.statusCode, message: "Invalid Pet object" } as Response);
     }
-    
+
 });
 
 
@@ -281,6 +285,7 @@ app.post('/deletepet', async (req, res) => {
             return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
         }
         await queries.deletePetRelationships(req.body.petid as unknown as number);
+        await queries.removePetReports(req.body.petid as unknown as number);
         var response: Response = await queries.deletePet(req.body.petid as unknown as number);
         return res.status(response.status).json(response);
     } else {
@@ -524,6 +529,112 @@ app.post('/deletechat', async (req, res) => {
     } else {
         res.status(400).json({ status: res.statusCode, message: "You are missing atleast one of two arguments" } as Response);
     }
+});
+
+
+
+//TODO ADD ADMIN AUTHENTIFICATION TO ALL REPORT FUNCTIONS
+app.post('/addreport', async (req, res) => {
+    if (await queries.isUserAdmin(req.user)) {
+        if (req.body.reportedpetid && req.body.reason) {
+            var response: Response = await queries.addReport(req.body.reportedpetid as unknown as number, req.body.reason as unknown as string);
+            return res.status(response.status).json(response);
+        } else {
+            res.status(400).json({ status: res.statusCode, message: "You are missing atleast one of two arguments" } as Response);
+        }
+    } else {
+        res.status(403).json({ status: res.statusCode, message: "You are not an Admin" } as Response);
+    }
+
+});
+
+app.post('/removepetreports', async (req, res) => {
+    if (await queries.isUserAdmin(req.user)) {
+        if (req.body.reportedpetid) {
+            var isCorrectUser: boolean = await queries.authenticateByPetId(req.user, req.body.reportedpetid as unknown as number);
+            if (!isCorrectUser) {
+                return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
+            }
+            var response: Response = await queries.removePetReports(req.body.reportedpetid as unknown as number);
+            return res.status(response.status).json(response);
+        } else {
+            res.status(400).json({ status: res.statusCode, message: "You are missing reportedpetid" } as Response);
+        }
+    } else {
+        res.status(403).json({ status: res.statusCode, message: "You are not an Admin" } as Response);
+    }
+
+});
+
+app.get('/removereport', async (req, res) => {
+    if (await queries.isUserAdmin(req.user)) {
+        if (req.query.reportid) {
+
+            var response: Response = await queries.removeReport(req.query.reportid as unknown as number);
+
+            res.status(response.status).json(response);
+        } else {
+            res.status(400).json({ status: res.statusCode, message: "You are missing petid" } as Response);
+        }
+
+    }else {
+        res.status(403).json({ status: res.statusCode, message: "You are not an Admin" } as Response);
+    }
+});
+
+app.get('/getallreports', async (req, res) => {
+    if (await queries.isUserAdmin(req.user)) {
+        var response: Response | Report[] = await queries.getAllReports();
+        if ("status" in response) {
+            res.status(response.status).json(response);
+        } else {
+            res.status(200).json(response as Report[]);
+        }
+    } else {
+        res.status(403).json({ status: res.statusCode, message: "You are not an Admin" } as Response);
+    }
+
+});
+
+app.post('/banuser', async (req, res) => {
+    if (await queries.isUserAdmin(req.user)) {
+        if (req.body.userid) {
+            var response: Response = await queries.banUser(req.body.userid as unknown as number);
+            return res.status(response.status).json(response);
+        } else {
+            res.status(400).json({ status: res.statusCode, message: "You are missing userid" } as Response);
+        }
+    } else {
+        res.status(403).json({ status: res.statusCode, message: "You are not an Admin" } as Response);
+    }
+
+});
+
+app.post('/unbanuser', async (req, res) => {
+    if (await queries.isUserAdmin(req.user)) {
+        if (req.body.userid) {
+            var response: Response = await queries.unbanUser(req.body.userid as unknown as number);
+            return res.status(response.status).json(response);
+        } else {
+            res.status(400).json({ status: res.statusCode, message: "You are missing userid" } as Response);
+        }
+    } else {
+        res.status(403).json({ status: res.statusCode, message: "You are not an Admin" } as Response);
+    }
+});
+
+app.get('/getbannedusers', async (req, res) => {
+    if (await queries.isUserAdmin(req.user)) {
+        var response: Response | User[] = await queries.getBannedUsers();
+        if ("status" in response) {
+            res.status(response.status).json(response);
+        } else {
+            res.status(200).json(response as User[]);
+        }
+    } else {
+        res.status(403).json({ status: res.statusCode, message: "You are not an Admin" } as Response);
+    }
+
 });
 
 app.listen(port, () => console.log(`Lowoof API running on port ${port}!`));

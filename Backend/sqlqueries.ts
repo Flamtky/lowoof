@@ -1,6 +1,6 @@
 import mysql, { Pool } from 'mysql';
 import dotenv from 'dotenv';
-import { User, Response, Pet, Relationship, Message, Preference } from './interfaces'
+import { User, Response, Pet, Relationship, Message, Preference, Report } from './interfaces'
 dotenv.config({ path: './vars.env' });
 
 export default class Queries {
@@ -91,7 +91,7 @@ export default class Queries {
             var response: Response = { status: 0, message: '' };
             connection.query(`INSERT INTO USER (USERNAME, PASSWORD, EMAIL, VORNAME, NACHNAME, GEBURTSTAG, INSTITUTION, TELEFONNUMMER, PLZ, WOHNORT, GESCHLECHT, PROFILBILD, ONLINESTATUS, MITGLIEDSCHAFTPAUSIERT)
            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0)`,
-                [user["USERNAME"], user["PASSWORD"], user["EMAIL"], user["VORNAME"], user["NACHNAME"], user["GEBURTSTAG"], user["INSTITUTION"], user["TELEFONNUMMER"], user["PLZ"], user["WOHNORT"], user["GESCHLECHT"],user["PROFILBILD"]],
+                [user["USERNAME"], user["PASSWORD"], user["EMAIL"], user["VORNAME"], user["NACHNAME"], user["GEBURTSTAG"], user["INSTITUTION"], user["TELEFONNUMMER"], user["PLZ"], user["WOHNORT"], user["GESCHLECHT"], user["PROFILBILD"]],
                 (err, rows, fields) => {
                     if (err) {
                         console.log(err);
@@ -430,7 +430,7 @@ export default class Queries {
     async getPetMatches(petid: number): Promise<Response | Relationship[]> {
         return new Promise<Response | Relationship[]>((resolve, reject) => {
             const connection: mysql.Pool = this.getConnection();
-            connection.query(`SELECT * FROM TIER_RELATIONSHIPS WHERE TIER_A_ID = ? OR TIER_B_ID = ?;`, [petid, petid],
+            connection.query(`SELECT * FROM TIER_MATCHES WHERE TIER_A_ID = ? OR TIER_B_ID = ?;`, [petid, petid],
                 (err, rows, fields) => {
                     if (err) {
                         console.log(err);
@@ -457,7 +457,7 @@ export default class Queries {
                 TIER_B_ID = petid;
             }
             RELATIONID = (`${TIER_A_ID}${TIER_B_ID}`) as unknown as number;
-            connection.query(`SELECT * FROM TIER_RELATIONSHIPS WHERE RELATIONID = ?;`, [RELATIONID],
+            connection.query(`SELECT * FROM TIER_MATCHES WHERE RELATIONID = ?;`, [RELATIONID],
                 (err, rows, fields) => {
                     if (err) {
                         console.log(err);
@@ -622,7 +622,7 @@ export default class Queries {
                             resolve(rows as Message[]);
                         }
                     }
-            });
+                });
         });
     }
 
@@ -685,7 +685,7 @@ export default class Queries {
     addPreferences(petid: number, preferences: number[]): Promise<Response> {
         return new Promise<Response>(async (resolve, reject) => {
             const connection: mysql.Pool = this.getConnection();
-            for(let i = 0; i < preferences.length; i++) {
+            for (let i = 0; i < preferences.length; i++) {
                 connection.query(`INSERT INTO USER_PREF_RELATION (PETID, PREFID) VALUES (?, ?);`, [petid, preferences[i]],
                     (err, rows, fields) => {
                         if (err) {
@@ -702,7 +702,7 @@ export default class Queries {
     removePreferences(petid: number, preferences: number[]): Promise<Response> {
         return new Promise<Response>(async (resolve, reject) => {
             const connection: mysql.Pool = this.getConnection();
-            for(let i = 0; i < preferences.length; i++) {
+            for (let i = 0; i < preferences.length; i++) {
                 connection.query(`INSERT INTO USER_PREF_RELATION (PETID, PREFID) VALUES (?, ?);`, [petid, preferences[i]],
                     (err, rows, fields) => {
                         if (err) {
@@ -753,6 +753,137 @@ export default class Queries {
         });
     }
 
+    addReport(reportedPetId: number, grund: string) {
+        return new Promise<Response>(async (resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            connection.query(`INSERT INTO REPORT (TIERID, GRUND) VALUES (?, ?);`, [reportedPetId, grund],
+                (err, rows, fields) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(this.errorResponse);
+                    } else {
+                        resolve({ status: 200, message: 'Report added' } as Response);
+                    }
+                }
+            );
+        });
+    }
+
+    removePetReports(reportedPetId: number) {
+        return new Promise<Response>(async (resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            connection.query(`DELETE FROM REPORT WHERE TIERID = ?;`, [reportedPetId],
+                (err, rows, fields) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(this.errorResponse);
+                    } else {
+                        
+                    }
+                }
+            );
+        });
+    }
+
+    removeReport(reportid: number): Promise<Response> {
+        return new Promise<Response>(async (resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            connection.query(`DELETE FROM REPORT WHERE REPORTID = ?;`, [reportid],
+                (err, rows, fields) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(this.errorResponse);
+                    } else {
+                        resolve({ status: 200, message: 'Report removed' } as Response);
+                    }
+                });
+        });
+    }
+
+    getAllReports(): Promise<Response | Report[]> {
+        return new Promise<Response | Report[]>(async (resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            connection.query(`SELECT * FROM REPORT;`,
+                (err, rows, fields) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(this.errorResponse);
+                    } else {
+                        if (rows.length == 0) {
+                            resolve({ status: 404, message: "No reports found" } as Response);
+                        } else {
+                            resolve(rows as Report[]);
+                        }
+                    }
+                });
+        });
+    }
+    //Set User Mitgliedschaftpausiert auf true
+    banUser(userid: number): Promise<Response> {
+        return new Promise<Response>(async (resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            connection.query(`UPDATE USER SET MITGLIEDSCHAFTPAUSIERT = 1 WHERE USERID = ?;`, [userid],
+                (err, rows, fields) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(this.errorResponse);
+                    } else {
+                        resolve({ status: 200, message: 'User banned' } as Response);
+                    }
+                });
+        });
+    }
+    unbanUser(userid: number): Promise<Response> {
+        return new Promise<Response>(async (resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            connection.query(`UPDATE USER SET MITGLIEDSCHAFTPAUSIERT = 0 WHERE USERID = ?;`, [userid],
+                (err, rows, fields) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(this.errorResponse);
+                    } else {
+                        resolve({ status: 200, message: 'User unbanned' } as Response);
+                    }
+                });
+        });
+    }
+    getBannedUsers(): Promise<Response | User[]> {
+        return new Promise<Response | User[]>(async (resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            connection.query(`SELECT * FROM USER WHERE MITGLIEDSCHAFTPAUSIERT = 1;`,
+                (err, rows, fields) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(this.errorResponse);
+                    } else {
+                        if (rows.length == 0) {
+                            resolve({ status: 404, message: "No banned users found" } as Response);
+                        } else {
+                            resolve(rows as User[]);
+                        }
+                    }
+                });
+        });
+    }
+    //Check of ADMIN in USER is True
+    isUserAdmin(tokenUser:any): Promise<Response | boolean> {
+        return new Promise<Response | boolean>(async (resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            connection.query(`SELECT ADMIN FROM USER WHERE USERNAME = ?;`, [tokenUser.username],
+                (err, rows, fields) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(this.errorResponse);
+                    } else {
+                        if (rows.length == 0) {
+                            resolve({ status: 404, message: "User not found" } as Response);
+                        } else {
+                            resolve(rows[0].ADMIN == 1);
+                        }
+                    }
+                });
+        });
+    }
 }
 
 

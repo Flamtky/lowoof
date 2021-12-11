@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useReducer } from 'react';
 import bcrypt from 'react-native-bcrypt';
-import { User, Response, Pet, Relationship, Message } from './interfaces';
+import { User, Response, Pet, Relationship, Message, Report } from './interfaces';
 export class Api {
     private apiToken: string = "";
     private url: string = "http://server.it-humke.de:8080";
@@ -18,8 +18,8 @@ export class Api {
     */
     async getAuthTokenfromServer(username: string, password: string) {
         try {
-            return await axios.post(this.url + '/auth', { username: username, password: password }).then(response => { this.setAuthToken(response.data.token); this.setCurrentUser(response.data.user);})
-            .catch((error) => { throw new Error("Error while connecting to server. Are you authorized?"); });
+            return await axios.post(this.url + '/auth', { username: username, password: password }).then(response => { this.setAuthToken(response.data.token); this.setCurrentUser(response.data.user); })
+                .catch((error) => { throw new Error("Error while connecting to server. Are you authorized?"); });
         } catch (error) {
             return "Error"
         }
@@ -34,10 +34,10 @@ export class Api {
     }
 
     getCurrentUser(): User | null {
-        if(this.currentUser != null) {
+        if (this.currentUser != null) {
             return this.currentUser;
         }
-        else{
+        else {
             return null;
         }
     }
@@ -475,8 +475,77 @@ export class Api {
             .catch((error) => { res = error.response.data as Response; });
         return res;
     }
-
-    pauseProfile(userId: number): void {
-        return;
+    //TODO: Add setOnlinestatus
+    async addReport(reportedPetId: number, reason: string): Promise<Response> {
+        var res: Response = { status: 500, message: "Error" };
+        await axios.post(this.url + '/addreport', { reportedpetid: reportedPetId, reason: reason }, {
+            headers: {
+                'Authorization': `Beaver ${this.apiToken}`
+            }
+        }).then(response => { res = response.data as Response; })
+            .catch((error) => { res = error.response.data as Response; });
+        return res;
     }
+    async removePetReports(reportedPetId: number): Promise<Response> {
+        var res: Response = { status: 500, message: "Error" };
+        await axios.post(this.url + '/removepetreports', { reportedpetid: reportedPetId }, {
+            headers: {
+                'Authorization': `Beaver ${this.apiToken}`
+            }
+        }).then(response => { res = response.data as Response; })
+            .catch((error) => { res = error.response.data as Response; });
+        return res;
+    }
+    async removeReport(reportid:number):Promise<Response|Report[]>{
+        var res:Response = {status:500,message:"Error"};
+        await axios.get(this.url + '/removereport?reportid=' + reportid,{
+            headers:{
+                'Authorization':`Beaver ${this.apiToken}`
+            }
+        }).then(response => {res = response.data as Response})
+            .catch((error) => {res = error.response.data as Response});
+        return res;
+    }
+    async getAllReports():Promise<Response|Report[]>{
+        var res:Response|Report[] = {status:500,message:"Error"};
+        await axios.get(this.url + '/getallreports',{
+            headers:{
+                'Authorization':`Beaver ${this.apiToken}`
+            }
+        }).then(response => {res = response.data as Response|Report[];})
+            .catch((error) => {res = error.response.data as Response|Report[];});
+        return res;
+    }
+    async banUser(userId: number): Promise<Response> {
+        var res: Response = { status: 500, message: "Error" };
+        await axios.post(this.url + '/banuser', { userid: userId }, {
+            headers: {
+                'Authorization': `Beaver ${this.apiToken}`
+            }
+        }).then(response => { res = response.data as Response; })
+            .catch((error) => { res = error.response.data as Response; });
+        return res;
+    }
+    async unbanUser(userId: number): Promise<Response> {
+        var res: Response = { status: 500, message: "Error" };
+        await axios.post(this.url + '/unbanuser', { userid: userId }, {
+            headers: {
+                'Authorization': `Beaver ${this.apiToken}`
+            }
+        }).then(response => { res = response.data as Response; })
+            .catch((error) => { res = error.response.data as Response; });
+        return res;
+    }
+    //TODO: Add change password
+    async getBannedUsers():Promise<Response|User[]>{
+        var res:Response|User[] = {status:500,message:"Error"};
+        await axios.get(this.url + '/getallbannedusers',{
+            headers:{
+                'Authorization':`Beaver ${this.apiToken}`
+            }
+        }).then(response => {res = response.data as User[];})
+            .catch((error) => {res = error.response.data as Response;});
+        return res;
+    }
+
 }

@@ -4,7 +4,7 @@ import OwnButton from '../Components/ownButton';
 import SearchBar from '../Components/searchbar';
 import { BACKGROUNDCOLOR, MAINCOLOR } from '../Constants/colors';
 import language from '../../language.json';
-import { currentLanguage } from '../Constants/language';
+import { currentLanguage as cl } from '../Constants/language';
 import { API } from '../Constants/api';
 import { TextBlock } from '../Components/styledText';
 
@@ -14,6 +14,11 @@ export default function Login({ route, navigation }:any) {
     const isLargeScreen = dimensions.width >= 768;
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [currentLanguage, setCurrentLanguage] = useState(cl);
+
+    React.useEffect(() => {
+        setCurrentLanguage(cl);
+    }, [cl]);
 
     return (
         <View style={{ backgroundColor: BACKGROUNDCOLOR, height: "100%" }}>

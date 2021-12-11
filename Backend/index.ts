@@ -127,8 +127,8 @@ app.get('/getuser', async (req, res) => {
 app.get('/getuserlanguage', async (req, res) => {
     if (req.query.userid) {
         var response: string | Response = await queries.getUserLanguage(req.query.userid as unknown as number)
-        if (!(typeof response === "string")) {
-            res.status(response.status).json(response);
+        if (response.hasOwnProperty("status")) {
+            res.status((response as Response).status).json(response);
         } else {
             res.status(200).json(response);
         }

@@ -70,7 +70,9 @@ export default function PetProfile({ route, navigation }: any) {
                         <View style={styles.row}>
                             <View style={{ width: "50%" }}>
                                 <TextBlock>{language.PET.NAME[currentLanguage]}: {petProfile?.NAME}</TextBlock>
-                                <TextBlock>{language.PET.OWNER[currentLanguage]}: {ownerProfile?.USERNAME}</TextBlock>
+                                <TouchableOpacity onPress={() => { navigation.navigate('MyProfile', { petID: petProfile?.USERID }) }}>
+                                    <TextBlock style={{color: "#00f"}}>{language.PET.OWNER[currentLanguage]}: {ownerProfile?.USERNAME}</TextBlock>
+                                </TouchableOpacity>
                                 <TextBlock> </TextBlock>
                                 <TextBlock>{language.PET.GENDER[currentLanguage]}: {petProfile?.GESCHLECHT}</TextBlock>
                                 <TextBlock>{language.PET.BIRTHDAY[currentLanguage]}: {petProfile?.GEBURTSTAG}</TextBlock>
@@ -99,10 +101,10 @@ export default function PetProfile({ route, navigation }: any) {
                             <>
                                 <View style={[styles.row, { marginVertical: 10, justifyContent: "space-around" }]}>
                                     <OwnButton title={language.MATCHES.HEADER[currentLanguage]} onPress={() => {
-                                        navigation.navigate('Matches');
+                                        navigation.navigate('Matches', { pet: petProfile });
                                     }} />
                                     <OwnButton title={language.FRIENDS.HEADER[currentLanguage]} onPress={() => {
-                                        navigation.navigate('Friends');
+                                        navigation.navigate('Friends', { pet: petProfile });
                                     }} />
                                     <OwnButton title={language.CHATS.HEADER[currentLanguage]} onPress={() => {
                                         navigation.navigate('Chats', { pet: petProfile });

@@ -3,7 +3,6 @@ import React from 'react';
 import { useWindowDimensions } from 'react-native';
 import SearchBar from './searchbar';
 import MyProfile from '../Screens/MyProfile';
-import PetProfile from '../Screens/PetProfile';
 import Matches from '../Screens/Matches';
 import Friends from '../Screens/Friends';
 import Chats from '../Screens/Chats';
@@ -11,6 +10,7 @@ import Settings from '../Screens/Settings';
 import { BACKGROUNDCOLOR, BLACK, TITLECOLOR, WHITE } from '../Constants/colors';
 import language from '../../language.json';
 import { currentLanguage } from '../Constants/language';
+import { API } from '../Constants/api';
 
 
 const Drawer = createDrawerNavigator();
@@ -61,7 +61,7 @@ export default function Sidebar() {
             }}
             backBehavior='history'
         >
-            <Drawer.Screen name="MyProfile" component={MyProfile} options={{ title: language.PROFILE.HEADER[currentLanguage] }} initialParams={{ userID: 10 /* TODO: Give current UserID */ }} />
+            <Drawer.Screen name="MyProfile" component={MyProfile} options={{ title: language.PROFILE.HEADER[currentLanguage] }} initialParams={{ userID: API.getCurrentUser()?.USERID ?? 0}} />
             <Drawer.Screen name="Matches" component={Matches} options={{ title: language.MATCHES.HEADER[currentLanguage] }} initialParams={{ petID: 195 /* TODO: Give current UserID */ }} />
             <Drawer.Screen name="Friends" component={Friends} options={{ title: language.FRIENDS.HEADER[currentLanguage] }} initialParams={{ petID: 195 /* TODO: Give current UserID */ }} />
             <Drawer.Screen name="Chats" component={Chats} options={{ title: language.CHATS.HEADER[currentLanguage] }}/>

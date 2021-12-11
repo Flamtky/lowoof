@@ -60,15 +60,19 @@ export function AddPet(props: any) {
         };
         if (newPet.NAME === "" || newPet.ART === "" || newPet.RASSE === "") {
             alert("Das Tier braucht einen Namen, einen Typ und eine Rasse!");
-        } else if (['Male', 'Female', 'Other'].indexOf(petGender.trim()) >= 0) {
+        } else if (['Male', 'Female', 'Other'].indexOf(petGender.trim()) < 0) {
             alert(language.LOGIN.INV_GENDER[currentLanguage])
         } else if (petBirthDate.trim().length !== 10) {
             alert(language.LOGIN.INV_BIRTHDATE[currentLanguage]);
         } else {
-            (props.api as Api).createPetProfile(newPet).then((resp) => {
-                if (resp.status !== 200) {
+            (props.route.params.api as Api).createPetProfile(newPet).then((resp) => {
+                if (resp.status === 413) {
+                    alert("Das Tier Bild ist zu groß!");
+                } else if (resp.status !== 200) {
                     alert("Fehler beim Erstellen des Tieres");
                     console.log(resp);
+                } else {
+                    props.navigation.navigate('MyProfile');
                 }
             });
         }

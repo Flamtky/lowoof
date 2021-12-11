@@ -36,7 +36,7 @@ export default function Register({ route, navigation }: any) {
             alert(language.LOGIN.NO_MATCH[currentLanguage]);
         } else if (email.trim().length < 5 || !email.trim().includes('@') || !email.trim().includes('.')) {
             alert(language.LOGIN.INV_EMAIL[currentLanguage]);
-        } else if (['Male', 'Female', 'Other'].indexOf(gender.trim()) >= 0) {
+        } else if (['Male', 'Female', 'Other'].indexOf(gender.trim()) < 0) {
             alert(language.LOGIN.INV_GENDER[currentLanguage])
         } else if (birthdate.trim().length !== 10) {
             alert(language.LOGIN.INV_BIRTHDATE[currentLanguage]);
@@ -66,7 +66,9 @@ export default function Register({ route, navigation }: any) {
             };
 
             API.createNewUser(user).then((resp: any) => {
-                if (resp.status !== 200) {
+                if (resp.status === 413) {
+                    alert("Das Bild ist zu groß!");
+                } else if (resp.status !== 200) {
                     alert(language.LOGIN.REG_ERR[currentLanguage]);
                     console.log(resp);
                 } else {

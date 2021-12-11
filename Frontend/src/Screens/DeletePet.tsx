@@ -34,6 +34,7 @@ export default function DeletePet({ navigation, route }: any) {
                         onChange={(event: any) => {
                             setPassword(event.nativeEvent.text);
                         }}
+                        secureTextEntry={true}
                     />
                     <OwnButton title={language.DELETE[currentLanguage]} onPress={() => {
                         api.deletePet(petToDelete.TIERID, password).then((resp) => {
@@ -41,7 +42,7 @@ export default function DeletePet({ navigation, route }: any) {
                                 alert(language.LOGIN.WRONG_PWD[currentLanguage]);
                             } else if (resp.message === "Pet deleted") {
                                 alert(language.EDIT_PET.SUCCESS_DELETE[currentLanguage]);
-                                window.location.reload();
+                                props.navigation.navigate('MyProfile');
                             } else {
                                 console.log(resp);
                             }

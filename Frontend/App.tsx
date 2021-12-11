@@ -4,7 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import Sidebar from './src/Components/sidebar';
 import { EditProfile, EditPet, AddPet } from './src/Screens/EditProfile';
 import { BACKGROUNDCOLOR, TITLECOLOR } from './src/Constants/colors';
-import { Chat } from './src/Screens/Chat';
+import Chat from './src/Screens/Chat';
 import DeletePet from './src/Screens/DeletePet';
 import language from './language.json';
 import { Api } from './src/Api/lowoof-api';

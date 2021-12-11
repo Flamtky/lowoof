@@ -10,41 +10,54 @@ import { Message, Pet } from '../Api/interfaces';
 import { TextBlock } from '../Components/styledText';
 import { API } from '../Constants/api';
 
-export function Chat(props: any) {
+export default function Chat({ route, navigation }: any) {
     const dimensions = useWindowDimensions();
     const isLargeScreen = dimensions.width >= 768;
     const [message, setMessage] = useState('');
     const [messageHistory, setMessageHistory] = useState<Message[]>([]);
-    const targetPet: Pet = props.targetPet;
-    const ownPet: Pet = props.ownPet;
+    const [messages, setMessages] = useState<string[]>([]);
+    const [targetPet, setTargetPet] = useState<Pet | null>(null);
+    const targetID = route.params.targetPet;
+    const ownID = route.params.ownPet;
 
 
-    //TODO: Test everything
+    //TODO: FIX DESIGN (ALLWAYS RIGHT SIDE)
 
     React.useEffect(() => {
-        if (targetPet == undefined) {
-            props.navigation.navigate('MyProfile');
+        if (targetID == undefined) {
+            navigation.navigate('MyProfile');
         } else {
             // Get the message history from the server
-            API.getMessages(ownPet.TIERID, targetPet.TIERID).then((data) => {
+            API.getMessages(ownID, targetID).then((data) => {
                 if (!data.hasOwnProperty("message")) {
-                    setMessageHistory(data);
+                    setMessageHistory(data as Message[]);
+                    (data as Message[]).forEach((message) => {
+                        setMessages(messages => [...messages, message.NACHRICHT]);
+                    });
                 } else {
-                    alert(data);
+                    console.log(data);
                 }
             });
-            props.navigation.setParams({ name: "Chat with " + targetPet.NAME })
+            API.getPetData(targetID).then((data) => {
+                if (!data.hasOwnProperty("message")) {
+                    setTargetPet(data as Pet);
+                    navigation.setParams({ name: "Chat with " + (data as Pet).NAME })
+                } else {
+                    console.log(data);
+                } 
+            }); 
         }
-    }, [targetPet, ownPet]);
+    }, [targetID, ownID]);
 
     return (
         <View style={{ backgroundColor: BACKGROUNDCOLOR, height: "100%" }}>
             <View style={[styles.container, isLargeScreen ? { width: '43%', left: "28%" } : null]}>
                 <ScrollView keyboardDismissMode='on-drag' style={{ height: "100%", width: "100%" }}>
-                    {messageHistory.map((messageObj, index) => {
+                    {messages.map((messageObj, index) => {
+                        const mess:Message|undefined = messageHistory.find(m => m.NACHRICHT === messageObj);
                         return (
-                            <View key={"Message-" + index} style={[styles.messageContainer, messageObj.From === ownPet.TIERID ? { justifyContent: 'flex-end' } : null]}>
-                                <TextBlock style={styles.messageText}>{message}</TextBlock>
+                            <View key={"Message-" + index} style={[styles.messageContainer, mess === undefined || mess.FROM_PET === ownID.TIERID ? {marginRight: "auto"} : { alignItems: 'flex-end', marginLeft: "auto" } ]}>
+                                <TextBlock style={styles.messageText}>{messageObj}</TextBlock>
                             </View>
                         )
                     })}
@@ -62,11 +75,13 @@ export function Chat(props: any) {
                         title="➤"
                         style={{ width: 40, padding: 0, minWidth: 0, borderRadius: 0 }}
                         onPress={() => {
-                            console.log("=>" + message);
-                            API.sendMessage(message, ownPet.TIERID, targetPet.TIERID).then((resp) => { //TODO: Change API Call, waiting for update
-                                if (resp.message === "/* TODO:  ADD*/") {
-                                    setMessageHistory([...messageHistory, message]);
+                            API.sendMessage(ownID, targetID, message).then((resp) => { 
+                                if (resp.status === 200) {
+                                    setMessages([...messages, message]);
                                     setMessage('');
+                                } else {
+                                    console.log(resp);
+                                    alert(resp.message);
                                 }
                             });
 
@@ -95,12 +110,12 @@ const styles = StyleSheet.create({
         borderRadius: 0,
     },
     messageContainer: {
-        width: "100%",
+        width: "auto",
         padding: 10,
         borderRadius: 10,
         backgroundColor: "#fff",
         marginBottom: 10,
-        alignItems: 'center',
+        alignItems: 'flex-start',
         justifyContent: 'flex-start',
     },
     messageText: {

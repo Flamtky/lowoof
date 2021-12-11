@@ -44,7 +44,7 @@ export default function Login({ route, navigation }:any) {
                 </View>
                 <OwnButton
                         title={language.LOGIN.LOGIN[currentLanguage]}
-                        style={{ width: 88, padding: 0, minWidth: 0, borderRadius: 0 }}
+                        style={{ width: "auto", padding: 0, minWidth: 0, borderRadius: 0 }}
                         onPress={() => {
                             if (username.trim().length < 3 || password.trim().length < 6 || username.trim().includes(' ') || password.trim().includes(' ')) {
                                 alert(language.LOGIN.LOGIN_ERR[currentLanguage]);

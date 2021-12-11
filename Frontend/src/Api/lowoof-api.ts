@@ -342,6 +342,26 @@ export class Api {
         return res;
     }
 
+    async getPetMatches(petId: number): Promise<Pet[] | Response> {
+        var res: Pet[] | Response = { status: 500, message: "Error" };
+        await axios.get(this.url + '/getpetmatches?petid=' + petId, {
+            headers: {
+                'Authorization': `Beaver ${this.apiToken}`
+            }
+        }).then(response => {
+            if (response.status == 200) {
+                res = response.data as Pet[];
+            } else {
+                res = response.data as Response;
+            }
+        }).catch((error) => { res = error.response.data as Response });
+        return res;
+    }
+
+    getChats(userId: number): any {
+        return;
+    }
+
 
     addReport(userId: number, reason: string): void {
         return;
@@ -349,9 +369,7 @@ export class Api {
 
 
 
-    getChats(userId: number): any {
-        return;
-    }
+    
 
     removeChat(deletingUserId: number, userId: number): void {
         return;

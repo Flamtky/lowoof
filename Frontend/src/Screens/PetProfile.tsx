@@ -80,7 +80,7 @@ export default function PetProfile({ route, navigation }: any) {
                                 <TextBlock>{language.PET.SPECIES[currentLanguage]}: {petProfile?.ART} </TextBlock>
                                 <TextBlock>{language.PET.BREED[currentLanguage]}: {petProfile?.RASSE} </TextBlock>
                                 <TextBlock>{language.PET.DESCRIPTION[currentLanguage]}: </TextBlock>
-                                <TextBlock>Text... </TextBlock> {/* TODO: Implement actual description from database */}
+                                <TextBlock>Text... {/* TODO: Implement actual description from database */}</TextBlock>
                                 <TextBlock>Text... </TextBlock>
                             </View>
                             <View style={{ width: "50%" }}>
@@ -92,7 +92,7 @@ export default function PetProfile({ route, navigation }: any) {
                                 <TextBlock>{language.PET.AGE[currentLanguage]}: </TextBlock>
                                 <TextBlock> </TextBlock>
                                 <TextBlock>{language.PET.FEATURES[currentLanguage]}</TextBlock>
-                                <TextBlock>Text... </TextBlock> {/* TODO: Implement features from database */}
+                                <TextBlock>Text... {/* TODO: Implement features from database */}</TextBlock>
                                 <TextBlock>Text... </TextBlock>
                             </View>
                         </View>

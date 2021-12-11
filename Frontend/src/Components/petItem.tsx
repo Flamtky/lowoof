@@ -17,14 +17,14 @@ export default function PetItem(props: any) {
     let hasRequested = props.hasRequested; /* Has this pet requested to become my friend? */
     let hasOwnRequest = props.hasOwnRequest; /* Have I requested to become this pet's friend? */
     let isMarkedAttractive = props.isMarkedAttractive; /* Have I marked this pet as attractive? */
-    return (<View style={[styles.row, { marginLeft: 15, height: 70 }]}>
+    return (<View style={[styles.row, { marginLeft: 15, height: 80 }]}>
         <TouchableOpacity onPress={() => { props.navigation.navigate('PetProfile', { petID: pet.TIERID }); }} >
             <Image style={styles.profilepicture}
                 source={{ uri: pet.PROFILBILD != null ? Buffer.from(pet.PROFILBILD, 'base64').toString('ascii') : "https://puu.sh/IsTPQ/5d69029437.png" }}
             />
         </TouchableOpacity>
         <View style={{ marginLeft: 10, height: 20, justifyContent: "space-between" }}>
-            <TextBlock>{language.PET.OWNER[currentLanguage]}: {pet.USERNAME}</TextBlock>
+            <TextBlock>{language.PET.OWNER[currentLanguage]}: {pet.USERNAME /* TODO: Highlight username as link */}</TextBlock>
             <TextBlock>{language.PET.NAME[currentLanguage]}: {pet.NAME}</TextBlock>
             <TextBlock>{language.PET.SPECIES[currentLanguage]}: {pet.ART}</TextBlock>
             <TextBlock>{language.PET.BREED[currentLanguage]}: {pet.RASSE}</TextBlock>

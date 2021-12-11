@@ -51,7 +51,7 @@ export default function Friends({ route, navigation }: any) {
                         // if last iteration
                         if (temp.length === (data as Relationship[]).length) {
                             setFriendsPets(temp);
-                            API.getPetRelationships(route.params.petID).then(data3 => {     //TODO: change to get matches. Needs API update
+                            API.getPetMatches(route.params.petID).then(data3 => { 
                                 if (!data.hasOwnProperty("message")) {
                                     setMatchedFriends((data3 as Relationship[]).filter(x => temp.some(t => t.TIERID === x.TIER_A_ID) || temp.some(t => t.TIERID === x.TIER_B_ID)));
                                     setIsLoading(false);

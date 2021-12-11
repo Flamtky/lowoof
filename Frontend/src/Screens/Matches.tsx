@@ -25,7 +25,7 @@ export default function Matches({ route, navigation }:any) {
         if (route.params.petID == undefined) {
             navigation.navigate('MyProfile');
         } else {
-            API.getPetMatches(route.params.petID).then((data: any) => { //TODO: change to get matches. Needs API update
+            API.getPetMatches(route.params.petID).then((data: any) => { 
                 if (!data.hasOwnProperty("message")) {
                     setmatches(data as Relationship[]);
                     

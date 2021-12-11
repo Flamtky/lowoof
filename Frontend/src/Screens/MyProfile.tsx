@@ -39,8 +39,10 @@ export default function MyProfile({ route, navigation }: any) {
                     }
                     setIsLoading(false);
                 });
+            } else {
+                console.log(data);
             }
-            // TODO: Handle error / show error page
+
         });
     }, [route]);
 

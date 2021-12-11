@@ -12,7 +12,7 @@ import { Api } from '../Api/lowoof-api';
 import language from '../../language.json';
 import { currentLanguage } from '../Constants/language';
 import { API } from '../Constants/api';
-import Buffer from 'buffer';
+import { Buffer } from "buffer"
 
 
 export default function PetProfile({ route, navigation }: any) {
@@ -44,7 +44,7 @@ export default function PetProfile({ route, navigation }: any) {
     }, [route]);
 
     return (
-        <View style={{width:"100%",height:"100%", backgroundColor: MAINCOLOR}}>
+        <View style={{ width: "100%", height: "100%", backgroundColor: MAINCOLOR }}>
             <View style={[styles.item, styles.container, isLargeScreen ? { width: '60%', marginLeft: "20%" } : { width: "100%" }]}>
                 <ScrollView style={{ width: '100%' }}
                     keyboardDismissMode="on-drag"
@@ -99,7 +99,7 @@ export default function PetProfile({ route, navigation }: any) {
                                 navigation.navigate('Friends');
                             }} />
                             <OwnButton title={language.CHATS.HEADER[currentLanguage]} onPress={() => {
-                                navigation.navigate('Chats');
+                                navigation.navigate('Chats', { pet: petProfile });
                             }} />
                         </View>
                         <Seperator />

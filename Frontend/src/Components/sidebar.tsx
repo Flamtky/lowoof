@@ -64,7 +64,7 @@ export default function Sidebar() {
             <Drawer.Screen name="MyProfile" component={MyProfile} options={{ title: language.PROFILE.HEADER[currentLanguage] }} initialParams={{ userID: API.getCurrentUser()?.USERID ?? 0}} />
             <Drawer.Screen name="Matches" component={Matches} options={{ title: language.MATCHES.HEADER[currentLanguage] }} initialParams={{ petID: 195 /* TODO: Give current UserID */ }} />
             <Drawer.Screen name="Friends" component={Friends} options={{ title: language.FRIENDS.HEADER[currentLanguage] }} initialParams={{ petID: 195 /* TODO: Give current UserID */ }} />
-            <Drawer.Screen name="Chats" component={Chats} options={{ title: language.CHATS.HEADER[currentLanguage] }}/>
+            <Drawer.Screen name="Chats" component={Chats} options={{ title: language.CHATS.HEADER[currentLanguage] }} />
             <Drawer.Screen name="Settings" component={Settings} options={{ title: language.SETTINGS.HEADER[currentLanguage] }}/>
         </Drawer.Navigator>
     );

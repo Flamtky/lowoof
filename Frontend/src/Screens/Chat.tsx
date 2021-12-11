@@ -20,9 +20,6 @@ export default function Chat({ route, navigation }: any) {
     const targetID = route.params.targetPet;
     const ownID = route.params.ownPet;
 
-
-    //TODO: FIX DESIGN (ALLWAYS RIGHT SIDE)
-
     React.useEffect(() => {
         if (targetID == undefined) {
             navigation.navigate('MyProfile');
@@ -41,11 +38,11 @@ export default function Chat({ route, navigation }: any) {
             API.getPetData(targetID).then((data) => {
                 if (!data.hasOwnProperty("message")) {
                     setTargetPet(data as Pet);
-                    navigation.setParams({ name: "Chat with " + (data as Pet).NAME })  //TODO: Can I use language here?
+                    navigation.setParams({ name: language.CHATS.CHAT_WITH[currentLanguage] + (data as Pet).NAME })  //TODO: Can I use language here?
                 } else {
                     console.log(data);
-                } 
-            }); 
+                }
+            });
         }
     }, [targetID, ownID]);
 
@@ -54,9 +51,9 @@ export default function Chat({ route, navigation }: any) {
             <View style={[styles.container, isLargeScreen ? { width: '43%', left: "28%" } : null]}>
                 <ScrollView keyboardDismissMode='on-drag' style={{ height: "100%", width: "100%" }}>
                     {messages.map((messageObj, index) => {
-                        const mess:Message|undefined = messageHistory.find(m => m.NACHRICHT === messageObj);
+                        const mess: Message | undefined = messageHistory.find(m => m.NACHRICHT === messageObj);
                         return (
-                            <View key={"Message-" + index} style={[styles.messageContainer, mess === undefined || mess.FROM_PET === ownID.TIERID ? {marginRight: "auto"} : { alignItems: 'flex-end', marginLeft: "auto" } ]}>
+                            <View key={"Message-" + index} style={[styles.messageContainer, mess === undefined || mess.FROM_PET === ownID ? { alignItems: 'flex-end', marginLeft: "auto" } : { marginRight: "auto" }]}>
                                 <TextBlock style={styles.messageText}>{messageObj}</TextBlock>
                             </View>
                         )
@@ -75,7 +72,7 @@ export default function Chat({ route, navigation }: any) {
                         title="➤"
                         style={{ width: 40, padding: 0, minWidth: 0, borderRadius: 0 }}
                         onPress={() => {
-                            API.sendMessage(ownID, targetID, message).then((resp) => { 
+                            API.sendMessage(ownID, targetID, message).then((resp) => {
                                 if (resp.status === 200) {
                                     setMessages([...messages, message]);
                                     setMessage('');

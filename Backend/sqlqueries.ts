@@ -1,6 +1,6 @@
 import mysql, { Pool } from 'mysql';
 import dotenv from 'dotenv';
-import { User, Response, Pet, Relationship } from './interfaces'
+import { User, Response, Pet, Relationship, Message } from './interfaces'
 dotenv.config({ path: './vars.env' });
 
 export default class Queries {
@@ -73,13 +73,13 @@ export default class Queries {
                         console.log(err + "\n---------NOT FATAL----------\n");
                         resolve(this.errorResponse);
                     } else {
-                        if(rows.length > 0 && rows[0].SPRACHE != null) {
+                        if (rows.length > 0 && rows[0].SPRACHE != null) {
                             resolve(rows[0].SPRACHE as string);
-                        }else{
-                            resolve({status: 404, message: "User has invalid SPRACHID"} as Response);
+                        } else {
+                            resolve({ status: 404, message: "User has invalid SPRACHID" } as Response);
                         }
 
-                        
+
                     }
                 });
         });
@@ -601,6 +601,41 @@ export default class Queries {
                         resolve(this.errorResponse);
                     } else {
                         resolve({ status: 200, message: 'Pet added' } as Response);
+                    }
+                }
+            );
+        });
+    }
+
+    getMessages(petid: number, chatpartnerid: number): Promise<Response | Message[]> {
+        return new Promise<Response | Message[]>(async (resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            connection.query(`SELECT * FROM NACHRICHT WHERE (TO_PET = ? AND FROM_PET = ?) OR (TO_PET = ? AND FROM_PET = ?) ORDER BY TIMESTAMP ASC;`, [petid, chatpartnerid, chatpartnerid, petid],
+                (err, rows, fields) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(this.errorResponse);
+                    } else {
+                        if (rows.length == 0) {
+                            resolve({ status: 404, message: "No messages found" } as Response);
+                        } else {
+                            resolve(rows as Message[]);
+                        }
+                    }
+            });
+        });
+    }
+
+    sendMessage(petid: number, chatpartnerid: number, message: string): Promise<Response> {
+        return new Promise<Response>(async (resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            connection.query(`INSERT INTO NACHRICHT (FROM_PET, TO_PET, NACHRICHT) VALUES (?, ?, ?);`, [petid, chatpartnerid, message],
+                (err, rows, fields) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(this.errorResponse);
+                    } else {
+                        resolve({ status: 200, message: 'Message sent' } as Response);
                     }
                 }
             );

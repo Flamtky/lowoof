@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import bcrypt from 'bcrypt';
 import cors from 'cors';
-import { User, Response, Pet, Relationship } from './interfaces'
+import { User, Response, Pet, Relationship, Message } from './interfaces'
 import Queries from "./sqlqueries"
 dotenv.config({ path: './vars.env' });
 
@@ -400,6 +400,37 @@ app.get('/getpetmatches', async (req, res) => {
         }
     } else {
         res.status(400).json({ status: res.statusCode, message: "Missing PetID" } as Response);
+    }
+});
+
+app.get('/getmessages', async (req, res) => {
+    if (req.query.petid && req.query.chatpartnerid) {
+        var isCorrectUser: boolean = await queries.authenticateByPetId(req.user, req.query.petid as unknown as number);
+        if (!isCorrectUser) {
+            return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
+        }
+        var response: Response | Message[] = await queries.getMessages(req.query.petid as unknown as number, req.query.chatpartnerid as unknown as number);
+        if ("status" in response) {
+            res.status(response.status).json(response);
+        } else {
+            res.status(200).json(response as Message[]);
+        }
+    } else {
+        res.status(400).json({ status: res.statusCode, message: "Missing atleast one of two arguments" } as Response);
+    }
+});
+
+app.post('/sendMessage', async (req, res) => {
+
+    if (req.body.petid && req.body.chatpartnerid && req.body.message) {
+        var isCorrectUser: boolean = await queries.authenticateByPetId(req.user, req.body.petid as unknown as number);
+        if (!isCorrectUser) {
+            return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
+        }
+        var response: Response = await queries.sendMessage(req.body.petid as unknown as number, req.body.chatpartnerid as unknown as number, req.body.message as unknown as string);
+        return res.status(response.status).json(response);
+    } else {
+        res.status(400).json({ status: res.statusCode, message: "You are missing atleast one of three arguments" } as Response);
     }
 });
 

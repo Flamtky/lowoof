@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useReducer } from 'react';
 import bcrypt from 'react-native-bcrypt';
-import { User, Response, Pet, Relationship } from './interfaces';
+import { User, Response, Pet, Relationship, Message } from './interfaces';
 export class Api {
     private apiToken: string = "";
     private url: string = "http://server.it-humke.de:8080";
@@ -358,6 +358,33 @@ export class Api {
         return res;
     }
 
+    async getMessages(petId: number, chatPartnerID: number): Promise<Message[] | Response> {
+        var res: Message[] | Response = { status: 500, message: "Error" };
+        await axios.get(this.url + '/getmessages?petid=' + petId + '&chatpartnerid=' + chatPartnerID, {
+            headers: {
+                'Authorization': `Beaver ${this.apiToken}`
+            }
+        }).then(response => {
+            if (response.status == 200) {
+                res = response.data as Message[];
+            } else {
+                res = response.data as Response;
+            }
+        }).catch((error) => { res = error.response.data as Response });
+        return res;
+    }
+
+    async sendMessage(petId: number, chatPartnerID: number, message: string): Promise<Response> {
+        var res: Response = { status: 500, message: "Error" };
+        await axios.post(this.url + '/sendmessage', { petid: petId, chatpartnerid: chatPartnerID, message: message }, {
+            headers: {
+                'Authorization': `Beaver ${this.apiToken}`
+            }
+        }).then(response => { res = response.data as Response; })
+            .catch((error) => { res = error.response.data as Response; });
+        return res;
+    }
+
     getChats(userId: number): any {
         return;
     }
@@ -407,14 +434,6 @@ export class Api {
         }).then(response => { res = response.data as Response; })
             .catch((error) => { res = error.response.data as Response; });
         return res;
-    }
-
-    getMessages(userId: number, toUserId: number): any {
-        return;
-    }
-
-    sendMessage(userId: number, toUserId: number, message: string): void {
-        return;
     }
 
     pauseProfile(userId: number): void {

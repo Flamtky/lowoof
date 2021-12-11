@@ -40,3 +40,11 @@ export interface Response {
     status: number;
     message: string;
 }
+
+export interface Message {
+    NACHRICHTENID: string,
+    NACHRICHT: string,
+    FROM_PET: number,
+    TO_PET: number,
+    TIMESTAMP: string,
+}

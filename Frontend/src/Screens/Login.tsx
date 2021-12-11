@@ -54,11 +54,11 @@ export default function Login({ route, navigation }:any) {
                                         alert(language.LOGIN.LOGIN_ERR[currentLanguage]);
                                     } else {
                                         route.params.setLogin(true);
+                                        setUsername('');
+                                        setPassword('');
                                     }
                                 }});
                             }
-                            setUsername('');
-                            setPassword('');
                         }}
                     />
             </View>

@@ -35,6 +35,7 @@ export default function App() {
 					AsyncStorage.setItem('language', JSON.stringify(res));
 				} else {
 					alert((res as Response).message);
+					AsyncStorage.setItem('language', "EN");
 				}
 			});
 		}

@@ -60,13 +60,12 @@ export default function Chats({ route, navigation }: any) {
 }
 
 export function ChatItem(props: any) {
-    console.log(props)
     const pet: Pet = props.pet; /* The pet to display */
     return (
         <>
-            <TouchableOpacity style={[styles.row, { marginTop: 0, height: 60 }]} onPress={() => { props.navigation.navigate('Chat') }}>
+            <TouchableOpacity style={[styles.row, { marginTop: 0, height: 60 }]} onPress={() => { props.navigation.navigate('Chat', {targetPet: pet.TIERID, ownPet: props.ownID, navigation: props.navigation}) }}>
                 <View style={[styles.row, { width: "100%", marginLeft: 15, marginTop: 0 }]}>
-                    <TouchableOpacity onPress={() => { props.navigation.navigate('MyProfile', {userID: pet.USERID})}}>
+                    <TouchableOpacity onPress={() => { props.navigation.navigate('PetProfile', {userID: pet.TIERID})}}>
                         <Image style={styles.profilepicture}
                             source={{ uri: pet.PROFILBILD != null ? Buffer.from(pet.PROFILBILD, 'base64').toString('ascii') : "https://puu.sh/IsTPQ/5d69029437.png" }}
                         />

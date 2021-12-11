@@ -47,7 +47,7 @@ export default function MyProfile({ route, navigation }: any) {
                 <View style={[styles.innerContainer, isLoading ? { display: "none" } : null]}>
                     <View style={styles.row}>
                         <Image style={styles.profilepicture}
-                            source={{ uri: profile?.PROFILBILD != null ? "data:image/png;base64," + Buffer.from(profile.PROFILBILD, 'base64').toString('base64') : "https://puu.sh/IsTPQ/5d69029437.png" }}
+                            source={{ uri: profile?.PROFILBILD != null ? Buffer.from(profile.PROFILBILD, 'base64').toString('ascii') : "https://puu.sh/IsTPQ/5d69029437.png" }}
                         />
                         <View style={{ position: "absolute", right: "10%" }}>
                             <TouchableOpacity onPress={() => { navigation.navigate("EditProfile") }} >
@@ -108,7 +108,7 @@ function PetItem(props: any) {
             <View style={styles.row}>
                 <TouchableOpacity onPress={props.onPic} >
                     <Image style={styles.petpicture}
-                        source={{ uri: pet?.PROFILBILD != null ? "data:image/png;base64," + Buffer.from(pet.PROFILBILD, 'base64').toString('base64') : "https://puu.sh/IsTPQ/5d69029437.png" }}
+                        source={{ uri: pet?.PROFILBILD != null ? Buffer.from(pet.PROFILBILD, 'base64').toString('ascii') : "https://puu.sh/IsTPQ/5d69029437.png" }}
                     />
                 </TouchableOpacity>
                 <View style={{ marginLeft: 10 }}>

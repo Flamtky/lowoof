@@ -56,8 +56,9 @@ export function AddPet(props: any) {
             RASSE: petBreed,
             GESCHLECHT: petGender,
             GEBURTSTAG: petBirthDate,
-            PROFILBILD: Buffer.from(petProfilePic, 'base64')
+            PROFILBILD: petProfilePic
         };
+
         if (newPet.NAME === "" || newPet.ART === "" || newPet.RASSE === "") {
             alert("Das Tier braucht einen Namen, einen Typ und eine Rasse!");
         } else if (['Male', 'Female', 'Other'].indexOf(petGender.trim()) < 0) {

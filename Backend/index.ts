@@ -436,13 +436,13 @@ app.post('/sendMessage', async (req, res) => {
     }
 });
 
-app.post('/getchats', async (req, res) => {
-    if (req.body.petid) {
-        var isCorrectUser: boolean = await queries.authenticateByPetId(req.user, req.body.petid as unknown as number);
+app.get('/getchats', async (req, res) => {
+    if (req.query.petid) {
+        var isCorrectUser: boolean = await queries.authenticateByPetId(req.user, req.query.petid as unknown as number);
         if (!isCorrectUser) {
             return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
         }
-        var response: Response | Pet[] = await queries.getChats(req.body.petid as unknown as number);
+        var response: Response | Pet[] = await queries.getChats(req.query.petid as unknown as number);
         if ("status" in response) {
             res.status(response.status).json(response);
         } else {

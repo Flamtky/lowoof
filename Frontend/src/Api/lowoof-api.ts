@@ -441,17 +441,6 @@ export class Api {
     }
 
 
-    addReport(userId: number, reason: string): void {
-        return;
-    }
-
-
-
-    
-
-    removeChat(deletingUserId: number, userId: number): void {
-        return;
-    }
 
     /**
      * 

@@ -1,19 +1,17 @@
 import React from 'react';
 import { View, Text, StyleSheet, useWindowDimensions } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
 import { Pet } from '../Api/interfaces';
-import { Api } from '../Api/lowoof-api';
 import OwnButton from '../Components/ownButton';
 import SearchBar from '../Components/searchbar';
 import { BACKGROUNDCOLOR, MAINCOLOR } from '../Constants/colors';
 import language from '../../language.json';
 import { currentLanguage } from '../Constants/language';
+import { API } from '../Constants/api';
 
 export default function Report({ navigation, route }: any) {
     const dimensions = useWindowDimensions();
     const props = route.params;
     const isLargeScreen = dimensions.width >= 768;
-    const api: Api = props.api;
     const petToReport: Pet = props.petToReport;
     const [reasson, setReasson] = React.useState('');
     React.useEffect(() => {
@@ -41,7 +39,7 @@ export default function Report({ navigation, route }: any) {
                         } else if (reasson.trim().length > 255) {
                             alert("Der Grund darf nicht länger als 255 Zeichen sein!");
                         } else {
-                            api.addReport(petToReport.USERID, reasson.trim()).then((resp) => {
+                            API.addReport(petToReport.USERID, reasson.trim()).then((resp) => {
                                 if (resp.message === "/* TODO: ADD */") {
                                     alert("Reported!");
                                     window.location.reload();

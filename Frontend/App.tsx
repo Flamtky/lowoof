@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import Sidebar from './src/Components/sidebar';
@@ -7,7 +7,6 @@ import { BACKGROUNDCOLOR, TITLECOLOR } from './src/Constants/colors';
 import Chat from './src/Screens/Chat';
 import DeletePet from './src/Screens/DeletePet';
 import language from './language.json';
-import { Api } from './src/Api/lowoof-api';
 import Login from './src/Screens/Login';
 import Register from './src/Screens/Register';
 import { currentLanguage, setLanguage } from './src/Constants/language';

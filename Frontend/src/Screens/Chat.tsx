@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, useWindowDimensions, TextInput } from 'react-native';
+import { View, StyleSheet, useWindowDimensions } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import OwnButton from '../Components/ownButton';
 import SearchBar from '../Components/searchbar';

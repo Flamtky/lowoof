@@ -76,7 +76,7 @@ export function ChatItem(props: any) {
                         <TextBlock>{language.PET.NAME[currentLanguage]}: {pet.NAME}</TextBlock>
                         <TextBlock>{language.CHATS.LAST_MSG[currentLanguage]}: </TextBlock>
                     </View>
-                    <TouchableOpacity onPress={() => { API.deleteChat(props.ownID, pet.TIERID) }} style={{ marginLeft: "auto", alignSelf: "center", right: 20 }}>
+                    <TouchableOpacity onPress={() => { API.deleteChat(props.ownID, pet.TIERID) /* TODO: REALTIME UPDATE */}} style={{ marginLeft: "auto", alignSelf: "center", right: 20 }}>
                         <FontAwesomeIcon icon={faTrashAlt} size={32} color="#555" />
                     </TouchableOpacity>
                 </View>

@@ -15,7 +15,7 @@ export default function Report({ navigation, route }: any) {
     const petToReport: Pet = props.petToReport;
     const [reason, setReason] = React.useState('');
     React.useEffect(() => {
-        navigation.setParams({ name: petToReport.USERNAME + " reporten" })  //TODO: language?
+        navigation.setParams({ name: petToReport.USERNAME + " " + language.REPORT.HEADER[currentLanguage].toLowerCase() })
         if (petToReport == undefined) {
             props.navigation.navigate('MyProfile');
         }
@@ -40,9 +40,9 @@ export default function Report({ navigation, route }: any) {
                             alert(language.ERROR.REASON_TOO_LONG[currentLanguage]);
                         } else {
                             API.addReport(petToReport.USERID, reason.trim()).then((resp) => {
-                                if (resp.message === "/* TODO: ADD */") {  //TODO: 
+                                if (resp.status === 200) {
                                     alert(language.REPORT.SUCCESS_REPORTED[currentLanguage]);
-                                    window.location.reload();
+                                    navigation.navigate('MyProfile');
                                 } else {
                                     console.log(resp);
                                 }

@@ -16,7 +16,7 @@ export default function DeletePet({ navigation, route }: any) {
     const petToDelete: Pet = props.petToDelete;
     const [password, setPassword] = React.useState('');
     React.useEffect(() => {
-        navigation.setParams({ name: petToDelete.NAME + " löschen" })  //TODO: Can I use language here?
+        navigation.setParams({ name: petToDelete.NAME + " " + language.DELETE[currentLanguage].toLowerCase() })
         if (petToDelete == undefined) {
             props.navigation.navigate('MyProfile');
         }

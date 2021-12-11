@@ -38,7 +38,7 @@ export default function Chat({ route, navigation }: any) {
             API.getPetData(targetID).then((data) => {
                 if (!data.hasOwnProperty("message")) {
                     setTargetPet(data as Pet);
-                    navigation.setParams({ name: language.CHATS.CHAT_WITH[currentLanguage] + (data as Pet).NAME })  //TODO: Can I use language here?
+                    navigation.setParams({ name: language.CHATS.CHAT_WITH[currentLanguage] + (data as Pet).NAME })
                 } else {
                     console.log(data);
                 }

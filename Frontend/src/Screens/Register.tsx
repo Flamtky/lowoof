@@ -63,7 +63,7 @@ export default function Register({ route, navigation }: any) {
                 PROFILBILD: profilePic,
                 ONLINESTATUS: 1,
                 MITGLIEDSCHAFTPAUSIERT: 0,
-                ADMIN: 0        //TODO: check if 0 is correct as not admin
+                ADMIN: 0
             };
 
             API.createNewUser(user).then((resp: any) => {

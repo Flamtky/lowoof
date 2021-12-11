@@ -47,6 +47,9 @@ export default function MyProfile({ route, navigation }: any) {
                 keyboardDismissMode="on-drag"
             >
                 <View style={[styles.innerContainer, isLoading ? { display: "none" } : null]}>
+                    {!ownProfile ? 
+                        <OwnButton title="Back to your Profile!" style={{ width: "90%", alignSelf: "center", heigth: 48 }} onPress={() => navigation.navigate('MyProfile', { userID: API.getCurrentUser()?.USERID })} />
+                        : null}
                     <View style={styles.row}>
                         <Image style={styles.profilepicture}
                             source={{ uri: profile?.PROFILBILD != null ? Buffer.from(profile.PROFILBILD, 'base64').toString('ascii') : "https://puu.sh/IsTPQ/5d69029437.png" }}

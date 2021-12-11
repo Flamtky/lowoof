@@ -61,7 +61,7 @@ export default function PetProfile({ route, navigation }: any) {
                                     <TouchableOpacity onPress={() => { navigation.navigate('EditPet') }} >
                                         <FontAwesomeIcon icon={faUserEdit} size={40} />
                                     </TouchableOpacity>
-                                    <TouchableOpacity onPress={() => { alert("Tier gelöscht!")/*TODO: Delete*/ }} >
+                                    <TouchableOpacity onPress={() => { navigation.navigate('DeletePet', { petToDelete: petProfile, api: api, navigation: navigation });}} >
                                         <FontAwesomeIcon icon={faTrashAlt} size={40} color="#555" />
                                     </TouchableOpacity>
                                 </View>
@@ -101,10 +101,10 @@ export default function PetProfile({ route, navigation }: any) {
                             <>
                                 <View style={[styles.row, { marginVertical: 10, justifyContent: "space-around" }]}>
                                     <OwnButton title={language.MATCHES.HEADER[currentLanguage]} onPress={() => {
-                                        navigation.navigate('Matches', { pet: petProfile });
+                                        navigation.navigate('Matches', { petID: petProfile?.TIERID });
                                     }} />
                                     <OwnButton title={language.FRIENDS.HEADER[currentLanguage]} onPress={() => {
-                                        navigation.navigate('Friends', { pet: petProfile });
+                                        navigation.navigate('Friends', { petID: petProfile?.TIERID });
                                     }} />
                                     <OwnButton title={language.CHATS.HEADER[currentLanguage]} onPress={() => {
                                         navigation.navigate('Chats', { pet: petProfile });

@@ -60,13 +60,13 @@ export default function Register({ route, navigation }: any) {
                 PLZ: Number(zip),
                 WOHNORT: city,
                 GESCHLECHT: gender,
-                PROFILBILD: profilePic,
+                PROFILBILD: Buffer.from(profilePic, 'base64'),
                 ONLINESTATUS: 1,
                 MITGLIEDSCHAFTPAUSIERT: 0
             };
 
             API.createNewUser(user).then((resp: any) => {
-                if (resp.status !== 201) {
+                if (resp.status !== 200) {
                     alert(language.LOGIN.REG_ERR[currentLanguage]);
                     console.log(resp);
                 } else {

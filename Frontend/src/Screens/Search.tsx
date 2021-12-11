@@ -11,6 +11,7 @@ import { currentLanguage } from '../Constants/language';
 export default function Suche({ navigation }: any) {
     const dimensions = useWindowDimensions();
     const isLargeScreen = dimensions.width >= 768;
+    //ADD SEARCH
     return (
         <View style={[styles.item, styles.container, isLargeScreen ? { width: '60%' } : { width: "100%" }]}>
             <ScrollView style={{ width: '100%' }} keyboardDismissMode="on-drag">

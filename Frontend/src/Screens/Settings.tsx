@@ -8,6 +8,7 @@ import { currentLanguage } from '../Constants/language';
 export default function Settings({ navigation }: any) {
     const dimensions = useWindowDimensions();
     const isLargeScreen = dimensions.width >= 768;
+    //TODO: ADD SETTINGS
     return (
         <View style={[styles.item, styles.container, isLargeScreen ? { width: '60%' } : { width: "100%" }]}>
             <ScrollView style={{ width: '100%' }}

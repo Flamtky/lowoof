@@ -38,6 +38,8 @@ export default function Report({ navigation, route }: any) {
                     <OwnButton title="Melden" onPress={() => {
                         if (reasson.trim() === '') {
                             alert("Bitte geben Sie einen Grund an!");
+                        } else if (reasson.trim().length > 255) {
+                            alert("Der Grund darf nicht länger als 255 Zeichen sein!");
                         } else {
                             api.addReport(petToReport.USERID, reasson.trim()).then((resp) => {
                                 if (resp.message === "/* TODO: ADD */") {

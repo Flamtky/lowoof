@@ -22,7 +22,7 @@ export default function MyProfile({ route, navigation }: any) {
     const [profile, setProfile] = React.useState<User | null>(null);
     const [pets, setPets] = React.useState<Pet[]>([]);
     const [isLoading, setIsLoading] = React.useState(true);
-    const api:Api = API;
+    const api: Api = API;
     React.useEffect(() => {
         api.getProfileData(route.params.userID).then(data => {
             // If data has message as key, then the user does not exist or multiple users with the same username exist
@@ -68,6 +68,8 @@ export default function MyProfile({ route, navigation }: any) {
                         <View style={{ width: "50%" }}>
                             <TextBlock>{language.PROFILE.EMAIL[currentLanguage]}: {profile?.EMAIL ?? "<E-Mail>"}</TextBlock>
                             <TextBlock>{language.PROFILE.PHONE[currentLanguage]}: {profile?.TELEFONNUMMER ?? "<Phone Number>"} </TextBlock>
+                            <TextBlock>{language.PROFILE.INSTITUTION[currentLanguage]}: {profile?.INSTITUTION ?? "<Institution>"} </TextBlock>
+
                         </View>
                     </View>
                     <Seperator />
@@ -77,7 +79,7 @@ export default function MyProfile({ route, navigation }: any) {
                             <PetItem
                                 pet={pet}
                                 navigation={navigation}
-                                onPic={() => { navigation.navigate('PetProfile', {petID: pet.TIERID}) }}
+                                onPic={() => { navigation.navigate('PetProfile', { petID: pet.TIERID }) }}
                                 onEdit={() => { navigation.navigate('EditPet') }}
                                 onDelete={() => {
                                     navigation.navigate('DeletePet', { petToDelete: pet, api: api, navigation: navigation });
@@ -85,9 +87,13 @@ export default function MyProfile({ route, navigation }: any) {
                                 key={pet.TIERID}
                             />)
                     })}
-                    <OwnButton title={language.PROFILE.ADDPET[currentLanguage]} style={{
-                        alignSelf: "center",
-                    }} />
+                    <OwnButton 
+                        title={language.PROFILE.ADDPET[currentLanguage]} 
+                        style={{alignSelf: "center"}}
+                        onPress={() => {
+                            navigation.navigate('AddPet', { api: api, navigation: navigation });
+                        }}
+                    />
                 </View>
             </ScrollView>
         </View>
@@ -106,7 +112,6 @@ function PetItem(props: any) {
                     />
                 </TouchableOpacity>
                 <View style={{ marginLeft: 10 }}>
-                    <TextBlock>{language.MATCHES.HEADER[currentLanguage]/* TODO: add Matches Number */}: </TextBlock>
                     <TextBlock>{pet.NAME ?? "<Name>"}</TextBlock>
                     <TextBlock>{pet.ART ?? "<Species>"} </TextBlock>
                     <TextBlock>{pet.RASSE ?? "<Breet>"}</TextBlock>

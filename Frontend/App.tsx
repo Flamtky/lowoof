@@ -2,7 +2,7 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import Sidebar from './src/Components/sidebar';
-import { EditProfile, EditPet } from './src/Screens/EditProfile';
+import { EditProfile, EditPet, AddPet } from './src/Screens/EditProfile';
 import { BACKGROUNDCOLOR, TITLECOLOR } from './src/Constants/colors';
 import { Chat } from './src/Screens/Chat';
 import DeletePet from './src/Screens/DeletePet';
@@ -87,6 +87,17 @@ export default function App() {
 							}} />
 							<Stack.Screen name="EditPet" component={EditPet} options={{
 								title: language.EDIT_PET.HEADER[currentLanguage],
+								headerStyle: {
+									backgroundColor: BACKGROUNDCOLOR,
+								},
+								headerTitleStyle: {
+									fontSize: 24,
+									color: TITLECOLOR,
+									fontWeight: "bold",
+								},
+							}} />
+							<Stack.Screen name="AddPet" component={AddPet} options={{
+								title: language.EDIT_PET.HEADER[currentLanguage], // TODO: ADD NEW LANGUAGE
 								headerStyle: {
 									backgroundColor: BACKGROUNDCOLOR,
 								},

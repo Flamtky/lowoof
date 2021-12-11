@@ -25,7 +25,7 @@ export interface Pet {
     RASSE: string;
     GESCHLECHT: string;
     GEBURTSTAG: string;
-    PROFILBILD: string;
+    PROFILBILD: any;
     USERNAME?: string;
 }
 

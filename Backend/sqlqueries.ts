@@ -430,7 +430,7 @@ export default class Queries {
     async getPetMatches(petid: number): Promise<Response | Relationship[]> {
         return new Promise<Response | Relationship[]>((resolve, reject) => {
             const connection: mysql.Pool = this.getConnection();
-            connection.query(`SELECT * FROM TIER_MATCHES WHERE TIER_A_ID = ? OR TIER_B_ID = ?;`, [petid, petid],
+            connection.query(`SELECT * FROM TIER_MATCHES WHERE (TIER_A_ID = ? OR TIER_B_ID = ?) AND RELATIONSHIP = ?;`, [petid, petid, "Matched"],
                 (err, rows, fields) => {
                     if (err) {
                         console.log(err);

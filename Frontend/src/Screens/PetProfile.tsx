@@ -12,6 +12,7 @@ import { Api } from '../Api/lowoof-api';
 import language from '../../language.json';
 import { currentLanguage } from '../Constants/language';
 import { API } from '../Constants/api';
+import Buffer from 'buffer';
 
 
 export default function PetProfile({ route, navigation }: any) {
@@ -51,7 +52,7 @@ export default function PetProfile({ route, navigation }: any) {
                     <View style={[styles.innerContainer, { height: dimensions.height }, isLoading ? { display: "none" } : null]}>
                         <View style={styles.row}>
                             <Image style={styles.petpicture}
-                                source={{ uri: petProfile?.PROFILBILD != null ? "data:image/png;base64," + Buffer.from(petProfile.PROFILBILD, 'base64').toString('base64') : "https://puu.sh/IsTPQ/5d69029437.png" }}
+                                source={{ uri: petProfile?.PROFILBILD != null ? Buffer.from(petProfile.PROFILBILD, 'base64').toString('ascii') : "https://puu.sh/IsTPQ/5d69029437.png" }}
                             />
                             <View style={[styles.row, { position: "absolute", right: "10%" }]}>
                                 <TouchableOpacity onPress={() => { navigation.navigate('EditPet') }} >

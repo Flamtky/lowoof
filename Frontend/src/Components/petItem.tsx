@@ -20,7 +20,7 @@ export default function PetItem(props: any) {
     return (<View style={[styles.row, { marginLeft: 15, height: 70 }]}>
         <TouchableOpacity onPress={() => { props.navigation.navigate('PetProfile', { petID: pet.TIERID }); }} >
             <Image style={styles.profilepicture}
-                source={{ uri: pet.PROFILBILD != null ? "data:image/png;base64," + Buffer.from(pet.PROFILBILD, 'base64').toString('base64') : "https://puu.sh/IsTPQ/5d69029437.png" }}
+                source={{ uri: pet.PROFILBILD != null ? Buffer.from(pet.PROFILBILD, 'base64').toString('ascii') : "https://puu.sh/IsTPQ/5d69029437.png" }}
             />
         </TouchableOpacity>
         <View style={{ marginLeft: 10, height: 20, justifyContent: "space-between" }}>

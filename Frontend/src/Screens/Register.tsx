@@ -60,7 +60,7 @@ export default function Register({ route, navigation }: any) {
                 PLZ: Number(zip),
                 WOHNORT: city,
                 GESCHLECHT: gender,
-                PROFILBILD: Buffer.from(profilePic, 'base64'),
+                PROFILBILD: profilePic,
                 ONLINESTATUS: 1,
                 MITGLIEDSCHAFTPAUSIERT: 0
             };

@@ -27,7 +27,7 @@ export default function Friends({ route, navigation }: any) {
         if (route.params.petID == undefined) {
             navigation.navigate('MyProfile');
         } else {
-            API.getPetRelationships(route.params.petID).then(data => {
+            API.getPetRelationships(route.params.petID).then((data:any) => {
                 if (!data.hasOwnProperty("message")) {
 
                     setFriends((data as Relationship[]).filter(x => x.RELATIONSHIP === "Friends"));
@@ -59,7 +59,10 @@ export default function Friends({ route, navigation }: any) {
                             });
                         }
                     });
-                }
+                } else if ((data as Response).status === 403) {
+                    alert(data.message);
+                    navigation.goBack();
+                } 
             });
         }
     }, [route]);

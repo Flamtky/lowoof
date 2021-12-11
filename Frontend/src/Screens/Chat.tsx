@@ -6,7 +6,7 @@ import SearchBar from '../Components/searchbar';
 import { BACKGROUNDCOLOR, MAINCOLOR } from '../Constants/colors';
 import language from '../../language.json';
 import { currentLanguage } from '../Constants/language';
-import { Pet } from '../Api/interfaces';
+import { Message, Pet } from '../Api/interfaces';
 import { TextBlock } from '../Components/styledText';
 import { API } from '../Constants/api';
 

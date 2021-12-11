@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer } from '@react-navigation/native';
 import Sidebar from './src/Components/sidebar';
@@ -21,10 +21,12 @@ const Stack = createNativeStackNavigator<any>();
 
 export default function App() {
 	const [login, setLogin] = React.useState<boolean>(false);
+	const [languageLoaded, setLanguageLoaded] = React.useState<boolean>(false);
 	AsyncStorage.getItem('language').then((res) => {
 		if (res) {
 			setLanguage(JSON.parse(res));
 		}
+		setLanguageLoaded(true);
 	});
 	React.useEffect(() => {
 		let user = API.getCurrentUser();
@@ -42,110 +44,112 @@ export default function App() {
 	}, [login]);
 	return (
 		<NavigationContainer>
-			<Stack.Navigator>
-				{!login ? (
-					<Stack.Group>
-						<Stack.Screen
-							name="Login"
-							component={Login}
-							initialParams={{ setLogin }}
-							options={{
-								headerShown: false,
-							}} />
-						<Stack.Screen
-							name="Register"
-							component={Register}
-							initialParams={{ setLogin }}
-							options={{
-								headerShown: false,
-							}} />
-					</Stack.Group>
-				) : (
-					<>
-						<Stack.Screen name="Root" component={Sidebar} options={{ headerShown: false }} />
-						<Stack.Group screenOptions={{ presentation: 'modal' }}>
-							<Stack.Screen name="PetProfile" component={PetProfile} options={{
-								title: language.PET.HEADER[currentLanguage],
-								headerStyle: {
-									backgroundColor: BACKGROUNDCOLOR,
-								},
-								headerTitleStyle: {
-									fontSize: 24,
-									color: TITLECOLOR,
-									fontWeight: "bold",
-								},
-							}} />
-							<Stack.Screen name="EditProfile" component={EditProfile} options={{
-								title: language.EDIT_PROFILE.HEADER[currentLanguage],
-								headerStyle: {
-									backgroundColor: BACKGROUNDCOLOR,
-								},
-								headerTitleStyle: {
-									fontSize: 24,
-									color: TITLECOLOR,
-									fontWeight: "bold",
-								},
-							}} />
-							<Stack.Screen name="EditPet" component={EditPet} options={{
-								title: language.EDIT_PET.HEADER[currentLanguage],
-								headerStyle: {
-									backgroundColor: BACKGROUNDCOLOR,
-								},
-								headerTitleStyle: {
-									fontSize: 24,
-									color: TITLECOLOR,
-									fontWeight: "bold",
-								},
-							}} />
-							<Stack.Screen name="AddPet" component={AddPet} options={{
-								title: language.EDIT_PET.HEADER[currentLanguage], // TODO: ADD NEW LANGUAGE
-								headerStyle: {
-									backgroundColor: BACKGROUNDCOLOR,
-								},
-								headerTitleStyle: {
-									fontSize: 24,
-									color: TITLECOLOR,
-									fontWeight: "bold",
-								},
-							}} />
-							<Stack.Screen name="Chat" component={Chat} options={({ route }) => ({
-								title: route?.params?.name ?? language.CHATS.CHAT_WITH[currentLanguage] + "XY",
-								headerStyle: {
-									backgroundColor: BACKGROUNDCOLOR,
-								},
-								headerTitleStyle: {
-									fontSize: 24,
-									color: TITLECOLOR,
-									fontWeight: "bold",
-								},
-							})} />
-							<Stack.Screen name="DeletePet" component={DeletePet} options={({ route }) => ({
-								title: route?.params?.name ?? language.EDIT_PET.DELETE[currentLanguage],
-								headerStyle: {
-									backgroundColor: BACKGROUNDCOLOR,
-								},
-								headerTitleStyle: {
-									fontSize: 24,
-									color: TITLECOLOR,
-									fontWeight: "bold",
-								},
-							})} />
-							<Stack.Screen name="Report" component={Report} options={({ route }) => ({
-								title: route?.params?.name ?? "Report",
-								headerStyle: {
-									backgroundColor: BACKGROUNDCOLOR,
-								},
-								headerTitleStyle: {
-									fontSize: 24,
-									color: TITLECOLOR,
-									fontWeight: "bold",
-								},
-							})} />
-
+			{languageLoaded ?
+				<Stack.Navigator>
+					{!login ? (
+						<Stack.Group>
+							<Stack.Screen
+								name="Login"
+								component={Login}
+								initialParams={{ setLogin }}
+								options={{
+									headerShown: false,
+								}} />
+							<Stack.Screen
+								name="Register"
+								component={Register}
+								initialParams={{ setLogin }}
+								options={{
+									headerShown: false,
+								}} />
 						</Stack.Group>
-					</>
-				)}
-			</Stack.Navigator>
+					) : (
+						<>
+							<Stack.Screen name="Root" component={Sidebar} options={{ headerShown: false }} />
+							<Stack.Group screenOptions={{ presentation: 'modal' }}>
+								<Stack.Screen name="PetProfile" component={PetProfile} options={{
+									title: language.PET.HEADER[currentLanguage],
+									headerStyle: {
+										backgroundColor: BACKGROUNDCOLOR,
+									},
+									headerTitleStyle: {
+										fontSize: 24,
+										color: TITLECOLOR,
+										fontWeight: "bold",
+									},
+								}} />
+								<Stack.Screen name="EditProfile" component={EditProfile} options={{
+									title: language.EDIT_PROFILE.HEADER[currentLanguage],
+									headerStyle: {
+										backgroundColor: BACKGROUNDCOLOR,
+									},
+									headerTitleStyle: {
+										fontSize: 24,
+										color: TITLECOLOR,
+										fontWeight: "bold",
+									},
+								}} />
+								<Stack.Screen name="EditPet" component={EditPet} options={{
+									title: language.EDIT_PET.HEADER[currentLanguage],
+									headerStyle: {
+										backgroundColor: BACKGROUNDCOLOR,
+									},
+									headerTitleStyle: {
+										fontSize: 24,
+										color: TITLECOLOR,
+										fontWeight: "bold",
+									},
+								}} />
+								<Stack.Screen name="AddPet" component={AddPet} options={{
+									title: language.EDIT_PET.HEADER[currentLanguage], // TODO: ADD NEW LANGUAGE
+									headerStyle: {
+										backgroundColor: BACKGROUNDCOLOR,
+									},
+									headerTitleStyle: {
+										fontSize: 24,
+										color: TITLECOLOR,
+										fontWeight: "bold",
+									},
+								}} />
+								<Stack.Screen name="Chat" component={Chat} options={({ route }) => ({
+									title: route?.params?.name ?? language.CHATS.CHAT_WITH[currentLanguage] + "XY",
+									headerStyle: {
+										backgroundColor: BACKGROUNDCOLOR,
+									},
+									headerTitleStyle: {
+										fontSize: 24,
+										color: TITLECOLOR,
+										fontWeight: "bold",
+									},
+								})} />
+								<Stack.Screen name="DeletePet" component={DeletePet} options={({ route }) => ({
+									title: route?.params?.name ?? language.EDIT_PET.DELETE[currentLanguage],
+									headerStyle: {
+										backgroundColor: BACKGROUNDCOLOR,
+									},
+									headerTitleStyle: {
+										fontSize: 24,
+										color: TITLECOLOR,
+										fontWeight: "bold",
+									},
+								})} />
+								<Stack.Screen name="Report" component={Report} options={({ route }) => ({
+									title: route?.params?.name ?? "Report",
+									headerStyle: {
+										backgroundColor: BACKGROUNDCOLOR,
+									},
+									headerTitleStyle: {
+										fontSize: 24,
+										color: TITLECOLOR,
+										fontWeight: "bold",
+									},
+								})} />
+
+							</Stack.Group>
+						</>
+					)}
+				</Stack.Navigator>
+				: null}
 		</NavigationContainer>
 	);
 }

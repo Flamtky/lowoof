@@ -46,7 +46,7 @@ export default function Register({ route, navigation }: any) {
             alert(language.ERROR.INV_PHONE[currentLanguage]);
         } else {
             // new user
-            const user: User = {   //TODO: VScode sagt: Property 'ADMIN' is missing in type
+            const user: User = {
                 USERID: 0,
                 SPRACHID: currentLanguage,
                 USERNAME: username,
@@ -62,7 +62,8 @@ export default function Register({ route, navigation }: any) {
                 GESCHLECHT: gender,
                 PROFILBILD: profilePic,
                 ONLINESTATUS: 1,
-                MITGLIEDSCHAFTPAUSIERT: 0
+                MITGLIEDSCHAFTPAUSIERT: 0,
+                ADMIN: 0        //TODO: check if 0 is correct as not admin
             };
 
             API.createNewUser(user).then((resp: any) => {
@@ -87,9 +88,9 @@ export default function Register({ route, navigation }: any) {
 
     return (
         <View style={{ backgroundColor: BACKGROUNDCOLOR, height: "100%" }}>
-            <ScrollView style={[isLargeScreen ? { width: '43%', left: "28%" } : null, { height: "100%", backgroundColor: MAINCOLOR }]}>
+            <ScrollView style={[isLargeScreen ? { width: '43%', left: "28%" } : null, { height: 10, backgroundColor: MAINCOLOR }]}>
                 <Image source={require('../../assets/splash.png')} style={[styles.logo, { backgroundColor: MAINCOLOR }]} />
-                <View style={{ backgroundColor: MAINCOLOR, height: "100%" }}>
+                <View style={{ backgroundColor: MAINCOLOR, height: 400 }}>
                     <View style={styles.inputContainer}>
                         <TextBlock>{language.LOGIN.ALREADY_REG[currentLanguage]}<TouchableOpacity onPress={()=>{navigation.navigate("Login")}}><TextBlock style={{color: "#00f"}}>hier</TextBlock></TouchableOpacity>!</TextBlock>
                         <SearchBar style={styles.input} placeholder={language.PROFILE.EMAIL[currentLanguage]} keyboardType='email-address' value={email} onChange={(event: any) => { setEmail(event.nativeEvent.text); }} />
@@ -112,7 +113,7 @@ export default function Register({ route, navigation }: any) {
                 </View>
                 <OwnButton
                     title={language.LOGIN.REGISTER[currentLanguage]}
-                    style={{ width: 120, padding: 0, minWidth: 0, borderRadius: 0, alignSelf: "center", marginTop: 5, paddingBottom: 20 }}
+                    style={{ width: "auto", padding: 0, minWidth: 0, borderRadius: 0, alignSelf: "center", marginTop: 10, paddingBottom: 20 }}
                     onPress={register}
                 />
             </ScrollView>
@@ -203,7 +204,7 @@ const styles = StyleSheet.create({
     },
     logo: {
         width: "100%",
-        height: "50%",
+        height: 300,
         resizeMode: "contain"
     },
     dropdown: {
@@ -215,7 +216,7 @@ const styles = StyleSheet.create({
     },
     inputContainer: {
         width: 300,
-        height: "100%",
+        height: "auto",
         alignItems: "center",
         justifyContent: "center",
         padding: 10,

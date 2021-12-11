@@ -47,11 +47,11 @@ export default function Login({ route, navigation }:any) {
                         style={{ width: "auto", padding: 0, minWidth: 0, borderRadius: 0 }}
                         onPress={() => {
                             if (username.trim().length < 3 || password.trim().length < 6 || username.trim().includes(' ') || password.trim().includes(' ')) {
-                                alert(language.LOGIN.LOGIN_ERR[currentLanguage]);
+                                alert(language.ERROR.LOGIN_ERR[currentLanguage]);
                             } else {
                                 API.getAuthTokenfromServer(username, password).then((resp: void | "Error" ) => {{
                                     if (resp === "Error") {
-                                        alert(language.LOGIN.LOGIN_ERR[currentLanguage]);
+                                        alert(language.ERROR.LOGIN_ERR[currentLanguage]);
                                     } else {
                                         route.params.setLogin(true);
                                         setUsername('');

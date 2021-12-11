@@ -60,17 +60,17 @@ export function AddPet(props: any) {
         };
 
         if (newPet.NAME === "" || newPet.ART === "" || newPet.RASSE === "") {
-            alert(language.LOGIN.NAME_SPECIES_BREED[currentLanguage]);
+            alert(language.ERROR.NAME_SPECIES_BREED[currentLanguage]);
         } else if (['Male', 'Female', 'Other'].indexOf(petGender.trim()) < 0) {
-            alert(language.LOGIN.INV_GENDER[currentLanguage])
+            alert(language.ERROR.INV_GENDER[currentLanguage])
         } else if (petBirthDate.trim().length !== 10) {
-            alert(language.LOGIN.INV_BIRTHDATE[currentLanguage]);
+            alert(language.ERROR.INV_BIRTHDATE[currentLanguage]);
         } else {
             (props.route.params.api as Api).createPetProfile(newPet).then((resp) => {
                 if (resp.status === 413) {
-                    alert(language.LOGIN.IMG_TOO_BIG[currentLanguage]);
+                    alert(language.ERROR.IMG_TOO_BIG[currentLanguage]);
                 } else if (resp.status !== 200) {
-                    alert(language.LOGIN.CREATE_PET_ERR[currentLanguage]);
+                    alert(language.ERROR.CREATE_PET_ERR[currentLanguage]);
                     console.log(resp);
                 } else {
                     props.navigation.navigate('MyProfile');
@@ -82,7 +82,7 @@ export function AddPet(props: any) {
     return (
         <View style={{ backgroundColor: BACKGROUNDCOLOR, height: "100%" }}>
             <ScrollView style={[isLargeScreen ? { width: '43%', left: "28%" } : null, { height: "100%", backgroundColor: MAINCOLOR }]}>
-                <View style={{ backgroundColor: MAINCOLOR, height: "100%" }}>
+                <View style={{ backgroundColor: MAINCOLOR, height: "auto" }}>
                     <View style={styles.inputContainer}>
                         <TextBlock style={styles.title}>{language.PROFILE.ADDPET[currentLanguage]}</TextBlock>
                         <Seperator />
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     input: {
-        height: 24,
+        height: 32,
         width: "100%",
         flexGrow: 1,
         borderRadius: 0,
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
     },
     inputContainer: {
         width: 300,
-        height: "100%",
+        height: "auto",
         alignItems: "center",
         justifyContent: "center",
         padding: 10,

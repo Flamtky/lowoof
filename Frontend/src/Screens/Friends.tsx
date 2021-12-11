@@ -72,7 +72,7 @@ export default function Friends({ route, navigation }: any) {
                 <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.FRIENDS.INCOMING_FRIEND[currentLanguage]}:</TextBlock>
                 <Seperator />
 
-                {friendsIn === null || friendsPets === null || matchedFriends === null || friendsIn.length === 0 || isLoading ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.FRIENDS.NO_REQUESTS[currentLanguage]} 😢</TextBlock> :
+                {friendsIn === null || friendsPets === null || matchedFriends === null || friendsIn.length === 0 || isLoading ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.FRIENDS.NO_REQUESTS[currentLanguage]}</TextBlock> :
                     friendsIn.map((friend: Relationship) => {
                         return (
                             <PetItem
@@ -93,7 +93,7 @@ export default function Friends({ route, navigation }: any) {
                 <TextBlock style={{ marginLeft: 15 }}>{language.FRIENDS.HEADER[currentLanguage]}:</TextBlock>
                 <Seperator />
 
-                {friends === null || friendsPets === null || matchedFriends === null || friends.length === 0 || isLoading ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.FRIENDS.NO_FRIENDS[currentLanguage]} </TextBlock> :
+                {friends === null || friendsPets === null || matchedFriends === null || friends.length === 0 || isLoading ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.FRIENDS.NO_FRIENDS[currentLanguage]} 😢</TextBlock> :
                     friends.map((friend: Relationship) => {
                         return (
                             <PetItem

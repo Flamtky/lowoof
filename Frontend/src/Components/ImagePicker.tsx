@@ -1,6 +1,6 @@
 //https://docs.expo.dev/versions/latest/sdk/imagepicker/
 import React, { useState, useEffect } from 'react';
-import { Button, Image, View, Platform, StyleSheet } from 'react-native';
+import { Button, Image, View, Platform } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import language from '../../language.json';
 import { currentLanguage } from '../Constants/language';

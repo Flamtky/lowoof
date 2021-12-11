@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, useWindowDimensions, Image, Touchable, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, useWindowDimensions, Image, TouchableOpacity } from 'react-native';
 import OwnButton from '../Components/ownButton';
 import SearchBar from '../Components/searchbar';
 import { BACKGROUNDCOLOR, MAINCOLOR } from '../Constants/colors';

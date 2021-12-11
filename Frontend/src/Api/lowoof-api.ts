@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { useReducer } from 'react';
 import bcrypt from 'react-native-bcrypt';
 import { User, Response, Pet, Relationship, Message, Report } from './interfaces';
 export class Api {

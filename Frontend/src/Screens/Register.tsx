@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, useWindowDimensions, Image, Platform, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, useWindowDimensions, Image, TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import OwnButton from '../Components/ownButton';
 import SearchBar from '../Components/searchbar';
-import { BACKGROUNDCOLOR, BLACK, MAINCOLOR } from '../Constants/colors';
+import { BACKGROUNDCOLOR, MAINCOLOR } from '../Constants/colors';
 import language from '../../language.json';
 import { currentLanguage } from '../Constants/language';
 import DropDownPicker from 'react-native-dropdown-picker';

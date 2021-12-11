@@ -1,10 +1,10 @@
 import React from 'react';
-import { StyleSheet, View, Image, Text, useWindowDimensions, ScrollView, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, useWindowDimensions, ScrollView } from 'react-native';
 import OwnButton from '../Components/ownButton';
 import Seperator from '../Components/seperator';
 import { TextBlock } from '../Components/styledText';
 import { BLACK, MAINCOLOR } from '../Constants/colors';
-import { Pet, Relationship, User } from '../Api/interfaces';
+import { Pet, Relationship } from '../Api/interfaces';
 import PetItem from '../Components/petItem';
 import language from '../../language.json';
 import { currentLanguage } from '../Constants/language';

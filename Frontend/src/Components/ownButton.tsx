@@ -1,6 +1,5 @@
 import React from 'react';
 import { StyleSheet, View, TouchableOpacity } from "react-native";
-import { max } from 'react-native-reanimated';
 import { BLUE, WHITE } from '../Constants/colors';
 import { TextBlock } from './styledText';
 

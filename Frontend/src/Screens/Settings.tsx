@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, Text, useWindowDimensions, ScrollView } from 'react-native';
+import { StyleSheet, View, useWindowDimensions, ScrollView } from 'react-native';
 import OwnButton from '../Components/ownButton';
 import { MAINCOLOR } from '../Constants/colors';
 import language from '../../language.json';

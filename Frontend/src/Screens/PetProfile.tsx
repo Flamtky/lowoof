@@ -1,7 +1,7 @@
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faTrashAlt, faUserEdit } from '@fortawesome/free-solid-svg-icons';
 import React from 'react';
-import { StyleSheet, View, useWindowDimensions, ScrollView, Image, Dimensions } from 'react-native';
+import { StyleSheet, View, useWindowDimensions, ScrollView, Image } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { TextBlock } from '../Components/styledText';
 import { BLACK, GRAY, MAINCOLOR, TITLECOLOR } from '../Constants/colors';

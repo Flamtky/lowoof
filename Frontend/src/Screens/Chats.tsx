@@ -10,7 +10,7 @@ import language from '../../language.json';
 import { currentLanguage } from '../Constants/language';
 import { Pet } from '../Api/interfaces';
 import { API } from '../Constants/api';
-import { Buffer } from "buffer";
+import { Buffer } from 'buffer';
 
 export default function Chats({ route, navigation }: any) {
     const dimensions = useWindowDimensions();

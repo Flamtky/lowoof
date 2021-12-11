@@ -1,6 +1,5 @@
 import React from 'react';
 import { View, Text, StyleSheet, useWindowDimensions } from 'react-native';
-import { TextInput } from 'react-native-gesture-handler';
 import { Pet } from '../Api/interfaces';
 import { Api } from '../Api/lowoof-api';
 import OwnButton from '../Components/ownButton';

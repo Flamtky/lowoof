@@ -1,11 +1,8 @@
-import { faCommentDots, faExclamationTriangle, faStar, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import React from 'react';
-import { StyleSheet, View, Image, Text, useWindowDimensions, ScrollView, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, useWindowDimensions, ScrollView } from 'react-native';
 import OwnButton from '../Components/ownButton';
 import PetItem from '../Components/petItem';
 import Seperator from '../Components/seperator';
-import { TextBlock } from '../Components/styledText';
 import { BLACK, MAINCOLOR } from '../Constants/colors';
 import language from '../../language.json';
 import { currentLanguage } from '../Constants/language';

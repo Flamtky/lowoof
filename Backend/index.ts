@@ -203,6 +203,8 @@ app.post('/addpet', async (req, res) => {
     
 });
 
+
+
 //Allowed Users: User
 app.post('/updateuser', async (req, res) => {
     console.log(req.body);
@@ -431,6 +433,40 @@ app.post('/sendMessage', async (req, res) => {
         return res.status(response.status).json(response);
     } else {
         res.status(400).json({ status: res.statusCode, message: "You are missing atleast one of three arguments" } as Response);
+    }
+});
+
+app.post('/getchats', async (req, res) => {
+    if (req.body.petid) {
+        var isCorrectUser: boolean = await queries.authenticateByPetId(req.user, req.body.petid as unknown as number);
+        if (!isCorrectUser) {
+            return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
+        }
+        var response: Response | Pet[] = await queries.getChats(req.body.petid as unknown as number);
+        if ("status" in response) {
+            res.status(response.status).json(response);
+        } else {
+            res.status(200).json(response as Pet[]);
+        }
+    } else {
+        res.status(400).json({ status: res.statusCode, message: "You are missing petid" } as Response);
+    }
+});
+
+app.get('getlastmessage', async (req, res) => {
+    if (req.query.petid && req.query.chatpartnerid) {
+        var isCorrectUser: boolean = await queries.authenticateByPetId(req.user, req.query.petid as unknown as number);
+        if (!isCorrectUser) {
+            return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
+        }
+        var response: Response | Message = await queries.getLastMessage(req.query.petid as unknown as number, req.query.chatpartnerid as unknown as number);
+        if ("status" in response) {
+            res.status(response.status).json(response);
+        } else {
+            res.status(200).json(response as Message);
+        }
+    } else {
+        res.status(400).json({ status: res.statusCode, message: "You are missing atleast one of two arguments" } as Response);
     }
 });
 

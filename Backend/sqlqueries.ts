@@ -89,9 +89,9 @@ export default class Queries {
         return new Promise<Response>((resolve, reject) => {
             const connection: mysql.Pool = this.getConnection();
             var response: Response = { status: 0, message: '' };
-            connection.query(`INSERT INTO USER (USERNAME, PASSWORD, EMAIL, VORNAME, NACHNAME, GEBURTSTAG, INSTITUTION, TELEFONNUMMER, PLZ, WOHNORT, GESCHLECHT, ONLINESTATUS, MITGLIEDSCHAFTPAUSIERT)
-           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0)`,
-                [user["USERNAME"], user["PASSWORD"], user["EMAIL"], user["VORNAME"], user["NACHNAME"], user["GEBURTSTAG"], user["INSTITUTION"], user["TELEFONNUMMER"], user["PLZ"], user["WOHNORT"], user["GESCHLECHT"]],
+            connection.query(`INSERT INTO USER (USERNAME, PASSWORD, EMAIL, VORNAME, NACHNAME, GEBURTSTAG, INSTITUTION, TELEFONNUMMER, PLZ, WOHNORT, GESCHLECHT, PROFILBILD, ONLINESTATUS, MITGLIEDSCHAFTPAUSIERT)
+           VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0)`,
+                [user["USERNAME"], user["PASSWORD"], user["EMAIL"], user["VORNAME"], user["NACHNAME"], user["GEBURTSTAG"], user["INSTITUTION"], user["TELEFONNUMMER"], user["PLZ"], user["WOHNORT"], user["GESCHLECHT"],user["PROFILBILD"]],
                 (err, rows, fields) => {
                     if (err) {
                         console.log(err);
@@ -594,7 +594,7 @@ export default class Queries {
     async addPet(pet: Pet): Promise<Response> {
         return new Promise<Response>(async (resolve, reject) => {
             const connection: mysql.Pool = this.getConnection();
-            connection.query(`INSERT INTO TIER (USERID, NAME, ART, RASSE, GESCHLECHT, GEBURTSTAG, PROFILBILD) VALUES (?, ?, ?, ?, ?, ?, BINARY(?));`, [pet.USERID, pet.NAME, pet.ART, pet.RASSE, pet.GESCHLECHT, pet.GEBURTSTAG, pet.PROFILBILD],
+            connection.query(`INSERT INTO TIER (USERID, NAME, ART, RASSE, GESCHLECHT, GEBURTSTAG, PROFILBILD) VALUES (?, ?, ?, ?, ?, ?, ?);`, [pet.USERID, pet.NAME, pet.ART, pet.RASSE, pet.GESCHLECHT, pet.GEBURTSTAG, pet.PROFILBILD],
                 (err, rows, fields) => {
                     if (err) {
                         console.log(err);
@@ -636,6 +636,46 @@ export default class Queries {
                         resolve(this.errorResponse);
                     } else {
                         resolve({ status: 200, message: 'Message sent' } as Response);
+                    }
+                }
+            );
+        });
+    }
+
+    getChats(petid: number): Promise<Response | Pet[]> {
+        return new Promise<Response | Pet[]>(async (resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            connection.query(`SELECT * FROM TIER WHERE TIERID in (SELECT FROM_PET FROM NACHRICHT WHERE TO_PET = ? ) OR TIERID in (SELECT TO_PET FROM NACHRICHT WHERE FROM_PET = ? ); `, [petid, petid],
+                (err, rows, fields) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(this.errorResponse);
+                    } else {
+                        if (rows.length == 0) {
+                            resolve({ status: 404, message: "No chats found" } as Response);
+                        } else {
+                            resolve(rows as Pet[]);
+                        }
+                    }
+                }
+            );
+        });
+    }
+
+    getLastMessage(petid: number, chatpartnerid: number): Promise<Response | Message> {
+        return new Promise<Response | Message>(async (resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            connection.query(`SELECT * FROM NACHRICHT WHERE (TO_PET = ? AND FROM_PET = ?) OR (TO_PET = ? AND FROM_PET = ?) ORDER BY TIMESTAMP DESC LIMIT 1;`, [petid, chatpartnerid, chatpartnerid, petid],
+                (err, rows, fields) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(this.errorResponse);
+                    } else {
+                        if (rows.length == 0) {
+                            resolve({ status: 404, message: "No messages found" } as Response);
+                        } else {
+                            resolve(rows[0] as Message);
+                        }
                     }
                 }
             );

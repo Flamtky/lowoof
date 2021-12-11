@@ -385,8 +385,26 @@ export class Api {
         return res;
     }
 
-    getChats(userId: number): any {
-        return;
+    async getChats(petId: number): Promise<Pet[] | Response> {
+        var res: Pet[] | Response = { status: 500, message: "Error" };
+        await axios.get(this.url + '/getchats?petid=' + petId, {
+            headers: {
+                'Authorization': `Beaver ${this.apiToken}`
+            }
+        }).then(response => { res = response.data as Pet[]; })
+            .catch((error) => { res = error.response.data as Response; });
+        return res;
+    }
+
+    async getLastMessage(petId: number, chatPartnerID: number): Promise<Message | Response> {
+        var res: Message | Response = { status: 500, message: "Error" };
+        await axios.get(this.url + '/getlastmessage?petid=' + petId + '&chatpartnerid=' + chatPartnerID, {
+            headers: {
+                'Authorization': `Beaver ${this.apiToken}`
+            }
+        }).then(response => { res = response.data as Message; })
+            .catch((error) => { res = error.response.data as Response; });
+        return res;
     }
 
 

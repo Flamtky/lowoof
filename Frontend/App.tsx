@@ -39,7 +39,7 @@ export default function App() {
 				}
 			});
 		}
-	},[login]);
+	}, [login]);
 	return (
 		<NavigationContainer>
 			<Stack.Navigator>

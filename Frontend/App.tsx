@@ -15,6 +15,7 @@ import PetProfile from './src/Screens/PetProfile';
 import Report from './src/Screens/Report';
 import { API } from './src/Constants/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Response } from './src/Api/interfaces';
 
 const Stack = createNativeStackNavigator<any>();
 
@@ -33,7 +34,7 @@ export default function App() {
 					setLanguage(res as any);
 					AsyncStorage.setItem('language', JSON.stringify(res));
 				} else {
-					alert(res);
+					alert((res as Response).message);
 				}
 			});
 		}

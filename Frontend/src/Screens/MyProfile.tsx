@@ -53,7 +53,7 @@ export default function MyProfile({ route, navigation }: any) {
             >
                 <View style={[styles.innerContainer, isLoading ? { display: "none" } : null]}>
                     {!ownProfile ? 
-                        <OwnButton title="Back to your Profile!" style={{ width: "90%", alignSelf: "center", heigth: 48 }} onPress={() => navigation.navigate('MyProfile', { userID: API.getCurrentUser()?.USERID })} />
+                        <OwnButton title={language.PROFILE.BACK_TO_PROFILE[currentLanguage]} style={{ width: "90%", alignSelf: "center", heigth: 48 }} onPress={() => navigation.navigate('MyProfile', { userID: API.getCurrentUser()?.USERID })} />
                         : null}
                     <View style={styles.row}>
                         <Image style={styles.profilepicture}
@@ -127,9 +127,9 @@ function PetItem(props: any) {
                     />
                 </TouchableOpacity>
                 <View style={{ marginLeft: 10 }}>
-                    <TextBlock>{pet.NAME ?? "<Name>"}</TextBlock>
-                    <TextBlock>{pet.ART ?? "<Species>"} </TextBlock>
-                    <TextBlock>{pet.RASSE ?? "<Breet>"}</TextBlock>
+                    <TextBlock>{language.PET.NAME[currentLanguage]}: {pet.NAME ?? "<Name>"}</TextBlock>
+                    <TextBlock>{language.PET.SPECIES[currentLanguage]}: {pet.ART ?? "<Species>"} </TextBlock>
+                    <TextBlock>{language.PET.BREED[currentLanguage]}: {pet.RASSE ?? "<Breed>"}</TextBlock>
                 </View>
                 {props.owned ?
                     <View style={[styles.row, { marginTop: 0, marginLeft: "auto", right: "10%" }]}>

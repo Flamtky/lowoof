@@ -60,7 +60,7 @@ export function AddPet(props: any) {
         };
 
         if (newPet.NAME === "" || newPet.ART === "" || newPet.RASSE === "") {
-            alert("Das Tier braucht einen Namen, einen Typ und eine Rasse!");
+            alert(language.LOGIN.NAME_SPECIES_BREED[currentLanguage]);
         } else if (['Male', 'Female', 'Other'].indexOf(petGender.trim()) < 0) {
             alert(language.LOGIN.INV_GENDER[currentLanguage])
         } else if (petBirthDate.trim().length !== 10) {
@@ -68,9 +68,9 @@ export function AddPet(props: any) {
         } else {
             (props.route.params.api as Api).createPetProfile(newPet).then((resp) => {
                 if (resp.status === 413) {
-                    alert("Das Tier Bild ist zu groß!");
+                    alert(language.LOGIN.IMG_TOO_BIG[currentLanguage]);
                 } else if (resp.status !== 200) {
-                    alert("Fehler beim Erstellen des Tieres");
+                    alert(language.LOGIN.CREATE_PET_ERR[currentLanguage]);
                     console.log(resp);
                 } else {
                     props.navigation.navigate('MyProfile');
@@ -84,21 +84,21 @@ export function AddPet(props: any) {
             <ScrollView style={[isLargeScreen ? { width: '43%', left: "28%" } : null, { height: "100%", backgroundColor: MAINCOLOR }]}>
                 <View style={{ backgroundColor: MAINCOLOR, height: "100%" }}>
                     <View style={styles.inputContainer}>
-                        <TextBlock style={styles.title}>Tier hinzufügen</TextBlock>
+                        <TextBlock style={styles.title}>{language.PROFILE.ADDPET[currentLanguage]}</TextBlock>
                         <Seperator />
-                        <SearchBar style={styles.input} placeholder="Name" value={petName} onChange={(event: any) => { setPetName(event.nativeEvent.text); }} />
-                        <SearchBar style={styles.input} placeholder="Typ" value={petType} onChange={(event: any) => { setPetType(event.nativeEvent.text); }} />
-                        <SearchBar style={styles.input} placeholder="Rasse" value={petBreed} onChange={(event: any) => { setPetBreed(event.nativeEvent.text); }} />
-                        <SearchBar style={styles.input} placeholder="Geschlecht" value={petGender} onChange={(event: any) => { setPetGender(event.nativeEvent.text); }} />
-                        <SearchBar style={styles.input} placeholder="Geburtsdatum" value={petBirthDate} onChange={(event: any) => { setPetBirthDate(event.nativeEvent.text); }} />
+                        <SearchBar style={styles.input} placeholder={language.PET.NAME[currentLanguage]} value={petName} onChange={(event: any) => { setPetName(event.nativeEvent.text); }} />
+                        <SearchBar style={styles.input} placeholder={language.PET.SPECIES[currentLanguage]} value={petType} onChange={(event: any) => { setPetType(event.nativeEvent.text); }} />
+                        <SearchBar style={styles.input} placeholder={language.PET.BREED[currentLanguage]} value={petBreed} onChange={(event: any) => { setPetBreed(event.nativeEvent.text); }} />
+                        <SearchBar style={styles.input} placeholder={language.PET.GENDER[currentLanguage]} value={petGender} onChange={(event: any) => { setPetGender(event.nativeEvent.text); }} />
+                        <SearchBar style={styles.input} placeholder={language.PET.BIRTHDAY[currentLanguage]} value={petBirthDate} onChange={(event: any) => { setPetBirthDate(event.nativeEvent.text); }} />
                         <View style={{ flexDirection: "row", width: "100%", marginBottom: 5, backgroundColor: "#f5f5f5" }}>
                             <ImagePickerField showPreview={false} onChange={setPetProfilePic} title={language.PROFILE.PIC_PICK[currentLanguage]} />
                             {petProfilePic !== '' ? <Image source={{ uri: petProfilePic }} style={{ width: 35, height: 35, alignSelf: "center" }} /> : null}
                         </View>
                     </View>
                     <OwnButton
-                        title="Tier anlegen"
-                        style={{ width: 120, padding: 0, minWidth: 0, borderRadius: 0, alignSelf: "center", marginTop: 5, paddingBottom: 20 }}
+                        title={language.EDIT_PET.CREATE_PET[currentLanguage]}
+                        style={{ width: "auto", padding: 0, minWidth: 0, borderRadius: 0, alignSelf: "center", marginTop: 5, paddingBottom: 20 }}
                         onPress={addPet}
                     />
                 </View>

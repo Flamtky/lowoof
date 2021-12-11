@@ -13,9 +13,9 @@ export default function Report({ navigation, route }: any) {
     const props = route.params;
     const isLargeScreen = dimensions.width >= 768;
     const petToReport: Pet = props.petToReport;
-    const [reasson, setReasson] = React.useState('');
+    const [reason, setReason] = React.useState('');
     React.useEffect(() => {
-        navigation.setParams({ name: petToReport.USERNAME + " reporten" })
+        navigation.setParams({ name: petToReport.USERNAME + " reporten" })  //TODO: language?
         if (petToReport == undefined) {
             props.navigation.navigate('MyProfile');
         }
@@ -24,29 +24,29 @@ export default function Report({ navigation, route }: any) {
         <View style={{ backgroundColor: BACKGROUNDCOLOR, height: "100%" }}>
             <View style={[styles.container, isLargeScreen ? { width: '43%', left: "28%" } : { width: "100%" }]}>
                 <View style={styles.innerContainer}>
-                    <Text style={{ alignSelf: 'center', fontSize: 16 }}>Möchtest du wirklich <Text style={styles.name}>'{petToReport.USERNAME}'</Text> melden?</Text>
+                    <Text style={{ alignSelf: 'center', fontSize: 16 }}>{language.REPORT.REALLY_REPORT[currentLanguage]}<Text style={styles.name}>'{petToReport.USERNAME}'</Text>{language.REPORT.REALLY_REPORT2[currentLanguage]}</Text>
                     <SearchBar
-                        placeholder="Reasson"
+                        placeholder={language.REPORT.REASON[currentLanguage]}
                         style={styles.input}
-                        value={reasson}
+                        value={reason}
                         onChange={(event: any) => {
-                            setReasson(event.nativeEvent.text);
+                            setReason(event.nativeEvent.text);
                         }}
                     />
-                    <OwnButton title="Melden" onPress={() => {
-                        if (reasson.trim() === '') {
-                            alert("Bitte geben Sie einen Grund an!");
-                        } else if (reasson.trim().length > 255) {
-                            alert("Der Grund darf nicht länger als 255 Zeichen sein!");
+                    <OwnButton title={language.REPORT.HEADER[currentLanguage]} onPress={() => {
+                        if (reason.trim() === '') {
+                            alert(language.ERROR.NEED_REASON[currentLanguage]);
+                        } else if (reason.trim().length > 255) {
+                            alert(language.ERROR.REASON_TOO_LONG[currentLanguage]);
                         } else {
-                            API.addReport(petToReport.USERID, reasson.trim()).then((resp) => {
-                                if (resp.message === "/* TODO: ADD */") {
-                                    alert("Reported!");
+                            API.addReport(petToReport.USERID, reason.trim()).then((resp) => {
+                                if (resp.message === "/* TODO: ADD */") {  //TODO: 
+                                    alert(language.REPORT.SUCCESS_REPORTED[currentLanguage]);
                                     window.location.reload();
                                 } else {
                                     console.log(resp);
                                 }
-                                setReasson('');
+                                setReason('');
                             });
                         }
                     }} />

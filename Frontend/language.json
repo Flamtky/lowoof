@@ -16,14 +16,6 @@
             "EN": "➤ Login",
             "DE": "➤ Einloggen"
         },
-        "LOGIN_ERR": {
-            "EN": "Error while logging in",
-            "DE": "Fehler beim Einloggen"
-        },
-        "WRONG_PWD": {
-            "EN": "Wrong Password!",
-            "DE": "Falsches Passwort!"
-        },
         "NOT_REG": {
             "EN": "Not registered yet? Then click ",
             "DE": "Noch nicht registriert? Dann klick "
@@ -36,41 +28,9 @@
             "EN": "here",
             "DE": "hier"
         },
-        "NO_MATCH": {
-            "EN": "Passwords do not match.",
-            "DE": "Passwörter stimmen nicht überein."
-        },
-        "INV_EMAIL": {
-            "EN": "Invalid email address",
-            "DE": "Ungültige Email-adresse"
-        },
-        "INV_GENDER": {
-            "EN": "Invalid gender",
-            "DE": "Ungültiges Geschlecht"
-        },
-        "INV_BIRTHDATE": {
-            "EN": "Invalid date of birth",
-            "DE": "Ungültiges Geburtsdatum"
-        },
-        "INV_ZIP": {
-            "EN": "Invalid zip code",
-            "DE": "Ungültige Postleitzahl "
-        },
-        "INV_PHONE": {
-            "EN": "Invalid phone number",
-            "DE": "Ungültige Telefonnummer"
-        },
         "REGISTER": {
             "EN": "➤ Register",
             "DE": "➤ Registrieren"
-        },
-        "REG_ERR": {
-            "EN": "Delete",
-            "DE": "Löschen"
-        },
-        "AUTH_ERR": {
-            "EN": "Delete",
-            "DE": "Löschen"
         },
         "DELETE": {
             "EN": "Delete",
@@ -179,6 +139,10 @@
         "ADDPET": {
             "EN": "Add Pet",
             "DE": "Haustier hinzufügen"
+        },
+        "BACK_TO_PROFILE": {
+            "EN": "Back to your profile",
+            "DE": "Zurück zu deinem Profil"
         }
     },
     "EDIT_PROFILE": {
@@ -241,6 +205,10 @@
         "HEADER": {
             "EN": "Edit Pet Profile",
             "DE": "Tierprofil bearbeiten"
+        },
+        "CREATE_PET": {
+            "EN": "Create Pet",
+            "DE": "Haustier anlegen"
         },
         "DELETE": {
             "EN": "Delete Pet",
@@ -323,6 +291,90 @@
         "PICK_IMAGE": {
             "EN": "Pick an image from camera roll",
             "DE": "Wähle ein Bild aus deiner Galerie aus"
+        }
+    },
+    "REPORT": {
+        "HEADER": {
+            "EN": "Report",
+            "DE": "Melden"
+        },
+        "REALLY_REPORT": {
+            "EN": "Do you really want to report ",
+            "DE": "Möchtest du "
+        },
+        "REALLY_REPORT2": {
+            "EN": "?",
+            "DE": " wirklich melden?"
+        },
+        "REASON": {
+            "EN": "Reason",
+            "DE": "Grund"
+        },
+        "SUCCESS_REPORTED": {
+            "EN": "User was reported!",
+            "DE": "Der Nutzer wurde gemeldet!"
+        }
+    },
+    "ERROR": {
+        "LOGIN_ERR": {
+            "EN": "Error while logging in!",
+            "DE": "Fehler beim Einloggen!"
+        },
+        "REG_ERR": {
+            "EN": "Error while creating your profile!",
+            "DE": "Fehler beim Registrieren!"
+        },
+        "AUTH_ERR": {
+            "EN": "Error while authenticating!",
+            "DE": "Fehler beim Authentifizieren!"
+        },
+        "WRONG_PWD": {
+            "EN": "Wrong Password!",
+            "DE": "Falsches Passwort!"
+        },
+        "NO_MATCH": {
+            "EN": "Passwords do not match!",
+            "DE": "Passwörter stimmen nicht überein!"
+        },
+        "INV_EMAIL": {
+            "EN": "Invalid email address!",
+            "DE": "Ungültige Email-adresse!"
+        },
+        "INV_GENDER": {
+            "EN": "Invalid gender!",
+            "DE": "Ungültiges Geschlecht!"
+        },
+        "INV_BIRTHDATE": {
+            "EN": "Invalid date of birth!",
+            "DE": "Ungültiges Geburtsdatum!"
+        },
+        "INV_ZIP": {
+            "EN": "Invalid zip code!",
+            "DE": "Ungültige Postleitzahl!"
+        },
+        "INV_PHONE": {
+            "EN": "Invalid phone number!",
+            "DE": "Ungültige Telefonnummer!"
+        },
+        "NAME_SPECIES_BREED": {
+            "EN": "Your pet needs a name, species and breed!",
+            "DE": "Das Haustier braucht einen Namen, eine Art und eine Rasse!"
+        },
+        "IMG_TOO_BIG": {
+            "EN": "The selected image is too large!",
+            "DE": "Das ausgewählte Bild ist zu groß!"
+        },
+        "CREATE_PET_ERR": {
+            "EN": "Error while creating the pet!",
+            "DE": "Fehler beim Erstellen des Haustieres!"
+        },
+        "NEED_REASON": {
+            "EN": "Please enter a reason!",
+            "DE": "Bitte geben Sie einen Grund an!"
+        },
+        "REASON_TOO_LONG": {
+            "EN": "The reason can't be longer than 255 characters!",
+            "DE": "Der Grund darf nicht länger als 255 Zeichen sein!"
         }
     }
 }

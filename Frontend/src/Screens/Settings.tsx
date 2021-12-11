@@ -15,7 +15,7 @@ export default function Settings({ navigation }: any) {
                 keyboardDismissMode="on-drag"
             >
                 <View>
-                    <Text>{language.SETTINGS.HEADER[currentLanguage]}</Text>
+                    
                 </View>
             </ScrollView>
             <OwnButton title={language.BACK[currentLanguage]} style={{ margin: 32, alignSelf: "flex-start" }} onPress={() => {

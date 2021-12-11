@@ -31,22 +31,22 @@ export default function Register({ route, navigation }: any) {
 
     const register = () => {
         if (username.trim().length < 3 || password.trim().length < 6 || username.trim().includes(' ') || password.trim().includes(' ')) {
-            alert(language.LOGIN.LOGIN_ERR[currentLanguage]);
+            alert(language.ERROR.LOGIN_ERR[currentLanguage]);
         } else if (password !== password2) {
-            alert(language.LOGIN.NO_MATCH[currentLanguage]);
+            alert(language.ERROR.NO_MATCH[currentLanguage]);
         } else if (email.trim().length < 5 || !email.trim().includes('@') || !email.trim().includes('.')) {
-            alert(language.LOGIN.INV_EMAIL[currentLanguage]);
+            alert(language.ERROR.INV_EMAIL[currentLanguage]);
         } else if (['Male', 'Female', 'Other'].indexOf(gender.trim()) < 0) {
-            alert(language.LOGIN.INV_GENDER[currentLanguage])
+            alert(language.ERROR.INV_GENDER[currentLanguage])
         } else if (birthdate.trim().length !== 10) {
-            alert(language.LOGIN.INV_BIRTHDATE[currentLanguage]);
+            alert(language.ERROR.INV_BIRTHDATE[currentLanguage]);
         } else if (zip.trim().length !== 5 || isNaN(Number(zip))) {
-            alert(language.LOGIN.INV_ZIP[currentLanguage]);
+            alert(language.ERROR.INV_ZIP[currentLanguage]);
         } else if (number.trim().length !== 10 || isNaN(Number(number))) {
-            alert(language.LOGIN.INV_PHONE[currentLanguage]);
+            alert(language.ERROR.INV_PHONE[currentLanguage]);
         } else {
             // new user
-            const user: User = {
+            const user: User = {   //TODO: VScode sagt: Property 'ADMIN' is missing in type
                 USERID: 0,
                 SPRACHID: currentLanguage,
                 USERNAME: username,
@@ -67,14 +67,14 @@ export default function Register({ route, navigation }: any) {
 
             API.createNewUser(user).then((resp: any) => {
                 if (resp.status === 413) {
-                    alert("Das Bild ist zu groß!");
+                    alert(language.ERROR.IMG_TOO_BIG[currentLanguage]);
                 } else if (resp.status !== 200) {
-                    alert(language.LOGIN.REG_ERR[currentLanguage]);
+                    alert(language.ERROR.REG_ERR[currentLanguage]);
                     console.log(resp);
                 } else {
                     API.getAuthTokenfromServer(username, password).then((resp2: void | "Error") => {
                         if (resp2 === "Error") {
-                            alert(language.LOGIN.AUTH_ERR[currentLanguage]);
+                            alert(language.ERROR.AUTH_ERR[currentLanguage]);
                         } else {
                             route.params.setLogin(true);
                         }

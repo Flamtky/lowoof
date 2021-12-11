@@ -1,6 +1,6 @@
 import mysql, { Pool } from 'mysql';
 import dotenv from 'dotenv';
-import { User, Response, Pet, Relationship, Message } from './interfaces'
+import { User, Response, Pet, Relationship, Message, Preference } from './interfaces'
 dotenv.config({ path: './vars.env' });
 
 export default class Queries {
@@ -645,7 +645,7 @@ export default class Queries {
     getChats(petid: number): Promise<Response | Pet[]> {
         return new Promise<Response | Pet[]>(async (resolve, reject) => {
             const connection: mysql.Pool = this.getConnection();
-            connection.query(`SELECT * FROM TIER WHERE TIERID in (SELECT FROM_PET FROM NACHRICHT WHERE TO_PET = ? ) OR TIERID in (SELECT TO_PET FROM NACHRICHT WHERE FROM_PET = ? ); `, [petid, petid],
+            connection.query(`SELECT TIER.*, USER.USERNAME FROM TIER LEFT JOIN USER ON TIER.USERID = USER.USERID WHERE TIERID in (SELECT FROM_PET FROM NACHRICHT WHERE TO_PET = ? ) OR TIERID in (SELECT TO_PET FROM NACHRICHT WHERE FROM_PET = ? ); `, [petid, petid],
                 (err, rows, fields) => {
                     if (err) {
                         console.log(err);
@@ -681,6 +681,78 @@ export default class Queries {
             );
         });
     }
+
+    addPreferences(petid: number, preferences: number[]): Promise<Response> {
+        return new Promise<Response>(async (resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            for(let i = 0; i < preferences.length; i++) {
+                connection.query(`INSERT INTO USER_PREF_RELATION (PETID, PREFID) VALUES (?, ?);`, [petid, preferences[i]],
+                    (err, rows, fields) => {
+                        if (err) {
+                            console.log(err);
+                            resolve(this.errorResponse);
+                        }
+                    }
+                );
+            }
+            resolve({ status: 200, message: 'Preferences added' } as Response);
+        });
+    }
+
+    removePreferences(petid: number, preferences: number[]): Promise<Response> {
+        return new Promise<Response>(async (resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            for(let i = 0; i < preferences.length; i++) {
+                connection.query(`INSERT INTO USER_PREF_RELATION (PETID, PREFID) VALUES (?, ?);`, [petid, preferences[i]],
+                    (err, rows, fields) => {
+                        if (err) {
+                            console.log(err);
+                            resolve(this.errorResponse);
+                        }
+                    }
+                );
+            }
+            resolve({ status: 200, message: 'Preferences removed' } as Response);
+        });
+    }
+
+    deleteChat(petid: number, chatpartnerid: number): Promise<Response> {
+        return new Promise<Response>(async (resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            connection.query(`DELETE FROM NACHRICHT WHERE (TO_PET = ? AND FROM_PET = ?) OR (TO_PET = ? AND FROM_PET = ?);`, [petid, chatpartnerid, chatpartnerid, petid],
+                (err, rows, fields) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(this.errorResponse);
+                    } else {
+                        resolve({ status: 200, message: 'Chat deleted' } as Response);
+                    }
+                }
+            );
+        });
+    }
+
+
+    getPreferences(petid: number): Promise<Response | Preference[]> {
+        return new Promise<Response | Preference[]>(async (resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            connection.query(`SELECT * FROM PREFERENZ WHERE PREFID IN (SELECT PREFID FROM USER_PREF_RELATION WHERE PETID = ?)`, [petid],
+                (err, rows, fields) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(this.errorResponse);
+                    } else {
+                        if (rows.length == 0) {
+                            resolve({ status: 404, message: "No preferences found" } as Response);
+                        } else {
+                            resolve(rows as Preference[]);
+                        }
+                    }
+                }
+            );
+        });
+    }
+
 }
 
 

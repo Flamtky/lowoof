@@ -342,15 +342,15 @@ export class Api {
         return res;
     }
 
-    async getPetMatches(petId: number): Promise<Pet[] | Response> {
-        var res: Pet[] | Response = { status: 500, message: "Error" };
+    async getPetMatches(petId: number): Promise<Relationship[] | Response> {
+        var res: Relationship[] | Response = { status: 500, message: "Error" };
         await axios.get(this.url + '/getpetmatches?petid=' + petId, {
             headers: {
                 'Authorization': `Beaver ${this.apiToken}`
             }
         }).then(response => {
             if (response.status == 200) {
-                res = response.data as Pet[];
+                res = response.data as Relationship[];
             } else {
                 res = response.data as Response;
             }
@@ -403,6 +403,39 @@ export class Api {
                 'Authorization': `Beaver ${this.apiToken}`
             }
         }).then(response => { res = response.data as Message; })
+            .catch((error) => { res = error.response.data as Response; });
+        return res;
+    }
+
+    async addPreferences(petId: number, preferences: number[]): Promise<Response> {
+        var res: Response = { status: 500, message: "Error" };
+        await axios.post(this.url + '/addpreferences', { petid: petId, preferences: preferences }, {
+            headers: {
+                'Authorization': `Beaver ${this.apiToken}`
+            }
+        }).then(response => { res = response.data as Response; })
+            .catch((error) => { res = error.response.data as Response; });
+        return res;
+    }
+
+    async removePreferences(petId: number, preferences: number[]): Promise<Response> {
+        var res: Response = { status: 500, message: "Error" };
+        await axios.post(this.url + '/removepreferences', { petid: petId, preferences: preferences }, {
+            headers: {
+                'Authorization': `Beaver ${this.apiToken}`
+            }
+        }).then(response => { res = response.data as Response; })
+            .catch((error) => { res = error.response.data as Response; });
+        return res;
+    }
+
+    async deleteChat(petId: number, chatPartnerID: number): Promise<Response> {
+        var res: Response = { status: 500, message: "Error" };
+        await axios.post(this.url + '/deletechat', { petid: petId, chatpartnerid: chatPartnerID }, {
+            headers: {
+                'Authorization': `Beaver ${this.apiToken}`
+            }
+        }).then(response => { res = response.data as Response; })
             .catch((error) => { res = error.response.data as Response; });
         return res;
     }

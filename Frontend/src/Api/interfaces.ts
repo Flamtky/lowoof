@@ -48,3 +48,8 @@ export interface Message {
     TO_PET: number,
     TIMESTAMP: string,
 }
+
+export interface Preference {
+    ID: string,
+    PREF: string,
+}

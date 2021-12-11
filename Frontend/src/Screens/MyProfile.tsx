@@ -21,9 +21,11 @@ export default function MyProfile({ route, navigation }: any) {
     const isLargeScreen = dimensions.width >= 768;
     const [profile, setProfile] = React.useState<User | null>(null);
     const [pets, setPets] = React.useState<Pet[]>([]);
+    const [ownProfile, setOwnProfile] = React.useState<boolean>(false);
     const [isLoading, setIsLoading] = React.useState(true);
     const api: Api = API;
     React.useEffect(() => {
+        setOwnProfile(route.params.userID === API.getCurrentUser());
         api.getProfileData(route.params.userID).then(data => {
             // If data has message as key, then the user does not exist or multiple users with the same username exist
             if (!data.hasOwnProperty("message")) {
@@ -49,11 +51,13 @@ export default function MyProfile({ route, navigation }: any) {
                         <Image style={styles.profilepicture}
                             source={{ uri: profile?.PROFILBILD != null ? Buffer.from(profile.PROFILBILD, 'base64').toString('ascii') : "https://puu.sh/IsTPQ/5d69029437.png" }}
                         />
-                        <View style={{ position: "absolute", right: "10%" }}>
-                            <TouchableOpacity onPress={() => { navigation.navigate("EditProfile") }} >
-                                <FontAwesomeIcon icon={faUserEdit} size={40} />
-                            </TouchableOpacity>
-                        </View>
+                        {ownProfile ?
+                            <View style={{ position: "absolute", right: "10%" }}>
+                                <TouchableOpacity onPress={() => { navigation.navigate("EditProfile") }} >
+                                    <FontAwesomeIcon icon={faUserEdit} size={40} />
+                                </TouchableOpacity>
+                            </View>
+                            : null}
                     </View>
                     <View style={styles.column}>
                         <TextBlock>{language.PROFILE.USERNAME[currentLanguage]}: {profile?.USERNAME ?? "<Username>"}</TextBlock>
@@ -79,21 +83,24 @@ export default function MyProfile({ route, navigation }: any) {
                             <PetItem
                                 pet={pet}
                                 navigation={navigation}
+                                owned={ownProfile}
                                 onPic={() => { navigation.navigate('PetProfile', { petID: pet.TIERID }) }}
-                                onEdit={() => { navigation.navigate('EditPet') }}
+                                onEdit={() => { navigation.navigate('EditPet', { petID: pet.TIERID }) }}
                                 onDelete={() => {
                                     navigation.navigate('DeletePet', { petToDelete: pet, api: api, navigation: navigation });
                                 }}
                                 key={pet.TIERID}
                             />)
                     })}
-                    <OwnButton 
-                        title={language.PROFILE.ADDPET[currentLanguage]} 
-                        style={{alignSelf: "center"}}
-                        onPress={() => {
-                            navigation.navigate('AddPet', { api: api, navigation: navigation });
-                        }}
-                    />
+                    {ownProfile ?
+                        <OwnButton
+                            title={language.PROFILE.ADDPET[currentLanguage]}
+                            style={{ alignSelf: "center" }}
+                            onPress={() => {
+                                navigation.navigate('AddPet', { api: api, navigation: navigation });
+                            }}
+                        />
+                        : null}
                 </View>
             </ScrollView>
         </View>
@@ -116,14 +123,16 @@ function PetItem(props: any) {
                     <TextBlock>{pet.ART ?? "<Species>"} </TextBlock>
                     <TextBlock>{pet.RASSE ?? "<Breet>"}</TextBlock>
                 </View>
-                <View style={[styles.row, { marginTop: 0, marginLeft: "auto", right: "10%" }]}>
-                    <TouchableOpacity onPress={props.onEdit}>
-                        <FontAwesomeIcon icon={faUserEdit} size={40} />
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={props.onDelete}>
-                        <FontAwesomeIcon icon={faTrashAlt} size={40} color="#555" />
-                    </TouchableOpacity>
-                </View>
+                {props.owned ?
+                    <View style={[styles.row, { marginTop: 0, marginLeft: "auto", right: "10%" }]}>
+                        <TouchableOpacity onPress={props.onEdit}>
+                            <FontAwesomeIcon icon={faUserEdit} size={40} />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={props.onDelete}>
+                            <FontAwesomeIcon icon={faTrashAlt} size={40} color="#555" />
+                        </TouchableOpacity>
+                    </View>
+                    : null}
             </View>
         </View>
     );

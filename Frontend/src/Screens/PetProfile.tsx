@@ -21,6 +21,7 @@ export default function PetProfile({ route, navigation }: any) {
     const [petProfile, setPetProfile] = React.useState<Pet | null>(null);
     const [ownerProfile, setOwnerProfile] = React.useState<User | null>(null);
     const [isLoading, setIsLoading] = React.useState(true);
+    const [ownProfile, setOwnProfile] = React.useState<boolean>(false);
     const api: Api = API;
 
     React.useEffect(() => {
@@ -30,6 +31,7 @@ export default function PetProfile({ route, navigation }: any) {
             api.getPetData(route.params.petID).then(data => {
                 if (!data.hasOwnProperty("message")) {
                     setPetProfile(data as Pet);
+                    setOwnProfile(API.getCurrentUser()?.USERID === (data as Pet).USERID);
                     api.getProfileData((data as Pet).USERID).then(data => {
                         if (!data.hasOwnProperty("message")) {
                             setOwnerProfile(data as User);
@@ -54,14 +56,16 @@ export default function PetProfile({ route, navigation }: any) {
                             <Image style={styles.petpicture}
                                 source={{ uri: petProfile?.PROFILBILD != null ? Buffer.from(petProfile.PROFILBILD, 'base64').toString('ascii') : "https://puu.sh/IsTPQ/5d69029437.png" }}
                             />
-                            <View style={[styles.row, { position: "absolute", right: "10%" }]}>
-                                <TouchableOpacity onPress={() => { navigation.navigate('EditPet') }} >
-                                    <FontAwesomeIcon icon={faUserEdit} size={40} />
-                                </TouchableOpacity>
-                                <TouchableOpacity onPress={() => { alert("Tier gelöscht!")/*TODO: Delete*/ }} >
-                                    <FontAwesomeIcon icon={faTrashAlt} size={40} color="#555" />
-                                </TouchableOpacity>
-                            </View>
+                            {ownProfile ?
+                                <View style={[styles.row, { position: "absolute", right: "10%" }]}>
+                                    <TouchableOpacity onPress={() => { navigation.navigate('EditPet') }} >
+                                        <FontAwesomeIcon icon={faUserEdit} size={40} />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity onPress={() => { alert("Tier gelöscht!")/*TODO: Delete*/ }} >
+                                        <FontAwesomeIcon icon={faTrashAlt} size={40} color="#555" />
+                                    </TouchableOpacity>
+                                </View>
+                                : null}
                         </View>
                         <View style={styles.row}>
                             <View style={{ width: "50%" }}>
@@ -91,18 +95,22 @@ export default function PetProfile({ route, navigation }: any) {
                             </View>
                         </View>
                         <Seperator />
-                        <View style={[styles.row, { marginVertical: 10, justifyContent: "space-around" }]}>
-                            <OwnButton title={language.MATCHES.HEADER[currentLanguage]} onPress={() => {
-                                navigation.navigate('Matches');
-                            }} />
-                            <OwnButton title={language.FRIENDS.HEADER[currentLanguage]} onPress={() => {
-                                navigation.navigate('Friends');
-                            }} />
-                            <OwnButton title={language.CHATS.HEADER[currentLanguage]} onPress={() => {
-                                navigation.navigate('Chats', { pet: petProfile });
-                            }} />
-                        </View>
-                        <Seperator />
+                        {ownProfile ?
+                            <>
+                                <View style={[styles.row, { marginVertical: 10, justifyContent: "space-around" }]}>
+                                    <OwnButton title={language.MATCHES.HEADER[currentLanguage]} onPress={() => {
+                                        navigation.navigate('Matches');
+                                    }} />
+                                    <OwnButton title={language.FRIENDS.HEADER[currentLanguage]} onPress={() => {
+                                        navigation.navigate('Friends');
+                                    }} />
+                                    <OwnButton title={language.CHATS.HEADER[currentLanguage]} onPress={() => {
+                                        navigation.navigate('Chats', { pet: petProfile });
+                                    }} />
+                                </View>
+                                <Seperator />
+                            </>
+                            : null}
                     </View>
                 </ScrollView>
                 <OwnButton title={language.BACK[currentLanguage]} style={{ margin: 32, alignSelf: "flex-start" }} onPress={() => {

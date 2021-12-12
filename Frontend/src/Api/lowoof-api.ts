@@ -430,6 +430,17 @@ export class Api {
         return res;
     }
 
+    async getPreferences(petId: number): Promise<number[] | Response> {
+        var res: number[] | Response = { status: 500, message: "Error" };
+        await axios.get(this.url + '/getpreferences?petid=' + petId, {
+            headers: {
+                'Authorization': `Beaver ${this.apiToken}`
+            }
+        }).then(response => { res = response.data as number[]; })
+            .catch((error) => { res = error.response.data as Response; });
+        return res;
+    }
+
     async removePreferences(petId: number, preferences: number[]): Promise<Response> {
         var res: Response = { status: 500, message: "Error" };
         await axios.post(this.url + '/removepreferences', { petid: petId, preferences: preferences }, {

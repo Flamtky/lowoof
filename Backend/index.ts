@@ -12,7 +12,7 @@ dotenv.config({ path: './vars.env' });
 const queries = new Queries();
 const app: express.Application = express();
 const port: number = 8080;
-
+let tokenBlacklist: string[] = [];
 const mySqlHost: string = process.env.MYSQL_HOST ?? '';
 const mySqlPort: string = process.env.MYSQL_PORT ?? '';
 const mySqlUser: string = process.env.MYSQL_USER ?? '';
@@ -75,6 +75,7 @@ app.post('/auth', (req, res) => {
                                 },
                                 process.env.JWT_SECRET ?? '',
                                 { expiresIn: '2h' });
+
                             res.status(201).json({ token: token, user: rows[0] as User });
                         } else {
                             res.status(401).json({ status: res.statusCode, message: "Wrong Password" } as Response);
@@ -168,7 +169,9 @@ app.use((req, res, next) => {
 
     if (authHeader) {
         const token = authHeader.split(' ')[1];
-
+        if (tokenBlacklist.includes(token)) {
+            return res.status(401).json({ status: res.statusCode, message: "Token is blacklisted" } as Response);
+        }
         jwt.verify(token, process.env.JWT_SECRET ?? '', (err, user) => {
             if (err) {
                 return res.status(401).json({ status: res.statusCode, message: 'Invalid Authorization Token' } as Response);
@@ -710,14 +713,14 @@ app.get('/gettoppets', async (req, res) => {
             var sortedPets: Pet[] = [];
             for (var i = 0; i < (req.query.limit as unknown as number); i++) {
                 var id = sortable.pop() as [number, number];
-                if(id == undefined) {
+                if (id == undefined) {
                     break;
                 }
-                var pet: Pet|Response = await queries.getPetByID(id[0]);
+                var pet: Pet | Response = await queries.getPetByID(id[0]);
                 if ("status" in pet) {
                     console.log(id[0]);
                     return res.status(pet.status).json(pet);
-                }else{
+                } else {
                     pet.TOTALMATCHES = id[1];
                     sortedPets.push(pet as Pet);
                 }
@@ -727,6 +730,29 @@ app.get('/gettoppets', async (req, res) => {
     } else {
         res.status(400).json({ status: res.statusCode, message: "You are missing limit" } as Response);
     }
+    
+});
+
+app.get('/getpreferences', async (req, res) => {
+    if (req.query.petId) {
+        var response: Response | Preference[] = await queries.getPreferences(req.query.petId as unknown as number);
+        if ("status" in response) {
+            res.status(response.status).json(response);
+        } else {
+            res.status(200).json(response as Preference[]);
+        }
+    } else {
+        res.status(400).json({ status: res.statusCode, message: "You are missing petId" } as Response);
+    }
+});
+
+app.get('/logout', (req, res) => {
+    const authHeader = req.headers.authorization;
+
+    if (authHeader) {
+        const token = authHeader.split(' ')[1];
+        tokenBlacklist.push(token);
+    };
 });
 
 app.listen(port, () => console.log(`Lowoof API running on port ${port}!`));

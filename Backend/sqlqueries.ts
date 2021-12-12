@@ -716,6 +716,7 @@ export default class Queries {
         });
     }
 
+
     removePreferences(petid: number, preferences: number[]): Promise<Response> {
         return new Promise<Response>(async (resolve, reject) => {
             const connection: mysql.Pool = this.getConnection();

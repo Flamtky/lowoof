@@ -18,6 +18,7 @@ export default function Chats({ route, navigation }: any) {
     const [pets, setPets] = React.useState<Pet[]>([]);
     const [lastMessages, setLastMessages] = React.useState<string[]>([]);
     const [isLoading, setIsLoading] = React.useState(true);
+    
     React.useEffect(() => {
         API.getChats(route.params?.pet?.TIERID).then((res: any) => {
             if (!res.hasOwnProperty("message")) {

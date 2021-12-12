@@ -25,6 +25,7 @@ export default function SearchBar(props: any) {
                 secureTextEntry={props.secureTextEntry}
                 keyboardType={props.keyboardType}
                 maxLength={props.maxLength}
+                editable={props.editable ?? true}
             />
         </View>
     );

@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { View, Text, StyleSheet, useWindowDimensions, Image, ScrollView } from 'react-native';
-import { BACKGROUNDCOLOR, MAINCOLOR } from '../Constants/colors';
+import { View, Text, StyleSheet, useWindowDimensions, Image, ScrollView, createElement } from 'react-native';
+import { BACKGROUNDCOLOR, BLUE, MAINCOLOR } from '../Constants/colors';
 import language from '../../language.json';
 import { currentLanguage } from '../Constants/language';
 import { TextBlock } from '../Components/styledText';
@@ -10,6 +10,11 @@ import ImagePickerField from '../Components/ImagePicker';
 import OwnButton from '../Components/ownButton';
 import { Pet } from '../Api/interfaces';
 import { Api } from '../Api/lowoof-api';
+import { Platform } from 'expo-modules-core';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 
 
 export function EditProfile() {
@@ -46,6 +51,7 @@ export function AddPet(props: any) {
     const [petGender, setPetGender] = React.useState("");
     const [petBirthDate, setPetBirthDate] = React.useState("");
     const [petProfilePic, setPetProfilePic] = React.useState("");
+    const [showDatePicker, setShowDatePicker] = React.useState(false);
 
     const addPet = () => {
         const newPet: Pet = {
@@ -54,14 +60,14 @@ export function AddPet(props: any) {
             NAME: petName,
             ART: petType,
             RASSE: petBreed,
-            GESCHLECHT: petGender,
+            GESCHLECHT: petGender.charAt(0).toUpperCase() + petGender.slice(1).toLowerCase(),
             GEBURTSTAG: petBirthDate,
             PROFILBILD: petProfilePic
         };
 
         if (newPet.NAME === "" || newPet.ART === "" || newPet.RASSE === "") {
             alert(language.ERROR.NAME_SPECIES_BREED[currentLanguage]);
-        } else if (['Male', 'Female', 'Other'].indexOf(petGender.trim()) < 0) {
+        } else if (['male', 'female', 'other'].indexOf(petGender.trim().toLowerCase().replace("diverse", "other")) < 0) {
             alert(language.ERROR.INV_GENDER[currentLanguage])
         } else if (petBirthDate.trim().length !== 10) {
             alert(language.ERROR.INV_BIRTHDATE[currentLanguage]);
@@ -79,6 +85,14 @@ export function AddPet(props: any) {
         }
     }
 
+    const formatDate = (date: string) => {
+        if (date.length === 10) {
+            return date.substring(8,10) + "." + date.substring(5, 7) + "." + date.substring(0,4);
+        }
+        return date;
+    }
+
+
     return (
         <View style={{ backgroundColor: BACKGROUNDCOLOR, height: "100%" }}>
             <ScrollView style={[isLargeScreen ? { width: '43%', left: "28%" } : null, { height: "100%", backgroundColor: MAINCOLOR }]}>
@@ -89,8 +103,30 @@ export function AddPet(props: any) {
                         <SearchBar style={styles.input} placeholder={language.PET.NAME[currentLanguage]} value={petName} onChange={(event: any) => { setPetName(event.nativeEvent.text); }} />
                         <SearchBar style={styles.input} placeholder={language.PET.SPECIES[currentLanguage]} value={petType} onChange={(event: any) => { setPetType(event.nativeEvent.text); }} />
                         <SearchBar style={styles.input} placeholder={language.PET.BREED[currentLanguage]} value={petBreed} onChange={(event: any) => { setPetBreed(event.nativeEvent.text); }} />
-                        <SearchBar style={styles.input} placeholder={language.PET.GENDER[currentLanguage]} value={petGender} onChange={(event: any) => { setPetGender(event.nativeEvent.text); }} />
-                        <SearchBar style={styles.input} placeholder={language.PET.BIRTHDAY[currentLanguage]} value={petBirthDate} onChange={(event: any) => { setPetBirthDate(event.nativeEvent.text); }} />
+                        <SearchBar style={styles.input} placeholder={language.PET.GENDER[currentLanguage] + " (Male, Female, Other)"} value={petGender} onChange={(event: any) => { setPetGender(event.nativeEvent.text); }} />
+                        {Platform.OS === "web" ?
+                            createElement('input', { type: 'date', value: petBirthDate, onChange: (event: any) => { setPetBirthDate(event.target.value); } })
+                            :
+                            <View style={{ flexDirection: 'row', width: "auto" }}>
+                                <SearchBar editable={false} style={[styles.input, { width: 50, flexGrow: 1 }]} placeholder={language.PET.BIRTHDAY[currentLanguage]} value={formatDate(petBirthDate)} onChange={(event: any) => { setPetBirthDate(event.nativeEvent.text); }} />
+                                <TouchableOpacity style={{ marginTop: 4}} onPress={() => { setShowDatePicker(true) }}>
+                                    <FontAwesomeIcon icon={faCalendar} size={24} color={BLUE} />
+                                </TouchableOpacity>
+                                {showDatePicker ?
+                                    <DateTimePicker
+                                        testID="dateTimePicker"
+                                        value={new Date()}
+                                        is24Hour={true}
+                                        display="default"
+                                        onChange={(event: any, date: Date | undefined) => {
+                                            if (event.type === "set" && date) {
+                                                setPetBirthDate(date.toISOString().substring(0, 10));
+                                            }
+                                            setShowDatePicker(false);
+                                        }} />
+                                    : null}
+                            </View>
+                        }
                         <View style={{ flexDirection: "row", width: "100%", marginBottom: 5, backgroundColor: "#f5f5f5" }}>
                             <ImagePickerField showPreview={false} onChange={setPetProfilePic} title={language.PROFILE.PIC_PICK[currentLanguage]} />
                             {petProfilePic !== '' ? <Image source={{ uri: petProfilePic }} style={{ width: 35, height: 35, alignSelf: "center" }} /> : null}

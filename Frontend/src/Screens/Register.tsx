@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, useWindowDimensions, Image, TouchableOpacity } from 'react-native';
+import { View, StyleSheet, useWindowDimensions, Image, TouchableOpacity, Platform, createElement } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import OwnButton from '../Components/ownButton';
 import SearchBar from '../Components/searchbar';
-import { BACKGROUNDCOLOR, MAINCOLOR } from '../Constants/colors';
+import { BACKGROUNDCOLOR, BLUE, MAINCOLOR } from '../Constants/colors';
 import language from '../../language.json';
 import { currentLanguage } from '../Constants/language';
 import DropDownPicker from 'react-native-dropdown-picker';
@@ -11,6 +11,9 @@ import ImagePickerField from '../Components/ImagePicker';
 import { User } from '../Api/interfaces';
 import { API } from '../Constants/api';
 import { TextBlock } from '../Components/styledText';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faCalendar } from '@fortawesome/free-solid-svg-icons';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function Register({ route, navigation }: any) {
     const dimensions = useWindowDimensions();
@@ -28,6 +31,8 @@ export default function Register({ route, navigation }: any) {
     const [number, setNumber] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [password2, setPassword2] = useState<string>('');
+
+    const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
 
     const register = () => {
         if (username.trim().length < 3 || password.trim().length < 6 || username.trim().includes(' ') || password.trim().includes(' ')) {
@@ -86,11 +91,18 @@ export default function Register({ route, navigation }: any) {
         }
     }
 
+    const formatDate = (date: string) => {
+        if (date.length === 10) {
+            return date.substring(8,10) + "." + date.substring(5, 7) + "." + date.substring(0,4);
+        }
+        return date;
+    }
+
     return (
         <View style={{ backgroundColor: BACKGROUNDCOLOR, height: "100%" }}>
             <ScrollView style={[isLargeScreen ? { width: '43%', left: "28%" } : null, { height: 10, backgroundColor: MAINCOLOR }]}>
                 <Image source={require('../../assets/splash.png')} style={[styles.logo, { backgroundColor: MAINCOLOR }]} />
-                <View style={{ backgroundColor: MAINCOLOR, height: 400 }}>
+                <View style={{ backgroundColor: MAINCOLOR, height: 500 }}>
                     <View style={styles.inputContainer}>
                         <TextBlock>{language.LOGIN.ALREADY_REG[currentLanguage]}<TouchableOpacity onPress={()=>{navigation.navigate("Login")}}><TextBlock style={{color: "#00f"}}>hier</TextBlock></TouchableOpacity>!</TextBlock>
                         <SearchBar style={styles.input} placeholder={language.PROFILE.EMAIL[currentLanguage]} keyboardType='email-address' value={email} onChange={(event: any) => { setEmail(event.nativeEvent.text); }} />
@@ -103,7 +115,29 @@ export default function Register({ route, navigation }: any) {
                             <ImagePickerField showPreview={false} onChange={setProfilePic} title={language.PROFILE.PIC_PICK[currentLanguage]} />
                             {profilePic !== '' ? <Image source={{ uri: profilePic }} style={{ width: 35, height: 35, alignSelf:"center" }} /> : null}
                         </View>
-                        <SearchBar style={styles.input} placeholder={language.PROFILE.BIRTHDAY[currentLanguage]} maxLength={2 + 1 + 2 + 1 + 4} value={birthdate} onChange={(event: any) => { setBirthdate(event.nativeEvent.text); }} />
+                        {Platform.OS === "web" ?
+                            createElement('input', { type: 'date', value: birthdate, onChange: (event: any) => { setBirthdate(event.target.value); } })
+                            :
+                            <View style={{ flexDirection: 'row', width: "auto" }}>
+                                <SearchBar editable={false} style={[styles.input, { width: 50, flexGrow: 1 }]} placeholder={language.PET.BIRTHDAY[currentLanguage]} value={formatDate(birthdate)} onChange={(event: any) => { setBirthdate(event.nativeEvent.text); }} />
+                                <TouchableOpacity style={{ alignItems:"center"}} onPress={() => { setShowDatePicker(true) }}>
+                                    <FontAwesomeIcon icon={faCalendar} size={24} color={BLUE} />
+                                </TouchableOpacity>
+                                {showDatePicker ?
+                                    <DateTimePicker
+                                        testID="dateTimePicker"
+                                        value={new Date()}
+                                        is24Hour={true}
+                                        display="default"
+                                        onChange={(event: any, date: Date | undefined) => {
+                                            if (event.type === "set" && date) {
+                                                setBirthdate(date.toISOString().substring(0, 10));
+                                            }
+                                            setShowDatePicker(false);
+                                        }} />
+                                    : null}
+                            </View>
+                        }
                         <SearchBar style={styles.input} placeholder={language.PROFILE.ZIP[currentLanguage]} keyboardType='number-pad' onChange={(event: any) => { setZip(event.nativeEvent.text); }} />
                         <SearchBar style={styles.input} placeholder={language.PROFILE.CITY[currentLanguage]} value={city} onChange={(event: any) => { setCity(event.nativeEvent.text); }} />
                         <SearchBar style={styles.input} placeholder={language.PROFILE.PHONE[currentLanguage]} keyboardType='phone-pad' onChange={(event: any) => { event.nativeEvent.text.replace(/[^0-9]/g, ''); setNumber(event.nativeEvent.text); }} />
@@ -113,7 +147,7 @@ export default function Register({ route, navigation }: any) {
                 </View>
                 <OwnButton
                     title={language.LOGIN.REGISTER[currentLanguage]}
-                    style={{ width: "auto", padding: 0, minWidth: 0, borderRadius: 0, alignSelf: "center", marginTop: 10, paddingBottom: 20 }}
+                    style={{ width: "auto", padding: 0, minWidth: 0, borderRadius: 0, alignSelf: "center", marginTop: -25, paddingBottom: 20 }}
                     onPress={register}
                 />
             </ScrollView>
@@ -137,55 +171,6 @@ export default function Register({ route, navigation }: any) {
     }
 }
 
-export function DropDown(props: any) {
-    const [open, setOpen] = useState(false);
-    const [value, setValue] = useState(null);
-    const [items, setItems] = useState([
-        { label: language.PROFILE.MALE[currentLanguage], value: 'm' },
-        { label: language.PROFILE.FEMALE[currentLanguage], value: 'w' },
-        { label: language.PROFILE.OTHER[currentLanguage], value: 'o' }
-    ]);
-    React.useEffect(() => {
-        props.onChange(value);
-    }, [value]);
-
-    return (
-        <DropDownPicker
-            open={open}
-            value={value}
-            items={items}
-            style={styles.dropdown}
-            setOpen={setOpen}
-            setValue={setValue}
-            setItems={setItems}
-            placeholder={language.PROFILE.GENDER[currentLanguage]}
-            dropDownDirection='AUTO'
-            showArrowIcon={false}
-            containerStyle={{
-                width: "auto",
-                marginRight: "auto",
-                alignSelf: "center",
-                justifyContent: "center",
-                paddingStart: 10,
-            }}
-            textStyle={{
-                fontSize: 16,
-                color: "#333",
-            }}
-            dropDownContainerStyle={{
-                width: 64,
-                borderWidth: 0.5,
-                borderColor: BACKGROUNDCOLOR,
-                borderRadius: 0,
-                justifyContent: "center",
-                alignItems: "center",
-                alignSelf: "center",
-                zIndex: 50000
-            }}
-        />
-    );
-}
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
@@ -194,7 +179,7 @@ const styles = StyleSheet.create({
         height: "100%"
     },
     input: {
-        height: 24,
+        height: 28,
         width: "100%",
         flexGrow: 1,
         borderRadius: 0,
@@ -206,13 +191,6 @@ const styles = StyleSheet.create({
         width: "100%",
         height: 300,
         resizeMode: "contain"
-    },
-    dropdown: {
-        width: "auto",
-        height: 24,
-        flexGrow: 1,
-        borderRadius: 0,
-        alignSelf: 'center',
     },
     inputContainer: {
         width: 300,

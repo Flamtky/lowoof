@@ -26,7 +26,7 @@ export default function Login({ route, navigation }:any) {
             <View style={[styles.container, isLargeScreen ? { width: '43%', left: "28%" } : null]}>
                 <View style={{ width: "100%", flexDirection: 'row', height: "auto", alignItems: "center", alignSelf: "flex-start", justifyContent: 'center'}}>
                     <View style={{ width: "auto", height: "auto", flexDirection: 'column', alignItems: 'center' }}>
-                        <TextBlock>{language.LOGIN.NOT_REG[currentLanguage]}<TouchableOpacity onPress={()=>{navigation.navigate("Register")}}><TextBlock style={{color: "#00f"}}>{language.LOGIN.HERE[currentLanguage]}</TextBlock></TouchableOpacity>!</TextBlock>
+                        <TextBlock>{language.LOGIN.NOT_REG[currentLanguage]}<TouchableOpacity onPress={()=>{navigation.navigate("Register")}}><TextBlock style={{color: "#00f", marginBottom: -3.7}}>{language.LOGIN.HERE[currentLanguage]}</TextBlock></TouchableOpacity>!</TextBlock>
                         <SearchBar
                             placeholder={language.PLACEHOLDER.USERNAME[currentLanguage]}
                             style={styles.input}

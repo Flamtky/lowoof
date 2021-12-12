@@ -87,7 +87,7 @@ export function AddPet(props: any) {
 
     const formatDate = (date: string) => {
         if (date.length === 10) {
-            return date.substring(8,10) + "." + date.substring(5, 7) + "." + date.substring(0,4);
+            return date.substring(8, 10) + "." + date.substring(5, 7) + "." + date.substring(0, 4);
         }
         return date;
     }
@@ -105,11 +105,11 @@ export function AddPet(props: any) {
                         <SearchBar style={styles.input} placeholder={language.PET.BREED[currentLanguage]} value={petBreed} onChange={(event: any) => { setPetBreed(event.nativeEvent.text); }} />
                         <SearchBar style={styles.input} placeholder={language.PET.GENDER[currentLanguage] + " (Male, Female, Other)"} value={petGender} onChange={(event: any) => { setPetGender(event.nativeEvent.text); }} />
                         {Platform.OS === "web" ?
-                            createElement('input', { type: 'date', value: petBirthDate, onChange: (event: any) => { setPetBirthDate(event.target.value); } })
+                            createElement('input', { style: { background: "#f5f5f5", borderWidth: 0, color: "#333", fontFamily: "arial", paddingLeft: 9, overflow: "hidden", marginBottom: 5, width: 272, height: 28, fontSize: 16 }, type: 'date', value: petBirthDate, onChange: (event: any) => { setPetBirthDate(event.target.value); } })
                             :
                             <View style={{ flexDirection: 'row', width: "auto" }}>
                                 <SearchBar editable={false} style={[styles.input, { width: 50, flexGrow: 1 }]} placeholder={language.PET.BIRTHDAY[currentLanguage]} value={formatDate(petBirthDate)} onChange={(event: any) => { setPetBirthDate(event.nativeEvent.text); }} />
-                                <TouchableOpacity style={{ marginTop: 4}} onPress={() => { setShowDatePicker(true) }}>
+                                <TouchableOpacity style={{ marginTop: 4 }} onPress={() => { setShowDatePicker(true) }}>
                                     <FontAwesomeIcon icon={faCalendar} size={24} color={BLUE} />
                                 </TouchableOpacity>
                                 {showDatePicker ?

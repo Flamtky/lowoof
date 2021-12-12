@@ -93,7 +93,7 @@ export default function Register({ route, navigation }: any) {
 
     const formatDate = (date: string) => {
         if (date.length === 10) {
-            return date.substring(8,10) + "." + date.substring(5, 7) + "." + date.substring(0,4);
+            return date.substring(8, 10) + "." + date.substring(5, 7) + "." + date.substring(0, 4);
         }
         return date;
     }
@@ -104,23 +104,23 @@ export default function Register({ route, navigation }: any) {
                 <Image source={require('../../assets/splash.png')} style={[styles.logo, { backgroundColor: MAINCOLOR }]} />
                 <View style={{ backgroundColor: MAINCOLOR, height: 500 }}>
                     <View style={styles.inputContainer}>
-                        <TextBlock>{language.LOGIN.ALREADY_REG[currentLanguage]}<TouchableOpacity onPress={()=>{navigation.navigate("Login")}}><TextBlock style={{color: "#00f"}}>hier</TextBlock></TouchableOpacity>!</TextBlock>
+                        <TextBlock>{language.LOGIN.ALREADY_REG[currentLanguage]}<TouchableOpacity onPress={() => { navigation.navigate("Login") }}><TextBlock style={{ color: "#00f", marginBottom: -3.7 }}>hier</TextBlock></TouchableOpacity>!</TextBlock>
                         <SearchBar style={styles.input} placeholder={language.PROFILE.EMAIL[currentLanguage]} keyboardType='email-address' value={email} onChange={(event: any) => { setEmail(event.nativeEvent.text); }} />
                         <SearchBar style={styles.input} placeholder={language.PROFILE.USERNAME[currentLanguage]} value={username} onChange={(event: any) => { setUsername(event.nativeEvent.text); }} />
                         <SearchBar style={styles.input} placeholder={language.PROFILE.LAST_NAME[currentLanguage]} value={surename} onChange={(event: any) => { setSurename(event.nativeEvent.text); }} />
                         <SearchBar style={styles.input} placeholder={language.PROFILE.FIRST_NAME[currentLanguage]} value={firstname} onChange={(event: any) => { setFirstname(event.nativeEvent.text); }} />
                         <SearchBar style={styles.input} placeholder={language.PROFILE.INSTITUTION[currentLanguage]} value={institution} onChange={(event: any) => { setInstitution(event.nativeEvent.text); }} />
-                        <SearchBar style={styles.input} placeholder={language.PROFILE.GENDER_PICK[currentLanguage]} onChange={(event: any) => {setGender(event.nativeEvent.text.trim())}}/>
+                        <SearchBar style={styles.input} placeholder={language.PROFILE.GENDER_PICK[currentLanguage]} onChange={(event: any) => { setGender(event.nativeEvent.text.trim()) }} />
                         <View style={{ flexDirection: "row", width: "100%", marginBottom: 5, backgroundColor: "#f5f5f5" }}>
                             <ImagePickerField showPreview={false} onChange={setProfilePic} title={language.PROFILE.PIC_PICK[currentLanguage]} />
-                            {profilePic !== '' ? <Image source={{ uri: profilePic }} style={{ width: 35, height: 35, alignSelf:"center" }} /> : null}
+                            {profilePic !== '' ? <Image source={{ uri: profilePic }} style={{ width: 35, height: 35, alignSelf: "center" }} /> : null}
                         </View>
                         {Platform.OS === "web" ?
-                            createElement('input', { type: 'date', value: birthdate, onChange: (event: any) => { setBirthdate(event.target.value); } })
+                            createElement('input', { style: { background: "#f5f5f5", borderWidth: 0, color: "#333", fontFamily: "arial", paddingLeft: 9, overflow: "hidden", marginBottom: 5, width: 272, height: 28, fontSize: 16 }, type: 'date', value: birthdate, onChange: (event: any) => { setBirthdate(event.target.value); } })
                             :
-                            <View style={{ flexDirection: 'row', width: "auto" }}>
+                            <View style={{ flexDirection: 'row' }}>
                                 <SearchBar editable={false} style={[styles.input, { width: 50, flexGrow: 1 }]} placeholder={language.PET.BIRTHDAY[currentLanguage]} value={formatDate(birthdate)} onChange={(event: any) => { setBirthdate(event.nativeEvent.text); }} />
-                                <TouchableOpacity style={{ alignItems:"center"}} onPress={() => { setShowDatePicker(true) }}>
+                                <TouchableOpacity style={{ alignItems: "center" }} onPress={() => { setShowDatePicker(true) }}>
                                     <FontAwesomeIcon icon={faCalendar} size={24} color={BLUE} />
                                 </TouchableOpacity>
                                 {showDatePicker ?

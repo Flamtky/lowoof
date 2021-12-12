@@ -79,7 +79,7 @@ export default function MyProfile({ route, navigation }: any) {
                         <View style={{ width: "50%" }}>
                             <TextBlock>{language.PROFILE.ADDRESS[currentLanguage]}: {profile?.PLZ ?? "<Zip Code>"}, {profile?.WOHNORT ?? "<City>"} </TextBlock>
                             <TextBlock>{language.PROFILE.GENDER[currentLanguage]}: {profile?.GESCHLECHT ?? "<Gender>"} </TextBlock>
-                            <TextBlock>{language.PROFILE.BIRTHDAY[currentLanguage]}: {moment(profile?.GEBURTSTAG).format("MM/DD/YYYY") ?? "<Date Of Birth>"} </TextBlock>
+                            <TextBlock>{language.PROFILE.BIRTHDAY[currentLanguage]}: {moment(profile?.GEBURTSTAG).format("DD.MM.YYYY") ?? "<Date Of Birth>"} </TextBlock>
                         </View>
                         <View style={{ width: "50%" }}>
                             <TextBlock>{language.PROFILE.EMAIL[currentLanguage]}: {profile?.EMAIL ?? "<E-Mail>"}</TextBlock>

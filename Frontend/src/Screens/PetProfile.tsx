@@ -12,7 +12,9 @@ import { Api } from '../Api/lowoof-api';
 import language from '../../language.json';
 import { currentLanguage } from '../Constants/language';
 import { API } from '../Constants/api';
-import { Buffer } from "buffer"
+import { Buffer } from "buffer";
+import moment from 'moment';
+
 
 
 export default function PetProfile({ route, navigation }: any) {
@@ -75,7 +77,7 @@ export default function PetProfile({ route, navigation }: any) {
                                 </TouchableOpacity>
                                 <TextBlock> </TextBlock>
                                 <TextBlock>{language.PET.GENDER[currentLanguage]}: {petProfile?.GESCHLECHT}</TextBlock>
-                                <TextBlock>{language.PET.BIRTHDAY[currentLanguage]}: {petProfile?.GEBURTSTAG}</TextBlock>
+                                <TextBlock>{language.PET.BIRTHDAY[currentLanguage]}: {moment(petProfile?.GEBURTSTAG).format("DD.MM.YYYY")}</TextBlock>
                                 <TextBlock> </TextBlock>
                                 <TextBlock>{language.PET.SPECIES[currentLanguage]}: {petProfile?.ART} </TextBlock>
                                 <TextBlock>{language.PET.BREED[currentLanguage]}: {petProfile?.RASSE} </TextBlock>

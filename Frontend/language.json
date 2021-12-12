@@ -374,6 +374,10 @@
             "EN": "Invalid phone number!",
             "DE": "Ungültige Telefonnummer!"
         },
+        "INV_USERNAME": {
+            "EN": "Invalid username!",
+            "DE": "Ungültiger Benutzername!"
+        },
         "NAME_SPECIES_BREED": {
             "EN": "Your pet needs a name, species and breed!",
             "DE": "Das Haustier braucht einen Namen, eine Art und eine Rasse!"

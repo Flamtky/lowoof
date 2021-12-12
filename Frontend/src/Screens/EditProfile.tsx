@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, useWindowDimensions, Image, ScrollView, createElement } from 'react-native';
 import { BACKGROUNDCOLOR, BLUE, MAINCOLOR } from '../Constants/colors';
 import language from '../../language.json';
@@ -8,8 +8,9 @@ import Seperator from '../Components/seperator';
 import SearchBar from '../Components/searchbar';
 import ImagePickerField from '../Components/ImagePicker';
 import OwnButton from '../Components/ownButton';
-import { Pet } from '../Api/interfaces';
+import { Pet, User } from '../Api/interfaces';
 import { Api } from '../Api/lowoof-api';
+import { API } from '../Constants/api';
 import { Platform } from 'expo-modules-core';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -17,16 +18,163 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 
 
-export function EditProfile() {
+export function EditProfile({ route, navigation }: any) {
     const dimensions = useWindowDimensions();
     const isLargeScreen = dimensions.width >= 768;
+    const currentUser : User = route.params?.userToEdit ?? API.getCurrentUser();
+    const [email, setEmail] = useState(currentUser.EMAIL);
+    const [username, setUsername] = useState<string>(currentUser.USERNAME);
+    const [surename, setSurename] = useState<string>(currentUser.NACHNAME);
+    const [firstname, setFirstname] = useState<string>(currentUser.VORNAME);
+    const [institution, setInstitution] = useState<string>(currentUser.INSTITUTION);
+    const [gender, setGender] = useState<string>(currentUser.GESCHLECHT);
+    const [profilePic, setProfilePic] = useState<string>('');
+    const [birthdate, setBirthdate] = useState<string>('');
+    const [zip, setZip] = useState<string>(String(currentUser.PLZ));
+    const [city, setCity] = useState<string>(currentUser.WOHNORT);
+    console.log(currentUser);
+    const [number, setNumber] = useState<string>(currentUser.TELEFONNUMMER);
+    const [password, setPassword] = useState<string>(currentUser.PASSWORD ?? '');
+    const [password2, setPassword2] = useState<string>('');
+
+    const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
+
+    const saveEdit = () => {
+        API.isUsernameValid(username).then((res) => {if (!res && username != currentUser.USERNAME) {
+            alert(language.ERROR.INV_USERNAME[currentLanguage]);
+        } else if (username.trim().length < 3 || password.trim().length < 6 || username.trim().includes(' ') || password.trim().includes(' ')) {
+            alert(language.ERROR.LOGIN_ERR[currentLanguage]);
+        } else if (password !== password2) {
+            alert(language.ERROR.NO_MATCH[currentLanguage]);
+        } else if (email.trim().length < 5 || !email.trim().includes('@') || !email.trim().includes('.')) {
+            alert(language.ERROR.INV_EMAIL[currentLanguage]);
+        } else if (['Male', 'Female', 'Other'].indexOf(gender.trim()) < 0) {
+            alert(language.ERROR.INV_GENDER[currentLanguage])
+        } else if (birthdate.trim().length !== 10) {
+            alert(language.ERROR.INV_BIRTHDATE[currentLanguage]);
+        } else if (zip.trim().length !== 5 || isNaN(Number(zip))) {
+            alert(language.ERROR.INV_ZIP[currentLanguage]);
+        } else if (number.trim().length !== 10 || isNaN(Number(number))) {
+            alert(language.ERROR.INV_PHONE[currentLanguage]);
+        } else {
+            // new user
+            const user: User = {
+                USERID: currentUser.USERID,
+                SPRACHID: currentLanguage,
+                USERNAME: username,
+                EMAIL: email,
+                PASSWORD: password,
+                VORNAME: firstname,
+                NACHNAME: surename,
+                GEBURTSTAG: birthdate,
+                INSTITUTION: institution,
+                TELEFONNUMMER: number,
+                PLZ: Number(zip),
+                WOHNORT: city,
+                GESCHLECHT: gender,
+                PROFILBILD: profilePic,
+                ONLINESTATUS: 1,
+                MITGLIEDSCHAFTPAUSIERT: 0,
+                ADMIN: 0
+            };
+
+            API.updateProfile(user).then((resp: any) => {
+                if (resp.status === 413) {
+                    alert(language.ERROR.IMG_TOO_BIG[currentLanguage]);
+                } else if (resp.status !== 200) {
+                    alert(language.ERROR.REG_ERR[currentLanguage]);
+                    console.log(resp);
+                } else {
+                    API.getAuthTokenfromServer(username, password).then((resp2: void | "Error") => {
+                        if (resp2 === "Error") {
+                            alert(language.ERROR.AUTH_ERR[currentLanguage]);
+                        } else {
+                            route.params.setLogin(true);
+                        }
+                    });
+                    cleanUpInputs();
+                }
+            });
+        }});
+    }
+
+    const formatDate = (date: string) => {
+        if (date.length === 10) {
+            return date.substring(8, 10) + "." + date.substring(5, 7) + "." + date.substring(0, 4);
+        }
+        return date;
+    }
+
     return (
         <View style={{ backgroundColor: BACKGROUNDCOLOR, height: "100%" }}>
-            <View style={[styles.container, isLargeScreen ? { width: '43%', left: "28%" } : { width: "100%" }]}>
-                <Text>{language.EDIT_PROFILE.HEADER[currentLanguage]}</Text>
-            </View>
+            <ScrollView style={[isLargeScreen ? { width: '43%', left: "28%" } : null, { height: 10, backgroundColor: MAINCOLOR }]}>
+                <Image source={require('../../assets/splash.png')} style={[styles.logo, { backgroundColor: MAINCOLOR }]} />
+                <View style={{ backgroundColor: MAINCOLOR, height: 500 }}>
+                    <View style={styles.inputContainer}>
+                        <SearchBar style={styles.input} placeholder={language.PROFILE.EMAIL[currentLanguage]} keyboardType='email-address' value={email} onChange={(event: any) => { setEmail(event.nativeEvent.text); }} />
+                        <SearchBar style={styles.input} placeholder={language.PROFILE.USERNAME[currentLanguage]} value={username} onChange={(event: any) => { setUsername(event.nativeEvent.text); }} />
+                        <SearchBar style={styles.input} placeholder={language.PROFILE.LAST_NAME[currentLanguage]} value={surename} onChange={(event: any) => { setSurename(event.nativeEvent.text); }} />
+                        <SearchBar style={styles.input} placeholder={language.PROFILE.FIRST_NAME[currentLanguage]} value={firstname} onChange={(event: any) => { setFirstname(event.nativeEvent.text); }} />
+                        <SearchBar style={styles.input} placeholder={language.PROFILE.INSTITUTION[currentLanguage]} value={institution} onChange={(event: any) => { setInstitution(event.nativeEvent.text); }} />
+                        <SearchBar style={styles.input} placeholder={language.PROFILE.GENDER_PICK[currentLanguage]} value={gender} onChange={(event: any) => { setGender(event.nativeEvent.text.trim()) }} />
+                        <View style={{ flexDirection: "row", width: "100%", marginBottom: 5, backgroundColor: "#f5f5f5" }}>
+                            <ImagePickerField showPreview={false} onChange={setProfilePic} title={language.PROFILE.PIC_PICK[currentLanguage]} />
+                            {profilePic !== '' ? <Image source={{ uri: profilePic }} style={{ width: 35, height: 35, alignSelf: "center" }} /> : null}
+                        </View>
+                        {Platform.OS === "web" ?
+                            createElement('input', { style: { background: "#f5f5f5", borderWidth: 0, color: "#333", fontFamily: "arial", paddingLeft: 9, overflow: "hidden", marginBottom: 5, width: 272, height: 28, fontSize: 16 }, type: 'date', value: birthdate /* TODO: set birthday value, to be seen in edit screen */, onChange: (event: any) => { setBirthdate(event.target.value); } })
+                            :
+                            <View style={{ flexDirection: 'row' }}>
+                                <SearchBar editable={false} style={[styles.input, { width: 50, flexGrow: 1 }]} placeholder={language.PET.BIRTHDAY[currentLanguage]} value={formatDate(birthdate)} onChange={(event: any) => { setBirthdate(event.nativeEvent.text); }} />
+                                <TouchableOpacity style={{ alignItems: "center" }} onPress={() => { setShowDatePicker(true) }}>
+                                    <FontAwesomeIcon icon={faCalendar} size={24} color={BLUE} />
+                                </TouchableOpacity>
+                                {showDatePicker ?
+                                    <DateTimePicker
+                                        testID="dateTimePicker"
+                                        value={new Date()}
+                                        is24Hour={true}
+                                        display="default"
+                                        onChange={(event: any, date: Date | undefined) => {
+                                            if (event.type === "set" && date) {
+                                                setBirthdate(date.toISOString().substring(0, 10));
+                                            }
+                                            setShowDatePicker(false);
+                                        }} />
+                                    : null}
+                            </View>
+                        }
+                        <SearchBar style={styles.input} placeholder={language.PROFILE.ZIP[currentLanguage]} value={zip} keyboardType='number-pad' onChange={(event: any) => { setZip(event.nativeEvent.text); }} />
+                        <SearchBar style={styles.input} placeholder={language.PROFILE.CITY[currentLanguage]} value={city} onChange={(event: any) => { setCity(event.nativeEvent.text); }} />
+                        <SearchBar style={styles.input} placeholder={language.PROFILE.PHONE[currentLanguage]} value={number} keyboardType='phone-pad' onChange={(event: any) => { event.nativeEvent.text.replace(/[^0-9]/g, ''); setNumber(event.nativeEvent.text); }} />
+                        <SearchBar style={styles.input} placeholder={language.PROFILE.PASSWORD[currentLanguage]} secureTextEntry={true} value={password} onChange={(event: any) => { setPassword(event.nativeEvent.text); }} />
+                        <SearchBar style={styles.input} placeholder={language.PROFILE.REPEAT_PASSWORD[currentLanguage]} secureTextEntry={true} value={password2} onChange={(event: any) => { setPassword2(event.nativeEvent.text); }} />
+                    </View>
+                </View>
+                <OwnButton
+                    title={language.SAVE[currentLanguage]}
+                    style={{ width: "auto", padding: 0, minWidth: 0, borderRadius: 0, alignSelf: "center", marginTop: -25, paddingBottom: 20 }}
+                    onPress={saveEdit}
+                />
+            </ScrollView>
         </View>
     );
+
+    function cleanUpInputs() {
+        setEmail('');
+        setUsername('');
+        setSurename('');
+        setFirstname('');
+        setInstitution('');
+        setGender('');
+        setProfilePic('');
+        setBirthdate('');
+        setZip('');
+        setCity('');
+        setNumber('');
+        setPassword('');
+        setPassword2('');
+    }
 }
 
 export function EditPet() {
@@ -41,7 +189,7 @@ export function EditPet() {
     );
 }
 
-export function AddPet(props: any) {
+export function AddPet(props: any) {  //TODO: Profile pictures uploaded from android doesnt show up on any other device
     const dimensions = useWindowDimensions();
     const isLargeScreen = dimensions.width >= 768;
 
@@ -172,5 +320,10 @@ const styles = StyleSheet.create({
         padding: 10,
         paddingVertical: 5,
         alignSelf: "center",
+    },
+    logo: {
+        width: "100%",
+        height: 300,
+        resizeMode: "contain"
     }
 });

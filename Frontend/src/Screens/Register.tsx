@@ -6,7 +6,6 @@ import SearchBar from '../Components/searchbar';
 import { BACKGROUNDCOLOR, BLUE, MAINCOLOR } from '../Constants/colors';
 import language from '../../language.json';
 import { currentLanguage } from '../Constants/language';
-import DropDownPicker from 'react-native-dropdown-picker';
 import ImagePickerField from '../Components/ImagePicker';
 import { User } from '../Api/interfaces';
 import { API } from '../Constants/api';
@@ -35,7 +34,9 @@ export default function Register({ route, navigation }: any) {
     const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
 
     const register = () => {
-        if (username.trim().length < 3 || password.trim().length < 6 || username.trim().includes(' ') || password.trim().includes(' ')) {
+        API.isUsernameValid(username).then((res) => {if (!res) {
+            alert(language.ERROR.INV_USERNAME[currentLanguage])
+        } else if (username.trim().length < 3 || password.trim().length < 6 || username.trim().includes(' ') || password.trim().includes(' ')) {
             alert(language.ERROR.LOGIN_ERR[currentLanguage]);
         } else if (password !== password2) {
             alert(language.ERROR.NO_MATCH[currentLanguage]);
@@ -88,7 +89,7 @@ export default function Register({ route, navigation }: any) {
                     cleanUpInputs();
                 }
             });
-        }
+        }});
     }
 
     const formatDate = (date: string) => {

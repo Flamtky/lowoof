@@ -46,10 +46,10 @@ export default function Chats({ route, navigation }: any) {
             <ScrollView style={{ width: '100%' }}
                 keyboardDismissMode="on-drag"
             >
-                <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.MATCHES.HEADER[currentLanguage]}:</TextBlock>
+                <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.CHATS.HEADER[currentLanguage]}:</TextBlock>
                 <Seperator />
 
-                {!isLoading && pets.length === 0 && <TextBlock style={{ textAlign: 'center', marginTop: 20 }}> Keine Chats!</TextBlock>}
+                {!isLoading && pets.length === 0 && <TextBlock style={{ textAlign: 'center', marginTop: 20 }}>{language.CHATS.NO_CHATS[currentLanguage]}</TextBlock>}
                 {pets.map((pet: Pet, index: number) => {
                     return (
                         <ChatItem

@@ -275,6 +275,10 @@
         "LAST_MSG": {
             "EN": "Last Message",
             "DE": "Letzte Nachricht"
+        },
+        "NO_CHATS": {
+            "EN": "No Chats!",
+            "DE": "Keine Chats!"
         }
     },
     "SETTINGS": {

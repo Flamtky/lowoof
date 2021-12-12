@@ -16,17 +16,23 @@ export default function Chats({ route, navigation }: any) {
     const dimensions = useWindowDimensions();
     const isLargeScreen = dimensions.width >= 768;
     const [pets, setPets] = React.useState<Pet[]>([]);
-    const [lastMessages, setLastMessages] = React.useState<string[]>([]);
+    const [lastMessages, setLastMessages] = React.useState<Message[]>([]);
     const [isLoading, setIsLoading] = React.useState(true);
-    
+
     React.useEffect(() => {
         API.getChats(route.params?.pet?.TIERID).then((res: any) => {
             if (!res.hasOwnProperty("message")) {
                 setPets(res as Pet[]);
+                let tempLastMessages: Message[] = [];
                 (res as Pet[]).forEach((pet: Pet) => {
-                    API.getLastMessage(route.params?.pet?.TIERID, pet.TIERID).then((res: any) => {
-                        if (!res.hasOwnProperty("message")) {
-                            setLastMessages([...lastMessages, (res as Message).NACHRICHT]);
+                    API.getLastMessage(route.params?.pet?.TIERID, pet.TIERID).then((res2: any) => {
+                        if (!res2.hasOwnProperty("message")) {
+                            tempLastMessages.push(res2);
+                        }
+
+                        // if last iteration
+                        if (tempLastMessages.length === (res as Pet[]).length) {
+                            setLastMessages(tempLastMessages);
                             setIsLoading(false);
                         }
                     });
@@ -45,28 +51,30 @@ export default function Chats({ route, navigation }: any) {
     return (
         <View style={{ width: "100%", height: "100%", backgroundColor: MAINCOLOR }}>
             <View style={[styles.item, styles.container, isLargeScreen ? { width: '60%', marginLeft: "20%" } : { width: "100%" }]}>
-            <ScrollView style={{ width: '100%' }}
-                keyboardDismissMode="on-drag"
-            >
-                <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.CHATS.HEADER[currentLanguage]}:</TextBlock>
-                <Seperator />
+                <ScrollView style={{ width: '100%' }}
+                    keyboardDismissMode="on-drag"
+                >
+                    <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.CHATS.HEADER[currentLanguage]}:</TextBlock>
+                    <Seperator />
 
-                {!isLoading && pets.length === 0 && <TextBlock style={{ textAlign: 'center', marginTop: 20 }}>{language.CHATS.NO_CHATS[currentLanguage]}</TextBlock>}
-                {pets.map((pet: Pet, index: number) => {
-                    return (
-                        <ChatItem
-                            key={index}
-                            pet={pet}
-                            navigation={navigation}
-                            ownID={route.params?.pet?.TIERID}
-                            lastMessage={lastMessages[index]/* TODO: TEST THIS */}
-                        />
-                    );
-                })}
-            </ScrollView>
-            <OwnButton title={language.BACK[currentLanguage]} style={{ margin: 32, alignSelf: "flex-start" }} onPress={() => {
-                navigation.goBack();
-            }} />
+                    {isLoading || pets.length === 0 || pets.length !== lastMessages.length ? <TextBlock style={{ textAlign: 'center', marginTop: 20 }}>{language.CHATS.NO_CHATS[currentLanguage]}</TextBlock>
+                        : pets.map((pet: Pet, index: number) => {
+                            console.log(lastMessages);
+                            return (
+                                <ChatItem
+                                    key={index}
+                                    pet={pet}
+                                    navigation={navigation}
+                                    ownID={route.params?.pet?.TIERID}
+                                    lastMessage={lastMessages.find((message: Message) => message.TO_PET === pet.TIERID || message.FROM_PET === pet.TIERID)?.NACHRICHT}
+                                />
+                            );
+                        })}
+
+                </ScrollView>
+                <OwnButton title={language.BACK[currentLanguage]} style={{ margin: 32, alignSelf: "flex-start" }} onPress={() => {
+                    navigation.goBack();
+                }} />
             </View>
         </View>
     );
@@ -85,7 +93,7 @@ export function ChatItem(props: any) {
                     </TouchableOpacity>
                     <View style={{ marginLeft: 10, height: 60, justifyContent: "space-between" }}>
                         <TouchableOpacity onPress={() => { props.navigation.navigate('MyProfile', { userID: pet.USERID }) }}>
-                            <TextBlock style={{color: "#00f"}}>{language.PET.OWNER[currentLanguage]}: {pet.USERNAME}</TextBlock>
+                            <TextBlock style={{ color: "#00f" }}>{language.PET.OWNER[currentLanguage]}: {pet.USERNAME}</TextBlock>
                         </TouchableOpacity>
                         <TextBlock>{language.PET.NAME[currentLanguage]}: {pet.NAME}</TextBlock>
                         <TextBlock>{language.CHATS.LAST_MSG[currentLanguage]}: {props.lastMessage}</TextBlock>

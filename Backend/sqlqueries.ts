@@ -769,7 +769,7 @@ export default class Queries {
         });
     }
 
-    removePetReports(reportedPetId: number) {
+    removePetReports(reportedPetId: number): Promise<Response> {
         return new Promise<Response>(async (resolve, reject) => {
             const connection: mysql.Pool = this.getConnection();
             connection.query(`DELETE FROM REPORT WHERE TIERID = ?;`, [reportedPetId],
@@ -778,7 +778,7 @@ export default class Queries {
                         console.log(err);
                         resolve(this.errorResponse);
                     } else {
-                        
+                        resolve({ status: 200, message: 'Reports removed' } as Response);
                     }
                 }
             );

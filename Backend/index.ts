@@ -300,12 +300,17 @@ app.post('/deletepet', async (req, res) => {
     if (req.body.petid) {
         var isCorrectUser: boolean = await queries.authenticateByPetId(req.user, req.body.petid as unknown as number);
         var isAdmin: boolean = await queries.isUserAdmin(req.user);
+        console.log(0);
         if (!isCorrectUser && !isAdmin) {
             return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
         }
+        console.log(1);
         await queries.deletePetRelationships(req.body.petid as unknown as number);
+        console.log(2);
         await queries.removePetReports(req.body.petid as unknown as number);
+        console.log(3);
         var response: Response = await queries.deletePet(req.body.petid as unknown as number);
+        console.log(4);
         return res.status(response.status).json(response);
     } else {
         res.status(400).json({ status: res.statusCode, message: "Missing PetID" } as Response);

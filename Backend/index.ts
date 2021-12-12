@@ -234,6 +234,22 @@ app.post('/updateuser', async (req, res) => {
 
 });
 
+app.post('/updatepet', async (req, res) => {
+    console.log(req.body);
+    if ("TIERID" in req.body) {
+        const pet: Pet = req.body;
+        var isCorrectUser: boolean = await queries.authenticateByPetId(req.user, req.body.TIERID as unknown as number);
+        if (!isCorrectUser) {
+            return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
+        }
+        var response: Response = await queries.updatePet(pet);
+        return res.status(response.status).json(response);
+    } else {
+        return res.status(400).json({ status: res.statusCode, message: "We didnt get a valid pet object" } as Response);
+    }
+
+});
+
 app.post('/setonlinestatus', async (req, res) => {
     if (req.body.userid && req.body.status != undefined) {
         var isCorrectUser: boolean = await queries.authenticateByUserId(req.user, req.body.userid as unknown as number);

@@ -152,6 +152,24 @@ export class Api {
         return res;
     }
 
+    async updatePet(newPet: Pet): Promise<Response> {
+        var res: Response = { status: 500, message: "Error" };
+        //newProfile["GEBURTSTAG"] = newProfile["GEBURTSTAG"].toISOString();
+        if (newPet["GEBURTSTAG"].includes("T")) {
+            newPet["GEBURTSTAG"] = newPet["GEBURTSTAG"].split("T")[0];
+        }
+        await axios.post(this.url + '/updatepet', newPet, {
+            headers: {
+                'Authorization': `Beaver ${this.apiToken}`
+            }
+        })
+            .then(response => {
+                res = response.data as Response;
+            })
+            .catch((error) => { res = error.response.data as Response });
+        return res;
+    }
+
     /**
      * Returns a Array of Users relationships but there are only UserIDs no usernames in the Response
      * @param userId :number UserID of the User to get the relationships of

@@ -33,6 +33,7 @@ export default function App() {
 		let user = API.getCurrentUser();
 		if (login) {
 			if (user) {
+				API.setOnlineStatus(user.USERID, true);
 				API.getUserLanguage(user.USERID).then((res) => {
 					if (!res.hasOwnProperty('message')) {
 						setLanguage(res as any);

@@ -81,7 +81,9 @@ export function ChatItem(props: any) {
                         />
                     </TouchableOpacity>
                     <View style={{ marginLeft: 10, height: 60, justifyContent: "space-between" }}>
-                        <TextBlock>{language.PET.OWNER[currentLanguage]}: {pet.USERNAME}</TextBlock>
+                        <TouchableOpacity onPress={() => { props.navigation.navigate('MyProfile', { userID: pet.USERID }) }}>
+                            <TextBlock style={{color: "#00f"}}>{language.PET.OWNER[currentLanguage]}: {pet.USERNAME}</TextBlock>
+                        </TouchableOpacity>
                         <TextBlock>{language.PET.NAME[currentLanguage]}: {pet.NAME}</TextBlock>
                         <TextBlock>{language.CHATS.LAST_MSG[currentLanguage]}: {props.lastMessage}</TextBlock>
                     </View>

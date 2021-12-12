@@ -7,7 +7,7 @@ import { TextBlock } from '../Components/styledText';
 import { BLACK, GRAY, MAINCOLOR, TITLECOLOR } from '../Constants/colors';
 import Seperator from '../Components/seperator';
 import OwnButton from '../Components/ownButton';
-import { Pet, User } from '../Api/interfaces';
+import { Pet, Preference, User } from '../Api/interfaces';
 import { Api } from '../Api/lowoof-api';
 import language from '../../language.json';
 import { currentLanguage } from '../Constants/language';
@@ -21,7 +21,7 @@ export default function PetProfile({ route, navigation }: any) {
     const dimensions = useWindowDimensions();
     const isLargeScreen = dimensions.width >= 768;
     const [petProfile, setPetProfile] = React.useState<Pet | null>(null);
-    const [ownerProfile, setOwnerProfile] = React.useState<User | null>(null);
+    const [prefs, setPrefs] = React.useState<Preference[]>([]);
     const [isLoading, setIsLoading] = React.useState(true);
     const [ownProfile, setOwnProfile] = React.useState<boolean>(false);
     const api: Api = API;
@@ -34,9 +34,9 @@ export default function PetProfile({ route, navigation }: any) {
                 if (!data.hasOwnProperty("message")) {
                     setPetProfile(data as Pet);
                     setOwnProfile(API.getCurrentUser()?.USERID === (data as Pet).USERID);
-                    api.getProfileData((data as Pet).USERID).then(data => {
-                        if (!data.hasOwnProperty("message")) {
-                            setOwnerProfile(data as User);
+                    api.getPreferences((data as Pet).TIERID).then(res => {
+                        if (!res.hasOwnProperty("message")) {
+                            setPrefs(res as Preference[]);
                         }
                         setIsLoading(false);
                     });
@@ -46,6 +46,20 @@ export default function PetProfile({ route, navigation }: any) {
             });
         }
     }, [route]);
+
+    const calcAge = (isoDate: string) => {
+        if (isoDate == null || isoDate.trim() === "") {
+            return "";
+        }
+        let today = new Date();
+        let birthDate = new Date(isoDate);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        let month = today.getMonth() - birthDate.getMonth();
+        if (month < 0 || (month === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        return age;
+    }
 
     return (
         <View style={{ width: "100%", height: "100%", backgroundColor: MAINCOLOR }}>
@@ -77,29 +91,30 @@ export default function PetProfile({ route, navigation }: any) {
                             <View style={{ width: "50%" }}>
                                 <TextBlock>{language.PET.NAME[currentLanguage]}: {petProfile?.NAME}</TextBlock>
                                 <TouchableOpacity onPress={() => { navigation.navigate('MyProfile', { userID: petProfile?.USERID }) }}>
-                                    <TextBlock style={{ color: "#00f" }}>{language.PET.OWNER[currentLanguage]}: {ownerProfile?.USERNAME}</TextBlock>
+                                    <TextBlock style={{ color: "#00f" }}>{language.PET.OWNER[currentLanguage]}: {petProfile?.USERNAME}</TextBlock>
                                 </TouchableOpacity>
                                 <TextBlock> </TextBlock>
                                 <TextBlock>{language.PET.GENDER[currentLanguage]}: {petProfile?.GESCHLECHT}</TextBlock>
                                 <TextBlock>{language.PET.BIRTHDAY[currentLanguage]}: {moment(petProfile?.GEBURTSTAG).format("DD.MM.YYYY")}</TextBlock>
-                                <TextBlock> </TextBlock>
-                                <TextBlock>{language.PET.SPECIES[currentLanguage]}: {petProfile?.ART} </TextBlock>
-                                <TextBlock>{language.PET.BREED[currentLanguage]}: {petProfile?.RASSE} </TextBlock>
-                                <TextBlock>{language.PET.DESCRIPTION[currentLanguage]}: </TextBlock>
-                                <TextBlock>Text... {/* TODO: Implement actual description from database */}</TextBlock>
-                                <TextBlock>Text... </TextBlock>
+                                <TextBlock>{language.PET.AGE[currentLanguage]}:  {calcAge(petProfile?.GEBURTSTAG ?? "")}</TextBlock>
                             </View>
                             <View style={{ width: "50%" }}>
+                                <TextBlock>{language.PET.SPECIES[currentLanguage]}: {petProfile?.ART} </TextBlock>
+                                <TextBlock>{language.PET.BREED[currentLanguage]}: {petProfile?.RASSE} </TextBlock>
                                 <TextBlock> </TextBlock>
-                                <TextBlock>{language.PET.PREFERENCES[currentLanguage]}: </TextBlock>
-                                <TextBlock> </TextBlock>
-                                <TextBlock>{language.PET.DISTANCE[currentLanguage]}: </TextBlock>
-                                <TextBlock>{language.PET.GENDER[currentLanguage]}: </TextBlock>
-                                <TextBlock>{language.PET.AGE[currentLanguage]}: </TextBlock>
-                                <TextBlock> </TextBlock>
-                                <TextBlock>{language.PET.FEATURES[currentLanguage]}</TextBlock>
-                                <TextBlock>Text... {/* TODO: Implement features from database */}</TextBlock>
-                                <TextBlock>Text... </TextBlock>
+                                {prefs.length > 0 ?
+                                    <>
+                                        <TextBlock>{language.PET.PREFERENCES[currentLanguage]}: </TextBlock>
+                                        {prefs.map((pref, index) => {
+                                            return (
+                                                <>
+                                                    <TextBlock>{index+1 + ": " + pref.PREF}</TextBlock>
+                                                </>
+                                            )
+                                        })}
+                                    </>
+                                    : null
+                                }
                             </View>
                         </View>
                         <Seperator />

@@ -133,7 +133,7 @@ export default class Queries {
                         console.log(err);
                         resolve({ status: 500, message: "Something went wrong, Try again or contact the administrator" } as Response);
                     } else {
-                        resolve(rows as Relationship[]);//TODO: Add Pet Relationships as Interface
+                        resolve(rows as Relationship[]);
                     }
                 }
             );
@@ -819,10 +819,20 @@ export default class Queries {
         });
     }
     //Set User Mitgliedschaftpausiert auf true
-    banUser(userid: number): Promise<Response> {
+    banUser(userid: number ,until:Date): Promise<Response> {
         return new Promise<Response>(async (resolve, reject) => {
             const connection: mysql.Pool = this.getConnection();
-            connection.query(`UPDATE USER SET MITGLIEDSCHAFTPAUSIERT = 1 WHERE USERID = ?;`, [userid],
+            var query:string = "";
+            var params:any[] = [];
+            if(until != undefined){
+                until.toISOString().slice(0,10);
+                query = `UPDATE USER SET MITGLIEDSCHAFTPAUSIERT = 1 , BANNEDUNTIL = ? WHERE USERID = ?;`
+                params = [until,userid];
+            }else{
+                query = `UPDATE USER SET MITGLIEDSCHAFTPAUSIERT = 1 WHERE USERID = ?;`
+                params = [userid];
+            }
+            connection.query(query, params,
                 (err, rows, fields) => {
                     if (err) {
                         console.log(err);
@@ -836,7 +846,7 @@ export default class Queries {
     unbanUser(userid: number): Promise<Response> {
         return new Promise<Response>(async (resolve, reject) => {
             const connection: mysql.Pool = this.getConnection();
-            connection.query(`UPDATE USER SET MITGLIEDSCHAFTPAUSIERT = 0 WHERE USERID = ?;`, [userid],
+            connection.query(`UPDATE USER SET MITGLIEDSCHAFTPAUSIERT = 0, BANNEDUNTIL = NULL WHERE USERID = ?;`, [userid],
                 (err, rows, fields) => {
                     if (err) {
                         console.log(err);
@@ -866,23 +876,59 @@ export default class Queries {
         });
     }
     //Check of ADMIN in USER is True
-    isUserAdmin(tokenUser:any): Promise<Response | boolean> {
-        return new Promise<Response | boolean>(async (resolve, reject) => {
+    isUserAdmin(tokenUser:any): Promise<boolean> {
+        return new Promise<boolean>(async (resolve, reject) => {
             const connection: mysql.Pool = this.getConnection();
             connection.query(`SELECT ADMIN FROM USER WHERE USERNAME = ?;`, [tokenUser.username],
                 (err, rows, fields) => {
                     if (err) {
                         console.log(err);
-                        resolve(this.errorResponse);
+                        resolve(false);
                     } else {
                         if (rows.length == 0) {
-                            resolve({ status: 404, message: "User not found" } as Response);
+                            resolve(false);
                         } else {
                             resolve(rows[0].ADMIN == 1);
                         }
                     }
                 });
         });
+    }
+
+    getAllMatches(): Promise<Response | Relationship[]> {
+        return new Promise<Response | Relationship[]>(async (resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            connection.query(`SELECT * FROM TIER_MATCHES;`,
+                (err, rows, fields) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(this.errorResponse);
+                    } else {
+                        if (rows.length == 0) {
+                            resolve({ status: 404, message: "No Relations found" } as Response);
+                        } else {
+                            resolve(rows as Relationship[]);
+                        }
+                    }
+                });
+        });
+    }
+
+    setOnlineStatus(userid: number, status: boolean): Promise<Response> {
+        return new Promise<Response>(async (resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            connection.query(`UPDATE USER SET ONLINESTATUS = ? WHERE USERID = ?;`, [status, userid],
+                (err, rows, fields) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(this.errorResponse);
+                    } else {
+                        resolve({ status: 200, message: 'Online status set' } as Response);
+                    }
+                });
+        }
+        );
+        
     }
 }
 

@@ -66,7 +66,7 @@ export class Api {
                     valid = false;
                 } else valid = true;
             });
-        }).catch((error) => { console.log(error); throw new Error("Error while connecting to server. Are you authorized?"); }); //TODO remove console log
+        }).catch((error) => { console.log(error); throw new Error("Error while connecting to server. Are you authorized?"); });
         return valid;
     }
 
@@ -235,21 +235,16 @@ export class Api {
     /**
      * Deletes a pet from the Database
      * @param petId :number PetID of the Pet to delete
-     * @param pwd :string Password of the User who owns the Pet
      * @returns {Response} Response Object with message from the server
      */
-    async deletePet(petId: number, pwd: string): Promise<Response> {
+    async deletePet(petId: number): Promise<Response> {
         var res: Response = { status: 500, message: "Error" };
-        if (pwd.length < 1) {
-            res = { status: 400, message: "Password not set" };
-        } else {
-            await axios.post(this.url + '/deletepet', { petid: petId, password: pwd }, {
-                headers: {
-                    'Authorization': `Beaver ${this.apiToken}`
-                }
-            }).then(response => { res = response.data as Response; })
-                .catch((error) => { res = error.response.data as Response; });
-        }
+        await axios.post(this.url + '/deletepet', { petid: petId}, {
+            headers: {
+                'Authorization': `Beaver ${this.apiToken}`
+            }
+        }).then(response => { res = response.data as Response; })
+            .catch((error) => { res = error.response.data as Response; });
         return res;
     }
 
@@ -474,7 +469,17 @@ export class Api {
             .catch((error) => { res = error.response.data as Response; });
         return res;
     }
-    //TODO: Add setOnlinestatus
+    async setOnlineStatus(userId: number, status:boolean): Promise<Response> {
+        var res: Response = { status: 500, message: "Error" };
+        await axios.post(this.url + '/setonlinestatus', { userid: userId, status:status }, {
+            headers: {
+                'Authorization': `Beaver ${this.apiToken}`
+            }
+        }).then(response => { res = response.data as Response; })
+            .catch((error) => { res = error.response.data as Response; });
+        return res;
+    }
+    
     async addReport(reportedPetId: number, reason: string): Promise<Response> {
         var res: Response = { status: 500, message: "Error" };
         await axios.post(this.url + '/addreport', { reportedpetid: reportedPetId, reason: reason }, {
@@ -515,9 +520,9 @@ export class Api {
             .catch((error) => {res = error.response.data as Response|Report[];});
         return res;
     }
-    async banUser(userId: number): Promise<Response> {
+    async banUser(userId: number, until?:Date): Promise<Response> {
         var res: Response = { status: 500, message: "Error" };
-        await axios.post(this.url + '/banuser', { userid: userId }, {
+        await axios.post(this.url + '/banuser', { userid: userId , until:until}, {
             headers: {
                 'Authorization': `Beaver ${this.apiToken}`
             }
@@ -543,6 +548,17 @@ export class Api {
                 'Authorization':`Beaver ${this.apiToken}`
             }
         }).then(response => {res = response.data as User[];})
+            .catch((error) => {res = error.response.data as Response;});
+        return res;
+    }
+
+    async getTopPets(limit = 10):Promise<Response|Pet[]>{
+        var res:Response|Pet[] = {status:500,message:"Error"};
+        await axios.get(this.url + '/gettoppets?limit=' + limit,{
+            headers:{
+                'Authorization':`Beaver ${this.apiToken}`
+            }
+        }).then(response => {res = response.data as Pet[];})
             .catch((error) => {res = error.response.data as Response;});
         return res;
     }

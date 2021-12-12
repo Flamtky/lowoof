@@ -42,20 +42,29 @@ app.get('/', (req, res) => {
 });
 
 app.post('/auth', (req, res) => {
-    //TODO Add Login page and change token creation accordingly
     //Create Auth Token
     if (req.body.username && req.body.password) {
         var hashedPassword: string;
         const connection: mysql.Pool = getConnection();
         connection.query(`SELECT * FROM USER WHERE USERNAME = ?`, [req.body.username],
-            (err, rows, fields) => {
+            async (err, rows, fields) => {
                 if (err) {
                     console.log(err);
                     res.status(500).json({ message: "Something went wrong, contact the administrator" });
                 } else {
                     if (rows.length > 0) {
-                        if(rows[0].MITGLIEDSCHAFTPAUSIERT == 1){
-                            return res.status(401).json({ message: "User is banned" });
+                        if (rows[0].MITGLIEDSCHAFTPAUSIERT == 1) {
+                            if (rows[0].BANNEDUNTIL == null) {
+                                return res.status(401).json({ message: "User is banned" });
+                            } else {
+                                if (new Date(rows[0].BANNEDUNTIL) > new Date()) {
+                                    return res.status(401).json({ message: "User is banned" });
+                                } else {
+                                    await queries.unbanUser(rows[0].USERID);
+                                    return res.status(401).json({ message: "User got unbanned" });
+                                }
+                            }
+
                         }
                         hashedPassword = rows[0].PASSWORD;
                         delete rows[0].PASSWORD;
@@ -226,6 +235,17 @@ app.post('/updateuser', async (req, res) => {
 
 });
 
+app.post('/setonlinestatus', async (req, res) => {
+    if (req.body.userid && req.body.status != undefined) {
+        var isCorrectUser: boolean = await queries.authenticateByUserId(req.user, req.body.userid as unknown as number);
+        if (!isCorrectUser) {
+            return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
+        }
+        var response: Response = await queries.setOnlineStatus(req.body.userid as unknown as number, req.body.status as unknown as boolean);
+        return res.status(response.status).json(response);
+    }
+});
+
 //Allowed Users: User
 app.get('/getpetrelationships', async (req, res) => {
 
@@ -278,10 +298,10 @@ app.post('/deleteuser', async (req, res) => {
 });
 //Allowed Users: User
 app.post('/deletepet', async (req, res) => {
-
     if (req.body.petid) {
         var isCorrectUser: boolean = await queries.authenticateByPetId(req.user, req.body.petid as unknown as number);
-        if (!isCorrectUser) {
+        var isAdmin: boolean = await queries.isUserAdmin(req.user);
+        if (!isCorrectUser && !isAdmin) {
             return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
         }
         await queries.deletePetRelationships(req.body.petid as unknown as number);
@@ -458,7 +478,7 @@ app.get('/getchats', async (req, res) => {
     }
 });
 
-app.get('getlastmessage', async (req, res) => {
+app.get('/getlastmessage', async (req, res) => {
     if (req.query.petid && req.query.chatpartnerid) {
         var isCorrectUser: boolean = await queries.authenticateByPetId(req.user, req.query.petid as unknown as number);
         if (!isCorrectUser) {
@@ -533,7 +553,6 @@ app.post('/deletechat', async (req, res) => {
 
 
 
-//TODO ADD ADMIN AUTHENTIFICATION TO ALL REPORT FUNCTIONS
 app.post('/addreport', async (req, res) => {
     if (await queries.isUserAdmin(req.user)) {
         if (req.body.reportedpetid && req.body.reason) {
@@ -577,7 +596,7 @@ app.get('/removereport', async (req, res) => {
             res.status(400).json({ status: res.statusCode, message: "You are missing petid" } as Response);
         }
 
-    }else {
+    } else {
         res.status(403).json({ status: res.statusCode, message: "You are not an Admin" } as Response);
     }
 });
@@ -599,7 +618,7 @@ app.get('/getallreports', async (req, res) => {
 app.post('/banuser', async (req, res) => {
     if (await queries.isUserAdmin(req.user)) {
         if (req.body.userid) {
-            var response: Response = await queries.banUser(req.body.userid as unknown as number);
+            var response: Response = await queries.banUser(req.body.userid as unknown as number, req.body.until as unknown as Date);
             return res.status(response.status).json(response);
         } else {
             res.status(400).json({ status: res.statusCode, message: "You are missing userid" } as Response);
@@ -635,6 +654,52 @@ app.get('/getbannedusers', async (req, res) => {
         res.status(403).json({ status: res.statusCode, message: "You are not an Admin" } as Response);
     }
 
+});
+
+app.get('/gettoppets', async (req, res) => {
+    if (req.query.limit) {
+        var response: Response | Relationship[] = await queries.getAllMatches();
+        if ("status" in response) {
+            res.status(response.status).json(response);
+        } else {
+            var points: any = {}
+            response.forEach(element => {
+                if (element.RELATIONSHIP == "Matched") {
+                    points[element.TIER_A_ID] = points[element.TIER_A_ID] ? points[element.TIER_A_ID] + 1 : 1;
+                    points[element.TIER_B_ID] = points[element.TIER_B_ID] ? points[element.TIER_B_ID] + 1 : 1;
+                } else if (element.RELATIONSHIP == "A requested B") {
+                    points[element.TIER_A_ID] = points[element.TIER_A_ID] ? points[element.TIER_A_ID] + 1 : 1;
+                } else if (element.RELATIONSHIP == "B requested A") {
+                    points[element.TIER_B_ID] = points[element.TIER_B_ID] ? points[element.TIER_B_ID] + 1 : 1;
+                } else if (element.RELATIONSHIP == "A removed B") {
+                    points[element.TIER_A_ID] = points[element.TIER_A_ID] ? points[element.TIER_A_ID] + 1 : 1;
+                } else if (element.RELATIONSHIP == "B removed A") {
+                    points[element.TIER_A_ID] = points[element.TIER_A_ID] ? points[element.TIER_A_ID] + 1 : 1;
+                }
+            });
+            var sortable = [];
+            for (var petid in points) {
+                sortable.push([petid, points[petid]]);
+            }
+
+            sortable.sort(function (a, b) {
+                return a[1] - b[1];
+            });
+            
+            var sortedPets: Pet[] = [];
+            for (var i = 0; i < (req.query.limit as unknown as number); i++) {
+                var pet: Pet|Response = await queries.getPetByID(sortable[i][0]);
+                if ("status" in pet) {
+                    res.status(pet.status).json(pet);
+                }else{
+                    sortedPets.push(pet as Pet);
+                }
+            }
+            res.status(200).json(sortedPets as Pet[]);
+        }
+    } else {
+        res.status(400).json({ status: res.statusCode, message: "You are missing limit" } as Response);
+    }
 });
 
 app.listen(port, () => console.log(`Lowoof API running on port ${port}!`));

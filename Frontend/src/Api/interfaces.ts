@@ -15,6 +15,7 @@ export interface User {
     PROFILBILD: any,
     ONLINESTATUS: number,
     MITGLIEDSCHAFTPAUSIERT: number,
+    BANNEDUNTIL?: Date,
     ADMIN: number,
 }
 

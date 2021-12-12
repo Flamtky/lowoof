@@ -1,5 +1,5 @@
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faTrashAlt, faUserEdit } from '@fortawesome/free-solid-svg-icons';
+import { faTrashAlt, faUserEdit, faUser, faUserSlash } from '@fortawesome/free-solid-svg-icons';
 import React from 'react';
 import { StyleSheet, View, useWindowDimensions, ScrollView, Image } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -59,6 +59,10 @@ export default function MyProfile({ route, navigation }: any) {
                         <Image style={styles.profilepicture}
                             source={{ uri: profile?.PROFILBILD != null ? Buffer.from(profile.PROFILBILD, 'base64').toString('ascii') : "https://puu.sh/IsTPQ/5d69029437.png" }}
                         />
+                        {console.log(profile?.ONLINESTATUS)}
+                        {profile?.ONLINESTATUS == 1 ?
+                        <FontAwesomeIcon icon={faUser} color="#0d0" size={20} style={{margin:10}}/>
+                        : <FontAwesomeIcon icon={faUserSlash} color="#f00" size={23} style={{margin:10}}/> }
                         {ownProfile ?
                             <View style={{ position: "absolute", right: "10%" }}>
                                 <TouchableOpacity onPress={() => { navigation.navigate("EditProfile") }} >

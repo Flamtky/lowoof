@@ -58,14 +58,18 @@ export default function PetProfile({ route, navigation }: any) {
                             <Image style={styles.petpicture}
                                 source={{ uri: petProfile?.PROFILBILD != null ? Buffer.from(petProfile.PROFILBILD, 'base64').toString('ascii') : "https://puu.sh/IsTPQ/5d69029437.png" }}
                             />
-                            {ownProfile ?
+                            {ownProfile || API.getCurrentUser()?.ADMIN ?
                                 <View style={[styles.row, { position: "absolute", right: "10%" }]}>
-                                    <TouchableOpacity onPress={() => { navigation.navigate('EditPet') }} >
-                                        <FontAwesomeIcon icon={faUserEdit} size={40} />
-                                    </TouchableOpacity>
-                                    <TouchableOpacity onPress={() => { navigation.navigate('DeletePet', { petToDelete: petProfile, api: api, navigation: navigation }); }} >
-                                        <FontAwesomeIcon icon={faTrashAlt} size={40} color="#555" />
-                                    </TouchableOpacity>
+                                    {ownProfile ?
+                                        <TouchableOpacity onPress={() => { navigation.navigate('EditPet') }} >
+                                            <FontAwesomeIcon icon={faUserEdit} size={40} />
+                                        </TouchableOpacity>
+                                        : null}
+                                    {ownProfile || API.getCurrentUser()?.ADMIN ?
+                                        <TouchableOpacity onPress={() => { navigation.navigate('DeletePet', { petToDelete: petProfile, api: api, navigation: navigation }); }} >
+                                            <FontAwesomeIcon icon={faTrashAlt} size={40} color="#555" />
+                                        </TouchableOpacity>
+                                        : null}
                                 </View>
                                 : null}
                         </View>

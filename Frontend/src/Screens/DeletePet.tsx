@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, useWindowDimensions } from 'react-native';
 import { Pet } from '../Api/interfaces';
 import { Api } from '../Api/lowoof-api';
 import OwnButton from '../Components/ownButton';
-import SearchBar from '../Components/searchbar';
 import { BACKGROUNDCOLOR, MAINCOLOR } from '../Constants/colors';
 import language from '../../language.json';
 import { currentLanguage } from '../Constants/language';
@@ -14,7 +13,6 @@ export default function DeletePet({ navigation, route }: any) {
     const isLargeScreen = dimensions.width >= 768;
     const api: Api = props.api;
     const petToDelete: Pet = props.petToDelete;
-    const [password, setPassword] = React.useState('');
     React.useEffect(() => {
         navigation.setParams({ name: petToDelete.NAME + " " + language.DELETE[currentLanguage].toLowerCase() })
         if (petToDelete == undefined) {
@@ -26,26 +24,14 @@ export default function DeletePet({ navigation, route }: any) {
             <View style={[styles.container, isLargeScreen ? { width: '43%', left: "28%" } : { width: "100%" }]}>
                 <View style={styles.innerContainer}>
                     <Text style={{ alignSelf: 'center', fontSize: 16 }}>{language.EDIT_PET.CONFRIM_DELETE[currentLanguage]} <Text style={styles.name}>'{petToDelete.NAME}'</Text></Text>
-                    <SearchBar
-                        placeholder={language.PLACEHOLDER.PASSWORD[currentLanguage]}
-                        style={styles.input}
-                        value={password}
-                        onChange={(event: any) => {
-                            setPassword(event.nativeEvent.text);
-                        }}
-                        secureTextEntry={true}
-                    />
                     <OwnButton title={language.DELETE[currentLanguage]} onPress={() => {
-                        api.deletePet(petToDelete.TIERID, password).then((resp) => {
-                            if (resp.message === "Wrong Password") {
-                                alert(language.ERROR.WRONG_PWD[currentLanguage]);
-                            } else if (resp.message === "Pet deleted") {
+                        api.deletePet(petToDelete.TIERID).then((resp) => {
+                            if (resp.message === "Pet deleted") {
                                 alert(language.EDIT_PET.SUCCESS_DELETE[currentLanguage]);
                                 props.navigation.navigate('MyProfile');
                             } else {
                                 console.log(resp);
                             }
-                            setPassword('');
                         });
                     }} />
                 </View>

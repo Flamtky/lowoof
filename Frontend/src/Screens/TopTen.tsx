@@ -20,7 +20,7 @@ export default function TopTen({ route, navigation }:any) {
     const [isLoading, setIsLoading] = React.useState(true);
 
     React.useEffect(() => {
-            API.getPetMatches().then((data: any) => { //TODO: wait for API update and implement API.getTopten()
+            API.getTopPets(10).then((data: any) => {
                 if (!data.hasOwnProperty("message")) {
                     setTopten(data as Pet[]);
                 } else {

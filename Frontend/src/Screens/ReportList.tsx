@@ -82,13 +82,13 @@ function ReportItem(props: any) {
                         source={{ uri: reportedPet?.PROFILBILD != null ? Buffer.from(reportedPet.PROFILBILD, 'base64').toString('ascii') : "https://puu.sh/IsTPQ/5d69029437.png" }}
                     />
                 </TouchableOpacity>
-                <View style={{ marginLeft: 10, maxWidth: "80%"}}>
+                <View style={{ marginLeft: 10, maxWidth: "80%", height: "100%", justifyContent: "space-around"}}>
                     <TextBlock>{language.PET.OWNER[currentLanguage]}: {reportedPet?.USERNAME ?? "<Name>"}</TextBlock>
                     <TextBlock>{language.PET.NAME[currentLanguage]}: {reportedPet?.NAME ?? "<Pet Name>"}</TextBlock>
                     <TextBlock>{language.REPORT.REASON[currentLanguage]}: {report.GRUND ?? "<Reasson>"}</TextBlock>
                     
                 </View>
-                <TouchableOpacity onPress={() => { API.banUser(reportedPet?.USERID, banUntil) }} style={{ marginLeft: "auto", marginRight: 6, alignSelf: "center"}}>
+                <TouchableOpacity onPress={() => { API.banUser(reportedPet?.USERID ?? 0, banUntil) }} style={{ marginLeft: "auto", marginRight: 6, alignSelf: "center"}}>
                     <FontAwesomeIcon icon={faHammer} size={32} color="#f00" />
                 </TouchableOpacity>
             </View>

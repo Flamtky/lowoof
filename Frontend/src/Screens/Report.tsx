@@ -39,9 +39,8 @@ export default function Report({ navigation, route }: any) {
                         } else if (reason.trim().length > 255) {
                             alert(language.ERROR.REASON_TOO_LONG[currentLanguage]);
                         } else {
-                            API.addReport(petToReport.USERID, reason.trim()).then((resp) => {
+                            API.addReport(petToReport.TIERID, reason.trim()).then((resp) => {
                                 if (resp.status === 200) {
-                                    alert(language.REPORT.SUCCESS_REPORTED[currentLanguage]);
                                     navigation.navigate('MyProfile');
                                 } else {
                                     console.log(resp);

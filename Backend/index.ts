@@ -61,7 +61,6 @@ app.post('/auth', (req, res) => {
                                     return res.status(401).json({ message: "User is banned" });
                                 } else {
                                     await queries.unbanUser(rows[0].USERID);
-                                    return res.status(401).json({ message: "User got unbanned" });
                                 }
                             }
 

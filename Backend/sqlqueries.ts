@@ -825,7 +825,7 @@ export default class Queries {
             var query:string = "";
             var params:any[] = [];
             if(until != undefined){
-                until.slice(0,10);
+                until = until.slice(0,10);
                 query = `UPDATE USER SET MITGLIEDSCHAFTPAUSIERT = 1 , BANNEDUNTIL = ? WHERE USERID = ?;`
                 params = [until,userid];
             }else{

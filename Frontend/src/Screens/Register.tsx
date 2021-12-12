@@ -104,7 +104,7 @@ export default function Register({ route, navigation }: any) {
                 <Image source={require('../../assets/splash.png')} style={[styles.logo, { backgroundColor: MAINCOLOR }]} />
                 <View style={{ backgroundColor: MAINCOLOR, height: 500 }}>
                     <View style={styles.inputContainer}>
-                        <TextBlock>{language.LOGIN.ALREADY_REG[currentLanguage]}<TouchableOpacity onPress={() => { navigation.navigate("Login") }}><TextBlock style={{ color: "#00f", marginBottom: -3.7 }}>hier</TextBlock></TouchableOpacity>!</TextBlock>
+                        <TextBlock>{language.LOGIN.ALREADY_REG[currentLanguage]}<TouchableOpacity onPress={() => { navigation.navigate("Login") }}><TextBlock style={{ color: "#00f", marginBottom: -3.7 }}>{language.LOGIN.HERE[currentLanguage]}</TextBlock></TouchableOpacity>!</TextBlock>
                         <SearchBar style={styles.input} placeholder={language.PROFILE.EMAIL[currentLanguage]} keyboardType='email-address' value={email} onChange={(event: any) => { setEmail(event.nativeEvent.text); }} />
                         <SearchBar style={styles.input} placeholder={language.PROFILE.USERNAME[currentLanguage]} value={username} onChange={(event: any) => { setUsername(event.nativeEvent.text); }} />
                         <SearchBar style={styles.input} placeholder={language.PROFILE.LAST_NAME[currentLanguage]} value={surename} onChange={(event: any) => { setSurename(event.nativeEvent.text); }} />

@@ -3,14 +3,12 @@ import React, { useState } from 'react';
 import { useWindowDimensions } from 'react-native';
 import SearchBar from './searchbar';
 import MyProfile from '../Screens/MyProfile';
-import Matches from '../Screens/Matches';
-import Friends from '../Screens/Friends';
-import Chats from '../Screens/Chats';
 import Settings from '../Screens/Settings';
 import { BACKGROUNDCOLOR, BLACK, TITLECOLOR, WHITE } from '../Constants/colors';
 import language from '../../language.json';
 import { currentLanguage as cl} from '../Constants/language';
 import { API } from '../Constants/api';
+import TopTen from '../Screens/TopTen';
 
 
 const Drawer = createDrawerNavigator();
@@ -67,6 +65,7 @@ export default function Sidebar() {
             backBehavior='history'
         >
             <Drawer.Screen name="MyProfile" component={MyProfile} options={{ title: language.PROFILE.HEADER[currentLanguage] }} initialParams={{ userID: API.getCurrentUser()?.USERID ?? 0}} />
+            <Drawer.Screen name="TopTen" component={TopTen} options={{ title: language.TOPTEN.HEADER[currentLanguage] }}/>
             <Drawer.Screen name="Settings" component={Settings} options={{ title: language.SETTINGS.HEADER[currentLanguage] }}/>
         </Drawer.Navigator>
     );

@@ -107,6 +107,8 @@ export default function MyProfile({ route, navigation }: any) {
                             />)
                     })}
                     {ownProfile ?
+                        <>
+                        <Seperator/>
                         <OwnButton
                             title={language.PROFILE.ADDPET[currentLanguage]}
                             style={{ alignSelf: "center" }}
@@ -114,6 +116,7 @@ export default function MyProfile({ route, navigation }: any) {
                                 navigation.navigate('AddPet', { api: api, navigation: navigation });
                             }}
                         />
+                        </>
                         : null}
                 </View>
             </ScrollView>

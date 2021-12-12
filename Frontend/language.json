@@ -281,6 +281,16 @@
             "DE": "Keine Chats!"
         }
     },
+    "TOPTEN": {
+        "HEADER": {
+            "EN": "Top Ten",
+            "DE": "Top Zehn"
+        },
+        "NO_TOPTEN": {
+            "EN": "No pets were rated attractive yet",
+            "DE": "Es wurde noch kein Haustier als attraktiv bewertet"
+        }
+    },
     "SETTINGS": {
         "HEADER": {
             "EN": "Settings",

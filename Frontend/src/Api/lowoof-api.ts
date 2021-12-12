@@ -520,7 +520,7 @@ export class Api {
             .catch((error) => {res = error.response.data as Response|Report[];});
         return res;
     }
-    async banUser(userId: number, until?:Date): Promise<Response> {
+    async banUser(userId: number, until?:string): Promise<Response> {
         var res: Response = { status: 500, message: "Error" };
         await axios.post(this.url + '/banuser', { userid: userId , until:until}, {
             headers: {

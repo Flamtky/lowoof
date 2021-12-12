@@ -754,7 +754,7 @@ export default class Queries {
     getPreferences(petid: number): Promise<Response | Preference[]> {
         return new Promise<Response | Preference[]>(async (resolve, reject) => {
             const connection: mysql.Pool = this.getConnection();
-            connection.query(`SELECT * FROM PREFERENZ WHERE PREFID IN (SELECT PREFID FROM USER_PREF_RELATION WHERE PETID = ?)`, [petid],
+            connection.query(`SELECT * FROM PREFERENCES WHERE ID IN (SELECT PREFID FROM USER_PREF_RELATION WHERE PETID = ?)`, [petid],
                 (err, rows, fields) => {
                     if (err) {
                         console.log(err);

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import bcrypt from 'react-native-bcrypt';
-import { User, Response, Pet, Relationship, Message, Report } from './interfaces';
+import { User, Response, Pet, Relationship, Message, Report, Preference } from './interfaces';
 export class Api {
     private apiToken: string = "";
     private url: string = "http://server.it-humke.de:8080";
@@ -430,7 +430,7 @@ export class Api {
         return res;
     }
 
-    async getPreferences(petId: number): Promise<string[] | Response> {
+    async getPreferences(petId: number): Promise<Preference[] | Response> {
         var res: number[] | Response = { status: 500, message: "Error" };
         await axios.get(this.url + '/getpreferences?petid=' + petId, {
             headers: {

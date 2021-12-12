@@ -25,25 +25,29 @@ export default function App() {
 		if (res) {
 			setLanguage(JSON.parse(res));
 		}
-		setLanguageLoaded(true);
 	});
 	React.useEffect(() => {
 		let user = API.getCurrentUser();
-		if (user) {
-			API.getUserLanguage(user.USERID).then((res) => {
-				if (!res.hasOwnProperty('message')) {
-					setLanguage(res as any);
-					AsyncStorage.setItem('language', JSON.stringify(res));
-				} else {
-					alert((res as Response).message);
-					AsyncStorage.setItem('language', "EN");
-				}
-			});
-		}
+		if (login) {
+			if (user) {
+				API.getUserLanguage(user.USERID).then((res) => {
+					if (!res.hasOwnProperty('message')) {
+						setLanguage(res as any);
+						AsyncStorage.setItem('language', JSON.stringify(res));
+					} else {
+						alert((res as Response).message);
+						AsyncStorage.setItem('language', "EN");
+					}
+					setLanguageLoaded(true);
+				});
+			} else {
+				setLanguageLoaded(true);
+			}
+		} 
 	}, [login]);
 	return (
 		<NavigationContainer>
-			{languageLoaded ?
+			{languageLoaded || !login?
 				<Stack.Navigator>
 					{!login ? (
 						<Stack.Group>

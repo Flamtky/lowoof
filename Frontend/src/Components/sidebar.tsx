@@ -1,5 +1,5 @@
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import React from 'react';
+import React, { useState } from 'react';
 import { useWindowDimensions } from 'react-native';
 import SearchBar from './searchbar';
 import MyProfile from '../Screens/MyProfile';
@@ -9,7 +9,7 @@ import Chats from '../Screens/Chats';
 import Settings from '../Screens/Settings';
 import { BACKGROUNDCOLOR, BLACK, TITLECOLOR, WHITE } from '../Constants/colors';
 import language from '../../language.json';
-import { currentLanguage } from '../Constants/language';
+import { currentLanguage as cl} from '../Constants/language';
 import { API } from '../Constants/api';
 
 
@@ -18,6 +18,11 @@ const Drawer = createDrawerNavigator();
 export default function Sidebar() {
     const dimensions = useWindowDimensions();
     const isLargeScreen = dimensions.width >= 768;
+    const [currentLanguage, setCurrentLanguage] = useState(cl);
+
+    React.useEffect(() => {
+        setCurrentLanguage(cl);
+    }, [cl]);
     return (
         <Drawer.Navigator
             initialRouteName="MyProfile"

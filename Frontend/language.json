@@ -136,6 +136,10 @@
             "EN": "Your Pets",
             "DE": "Deine Haustiere"
         },
+        "PETS_OF": {
+            "EN": "Pets of ",
+            "DE": "Haustiere von "
+        },
         "ADDPET": {
             "EN": "Add Pet",
             "DE": "Haustier hinzufügen"

@@ -85,7 +85,9 @@ export default function MyProfile({ route, navigation }: any) {
                         </View>
                     </View>
                     <Seperator />
-                    <TextBlock style={[styles.title, pets.length <= 0 ? { display: "none" } : null]}>{language.PROFILE.YOURPETS[currentLanguage]}</TextBlock>
+                    <TextBlock style={[styles.title, pets.length <= 0 ? { display: "none" } : null]}>
+                        {ownProfile ? language.PROFILE.YOURPETS[currentLanguage] : language.PROFILE.PETS_OF[currentLanguage] + profile?.USERNAME ?? "<User>" }
+                    </TextBlock>
                     {pets.map((pet: Pet) => {
                         return (
                             <PetItem

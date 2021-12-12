@@ -16,23 +16,23 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
+import { Buffer } from 'buffer';
 
 
 export function EditProfile({ route, navigation }: any) {
     const dimensions = useWindowDimensions();
     const isLargeScreen = dimensions.width >= 768;
-    const currentUser : User = route.params?.userToEdit ?? API.getCurrentUser();
+    const currentUser: User = route.params?.userToEdit ?? API.getCurrentUser();
     const [email, setEmail] = useState(currentUser.EMAIL);
     const [username, setUsername] = useState<string>(currentUser.USERNAME);
     const [surename, setSurename] = useState<string>(currentUser.NACHNAME);
     const [firstname, setFirstname] = useState<string>(currentUser.VORNAME);
     const [institution, setInstitution] = useState<string>(currentUser.INSTITUTION);
     const [gender, setGender] = useState<string>(currentUser.GESCHLECHT);
-    const [profilePic, setProfilePic] = useState<string>('');
-    const [birthdate, setBirthdate] = useState<string>('');
+    const [profilePic, setProfilePic] = useState<string>(Buffer.from(currentUser.PROFILBILD, 'base64').toString('ascii'));
+    const [birthdate, setBirthdate] = useState<string>(currentUser.GEBURTSTAG);
     const [zip, setZip] = useState<string>(String(currentUser.PLZ));
     const [city, setCity] = useState<string>(currentUser.WOHNORT);
-    console.log(currentUser);
     const [number, setNumber] = useState<string>(currentUser.TELEFONNUMMER);
     const [password, setPassword] = useState<string>(currentUser.PASSWORD ?? '');
     const [password2, setPassword2] = useState<string>('');
@@ -40,62 +40,64 @@ export function EditProfile({ route, navigation }: any) {
     const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
 
     const saveEdit = () => {
-        API.isUsernameValid(username).then((res) => {if (!res && username != currentUser.USERNAME) {
-            alert(language.ERROR.INV_USERNAME[currentLanguage]);
-        } else if (username.trim().length < 3 || password.trim().length < 6 || username.trim().includes(' ') || password.trim().includes(' ')) {
-            alert(language.ERROR.LOGIN_ERR[currentLanguage]);
-        } else if (password !== password2) {
-            alert(language.ERROR.NO_MATCH[currentLanguage]);
-        } else if (email.trim().length < 5 || !email.trim().includes('@') || !email.trim().includes('.')) {
-            alert(language.ERROR.INV_EMAIL[currentLanguage]);
-        } else if (['Male', 'Female', 'Other'].indexOf(gender.trim()) < 0) {
-            alert(language.ERROR.INV_GENDER[currentLanguage])
-        } else if (birthdate.trim().length !== 10) {
-            alert(language.ERROR.INV_BIRTHDATE[currentLanguage]);
-        } else if (zip.trim().length !== 5 || isNaN(Number(zip))) {
-            alert(language.ERROR.INV_ZIP[currentLanguage]);
-        } else if (number.trim().length !== 10 || isNaN(Number(number))) {
-            alert(language.ERROR.INV_PHONE[currentLanguage]);
-        } else {
-            // new user
-            const user: User = {
-                USERID: currentUser.USERID,
-                SPRACHID: currentLanguage,
-                USERNAME: username,
-                EMAIL: email,
-                PASSWORD: password,
-                VORNAME: firstname,
-                NACHNAME: surename,
-                GEBURTSTAG: birthdate,
-                INSTITUTION: institution,
-                TELEFONNUMMER: number,
-                PLZ: Number(zip),
-                WOHNORT: city,
-                GESCHLECHT: gender,
-                PROFILBILD: profilePic,
-                ONLINESTATUS: 1,
-                MITGLIEDSCHAFTPAUSIERT: 0,
-                ADMIN: 0
-            };
+        API.isUsernameValid(username).then((res) => {
+            if (!res && username != currentUser.USERNAME) {
+                alert(language.ERROR.INV_USERNAME[currentLanguage]);
+            } else if (username.trim().length < 3 || password.trim().length < 6 || username.trim().includes(' ') || password.trim().includes(' ')) {
+                alert(language.ERROR.LOGIN_ERR[currentLanguage]);
+            } else if (password !== password2) {
+                alert(language.ERROR.NO_MATCH[currentLanguage]);
+            } else if (email.trim().length < 5 || !email.trim().includes('@') || !email.trim().includes('.')) {
+                alert(language.ERROR.INV_EMAIL[currentLanguage]);
+            } else if (['Male', 'Female', 'Other'].indexOf(gender.trim()) < 0) {
+                alert(language.ERROR.INV_GENDER[currentLanguage])
+            } else if (birthdate.trim().length !== 10) {
+                alert(language.ERROR.INV_BIRTHDATE[currentLanguage]);
+            } else if (zip.trim().length !== 5 || isNaN(Number(zip))) {
+                alert(language.ERROR.INV_ZIP[currentLanguage]);
+            } else if (number.trim().length !== 10 || isNaN(Number(number))) {
+                alert(language.ERROR.INV_PHONE[currentLanguage]);
+            } else {
+                // new user
+                const user: User = {
+                    USERID: currentUser.USERID,
+                    SPRACHID: currentLanguage === 'DE' ? '2' : '1', //TODO: CHECK THIS
+                    USERNAME: username,
+                    EMAIL: email,
+                    PASSWORD: password,
+                    VORNAME: firstname,
+                    NACHNAME: surename,
+                    GEBURTSTAG: birthdate,
+                    INSTITUTION: institution,
+                    TELEFONNUMMER: number,
+                    PLZ: Number(zip),
+                    WOHNORT: city,
+                    GESCHLECHT: gender,
+                    PROFILBILD: profilePic,
+                    ONLINESTATUS: 1,
+                    MITGLIEDSCHAFTPAUSIERT: 0,
+                    ADMIN: 0
+                };
 
-            API.updateProfile(user).then((resp: any) => {
-                if (resp.status === 413) {
-                    alert(language.ERROR.IMG_TOO_BIG[currentLanguage]);
-                } else if (resp.status !== 200) {
-                    alert(language.ERROR.REG_ERR[currentLanguage]);
-                    console.log(resp);
-                } else {
-                    API.getAuthTokenfromServer(username, password).then((resp2: void | "Error") => {
-                        if (resp2 === "Error") {
-                            alert(language.ERROR.AUTH_ERR[currentLanguage]);
-                        } else {
-                            route.params.setLogin(true);
-                        }
-                    });
-                    cleanUpInputs();
-                }
-            });
-        }});
+                API.updateProfile(user).then((resp: any) => {
+                    if (resp.status === 413) {
+                        alert(language.ERROR.IMG_TOO_BIG[currentLanguage]);
+                    } else if (resp.status !== 200) {
+                        alert(language.ERROR.REG_ERR[currentLanguage]);
+                        console.log(resp);
+                    } else {
+                        API.getAuthTokenfromServer(username, password).then((resp2: void | "Error") => {
+                            if (resp2 === "Error") {
+                                alert(language.ERROR.AUTH_ERR[currentLanguage]);
+                            } else {
+                                route.params.setLogin(true);
+                            }
+                        });
+                        cleanUpInputs();
+                    }
+                });
+            }
+        });
     }
 
     const formatDate = (date: string) => {
@@ -122,7 +124,7 @@ export function EditProfile({ route, navigation }: any) {
                             {profilePic !== '' ? <Image source={{ uri: profilePic }} style={{ width: 35, height: 35, alignSelf: "center" }} /> : null}
                         </View>
                         {Platform.OS === "web" ?
-                            createElement('input', { style: { background: "#f5f5f5", borderWidth: 0, color: "#333", fontFamily: "arial", paddingLeft: 9, overflow: "hidden", marginBottom: 5, width: 272, height: 28, fontSize: 16 }, type: 'date', value: birthdate /* TODO: set birthday value, to be seen in edit screen */, onChange: (event: any) => { setBirthdate(event.target.value); } })
+                            createElement('input', { style: { background: "#f5f5f5", borderWidth: 0, color: "#333", fontFamily: "arial", paddingLeft: 9, overflow: "hidden", marginBottom: 5, width: 272, height: 28, fontSize: 16 }, type: 'date', value: birthdate.substring(0, 10), onChange: (event: any) => { setBirthdate(event.target.value); } })
                             :
                             <View style={{ flexDirection: 'row' }}>
                                 <SearchBar editable={false} style={[styles.input, { width: 50, flexGrow: 1 }]} placeholder={language.PET.BIRTHDAY[currentLanguage]} value={formatDate(birthdate)} onChange={(event: any) => { setBirthdate(event.nativeEvent.text); }} />
@@ -132,7 +134,7 @@ export function EditProfile({ route, navigation }: any) {
                                 {showDatePicker ?
                                     <DateTimePicker
                                         testID="dateTimePicker"
-                                        value={new Date()}
+                                        value={new Date(birthdate)} // TODO: TEST THIS
                                         is24Hour={true}
                                         display="default"
                                         onChange={(event: any, date: Date | undefined) => {

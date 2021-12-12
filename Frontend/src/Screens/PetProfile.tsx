@@ -63,7 +63,7 @@ export default function PetProfile({ route, navigation }: any) {
                                     <TouchableOpacity onPress={() => { navigation.navigate('EditPet') }} >
                                         <FontAwesomeIcon icon={faUserEdit} size={40} />
                                     </TouchableOpacity>
-                                    <TouchableOpacity onPress={() => { navigation.navigate('DeletePet', { petToDelete: petProfile, api: api, navigation: navigation });}} >
+                                    <TouchableOpacity onPress={() => { navigation.navigate('DeletePet', { petToDelete: petProfile, api: api, navigation: navigation }); }} >
                                         <FontAwesomeIcon icon={faTrashAlt} size={40} color="#555" />
                                     </TouchableOpacity>
                                 </View>
@@ -73,7 +73,7 @@ export default function PetProfile({ route, navigation }: any) {
                             <View style={{ width: "50%" }}>
                                 <TextBlock>{language.PET.NAME[currentLanguage]}: {petProfile?.NAME}</TextBlock>
                                 <TouchableOpacity onPress={() => { navigation.navigate('MyProfile', { userID: petProfile?.USERID }) }}>
-                                    <TextBlock style={{color: "#00f"}}>{language.PET.OWNER[currentLanguage]}: {ownerProfile?.USERNAME}</TextBlock>
+                                    <TextBlock style={{ color: "#00f" }}>{language.PET.OWNER[currentLanguage]}: {ownerProfile?.USERNAME}</TextBlock>
                                 </TouchableOpacity>
                                 <TextBlock> </TextBlock>
                                 <TextBlock>{language.PET.GENDER[currentLanguage]}: {petProfile?.GESCHLECHT}</TextBlock>

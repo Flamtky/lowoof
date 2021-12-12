@@ -52,17 +52,16 @@ export default function MyProfile({ route, navigation }: any) {
                 keyboardDismissMode="on-drag"
             >
                 <View style={[styles.innerContainer, isLoading ? { display: "none" } : null]}>
-                    {!ownProfile ? 
+                    {!ownProfile ?
                         <OwnButton title={language.PROFILE.BACK_TO_PROFILE[currentLanguage]} style={{ width: "90%", alignSelf: "center", heigth: 48 }} onPress={() => navigation.navigate('MyProfile', { userID: API.getCurrentUser()?.USERID })} />
                         : null}
                     <View style={styles.row}>
                         <Image style={styles.profilepicture}
                             source={{ uri: profile?.PROFILBILD != null ? Buffer.from(profile.PROFILBILD, 'base64').toString('ascii') : "https://puu.sh/IsTPQ/5d69029437.png" }}
                         />
-                        {console.log(profile?.ONLINESTATUS)}
                         {profile?.ONLINESTATUS == 1 ?
-                        <FontAwesomeIcon icon={faUser} color="#0d0" size={20} style={{margin:10}}/>
-                        : <FontAwesomeIcon icon={faUserSlash} color="#f00" size={23} style={{margin:10}}/> }
+                            <FontAwesomeIcon icon={faUser} color="#0d0" size={20} style={{ margin: 10 }} />
+                            : <FontAwesomeIcon icon={faUserSlash} color="#f00" size={23} style={{ margin: 10 }} />}
                         {ownProfile ?
                             <View style={{ position: "absolute", right: "10%" }}>
                                 <TouchableOpacity onPress={() => { navigation.navigate("EditProfile") }} >
@@ -90,7 +89,7 @@ export default function MyProfile({ route, navigation }: any) {
                     </View>
                     <Seperator />
                     <TextBlock style={[styles.title, pets.length <= 0 ? { display: "none" } : null]}>
-                        {ownProfile ? language.PROFILE.YOURPETS[currentLanguage] : language.PROFILE.PETS_OF[currentLanguage] + profile?.USERNAME ?? "<User>" }
+                        {ownProfile ? language.PROFILE.YOURPETS[currentLanguage] : language.PROFILE.PETS_OF[currentLanguage] + profile?.USERNAME ?? "<User>"}
                     </TextBlock>
                     {pets.map((pet: Pet) => {
                         return (
@@ -108,14 +107,14 @@ export default function MyProfile({ route, navigation }: any) {
                     })}
                     {ownProfile ?
                         <>
-                        <Seperator/>
-                        <OwnButton
-                            title={language.PROFILE.ADDPET[currentLanguage]}
-                            style={{ alignSelf: "center" }}
-                            onPress={() => {
-                                navigation.navigate('AddPet', { api: api, navigation: navigation });
-                            }}
-                        />
+                            <Seperator />
+                            <OwnButton
+                                title={language.PROFILE.ADDPET[currentLanguage]}
+                                style={{ alignSelf: "center" }}
+                                onPress={() => {
+                                    navigation.navigate('AddPet', { api: api, navigation: navigation });
+                                }}
+                            />
                         </>
                         : null}
                 </View>

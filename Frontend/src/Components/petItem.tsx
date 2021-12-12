@@ -24,7 +24,9 @@ export default function PetItem(props: any) {
             />
         </TouchableOpacity>
         <View style={{ marginLeft: 10, height: 20, justifyContent: "space-between" }}>
-            <TextBlock>{language.PET.OWNER[currentLanguage]}: {pet.USERNAME /* TODO: Highlight username as link */}</TextBlock>
+            <TouchableOpacity onPress={() => { props.navigation.navigate('MyProfile', { userID: pet.USERID }) }}>
+                <TextBlock style={{color: "#00f"}}>{language.PET.OWNER[currentLanguage]}: {pet.USERNAME}</TextBlock>
+            </TouchableOpacity>
             <TextBlock>{language.PET.NAME[currentLanguage]}: {pet.NAME}</TextBlock>
             <TextBlock>{language.PET.SPECIES[currentLanguage]}: {pet.ART}</TextBlock>
             <TextBlock>{language.PET.BREED[currentLanguage]}: {pet.RASSE}</TextBlock>

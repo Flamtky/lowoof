@@ -70,7 +70,7 @@ export default function PetProfile({ route, navigation }: any) {
                         <View style={styles.row}>
                             <View style={{ width: "50%" }}>
                                 <TextBlock>{language.PET.NAME[currentLanguage]}: {petProfile?.NAME}</TextBlock>
-                                <TouchableOpacity onPress={() => { navigation.navigate('MyProfile', { petID: petProfile?.USERID }) }}>
+                                <TouchableOpacity onPress={() => { navigation.navigate('MyProfile', { userID: petProfile?.USERID }) }}>
                                     <TextBlock style={{color: "#00f"}}>{language.PET.OWNER[currentLanguage]}: {ownerProfile?.USERNAME}</TextBlock>
                                 </TouchableOpacity>
                                 <TextBlock> </TextBlock>

@@ -819,13 +819,13 @@ export default class Queries {
         });
     }
     //Set User Mitgliedschaftpausiert auf true
-    banUser(userid: number ,until:Date): Promise<Response> {
+    banUser(userid: number ,until:string): Promise<Response> {
         return new Promise<Response>(async (resolve, reject) => {
             const connection: mysql.Pool = this.getConnection();
             var query:string = "";
             var params:any[] = [];
             if(until != undefined){
-                until.toISOString().slice(0,10);
+                until.slice(0,10);
                 query = `UPDATE USER SET MITGLIEDSCHAFTPAUSIERT = 1 , BANNEDUNTIL = ? WHERE USERID = ?;`
                 params = [until,userid];
             }else{

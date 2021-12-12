@@ -618,7 +618,7 @@ app.get('/getallreports', async (req, res) => {
 app.post('/banuser', async (req, res) => {
     if (await queries.isUserAdmin(req.user)) {
         if (req.body.userid) {
-            var response: Response = await queries.banUser(req.body.userid as unknown as number, req.body.until as unknown as Date);
+            var response: Response = await queries.banUser(req.body.userid as unknown as number, req.body.until);
             return res.status(response.status).json(response);
         } else {
             res.status(400).json({ status: res.statusCode, message: "You are missing userid" } as Response);
@@ -683,15 +683,22 @@ app.get('/gettoppets', async (req, res) => {
             }
 
             sortable.sort(function (a, b) {
-                return a[1] - b[1];
+                return b[1] - a[1];
             });
-            
+            console.log(sortable);
+            sortable.reverse();
             var sortedPets: Pet[] = [];
             for (var i = 0; i < (req.query.limit as unknown as number); i++) {
-                var pet: Pet|Response = await queries.getPetByID(sortable[i][0]);
+                var id = sortable.pop() as [number, number];
+                if(id == undefined) {
+                    break;
+                }
+                var pet: Pet|Response = await queries.getPetByID(id[0]);
                 if ("status" in pet) {
-                    res.status(pet.status).json(pet);
+                    console.log(id[0]);
+                    return res.status(pet.status).json(pet);
                 }else{
+                    pet.TOTALMATCHES = id[1];
                     sortedPets.push(pet as Pet);
                 }
             }

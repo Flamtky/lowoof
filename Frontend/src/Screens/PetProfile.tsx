@@ -107,9 +107,7 @@ export default function PetProfile({ route, navigation }: any) {
                                         <TextBlock>{language.PET.PREFERENCES[currentLanguage]}: </TextBlock>
                                         {prefs.map((pref, index) => {
                                             return (
-                                                <>
-                                                    <TextBlock>{index+1 + ": " + pref.PREF}</TextBlock>
-                                                </>
+                                                <TextBlock key={"petpref-"+index}>{index+1 + ": " + pref.PREF}</TextBlock>
                                             )
                                         })}
                                     </>

@@ -430,7 +430,7 @@ export class Api {
         return res;
     }
 
-    async getPreferences(petId: number): Promise<number[] | Response> {
+    async getPreferences(petId: number): Promise<string[] | Response> {
         var res: number[] | Response = { status: 500, message: "Error" };
         await axios.get(this.url + '/getpreferences?petid=' + petId, {
             headers: {

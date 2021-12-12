@@ -56,7 +56,8 @@ export default function Matches({ route, navigation }:any) {
     }, [route]);
 
     return (
-        <View style={[styles.item, styles.container, isLargeScreen ? { width: '60%' } : { width: "100%" }]}>
+        <View style={{ width: "100%", height: "100%", backgroundColor: MAINCOLOR }}>
+            <View style={[styles.item, styles.container, isLargeScreen ? { width: '60%', marginLeft: "20%" } : { width: "100%" }]}>
             <ScrollView style={{ width: '100%' }}
                 keyboardDismissMode="on-drag"
             >
@@ -87,6 +88,7 @@ export default function Matches({ route, navigation }:any) {
             <OwnButton title={language.BACK[currentLanguage]} style={{ margin: 32, alignSelf: "flex-start" }} onPress={() => {
                 navigation.goBack();
             }} />
+            </View>
         </View>
     );
 }

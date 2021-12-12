@@ -15,6 +15,9 @@ import Report from './src/Screens/Report';
 import { API } from './src/Constants/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Response } from './src/Api/interfaces';
+import Matches from './src/Screens/Matches';
+import Friends from './src/Screens/Friends';
+import Chats from './src/Screens/Chats';
 
 const Stack = createNativeStackNavigator<any>();
 
@@ -44,11 +47,11 @@ export default function App() {
 			} else {
 				setLanguageLoaded(true);
 			}
-		} 
+		}
 	}, [login]);
 	return (
 		<NavigationContainer>
-			{languageLoaded || !login?
+			{languageLoaded || !login ?
 				<Stack.Navigator>
 					{!login ? (
 						<Stack.Group>
@@ -148,7 +151,40 @@ export default function App() {
 										fontWeight: "bold",
 									},
 								})} />
-
+								<Stack.Screen name="Matches" component={Matches} options={{
+									title: language.MATCHES.HEADER[currentLanguage],
+									headerStyle: {
+										backgroundColor: BACKGROUNDCOLOR,
+									},
+									headerTitleStyle: {
+										fontSize: 24,
+										color: TITLECOLOR,
+										fontWeight: "bold",
+									},
+								}} />
+								<Stack.Screen name="Friends" component={Friends} options={{
+									title: language.FRIENDS.HEADER[currentLanguage],
+									headerStyle: {
+										backgroundColor: BACKGROUNDCOLOR,
+									},
+									headerTitleStyle: {
+										fontSize: 24,
+										color: TITLECOLOR,
+										fontWeight: "bold",
+									},
+								}} />
+								<Stack.Screen name="Chats" component={Chats} options={{
+									title: language.CHATS.HEADER[currentLanguage],
+									headerStyle: {
+										backgroundColor: BACKGROUNDCOLOR,
+									},
+									headerTitleStyle: {
+										fontSize: 24,
+										color: TITLECOLOR,
+										fontWeight: "bold",
+									},
+								}}
+								/>
 							</Stack.Group>
 						</>
 					)}

@@ -9,26 +9,26 @@ import { currentLanguage } from '../Constants/language';
 import { API } from '../Constants/api';
 import { Pet, Report } from '../Api/interfaces';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faExclamationTriangle, faHammer } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faUserSlash } from '@fortawesome/free-solid-svg-icons';
 
-export default function ReportList({ route, navigation }:any) {
+export default function ReportList({ route, navigation }: any) {
     const dimensions = useWindowDimensions();
     const isLargeScreen = dimensions.width >= 768;
 
-    const [repots, setReports] = React.useState<Report[]>([]);
+    const [reports, setReports] = React.useState<Report[]>([]);
 
     const [isLoading, setIsLoading] = React.useState(true);
 
     React.useEffect(() => {
-            API.getAllReports().then((data: any) => {
-                if (!data.hasOwnProperty("message")) {
-                    setReports(data as Report[]);
-                } else {
-                    alert(data.message);
-                    console.log(data);
-                }
-                setIsLoading(false);
-            });
+        API.getAllReports().then((data: any) => {
+            if (!data.hasOwnProperty("message")) {
+                setReports(data as Report[]);
+            } else {
+                setReports([]);
+                console.log(data);
+            }
+            setIsLoading(false);
+        });
     }, [route]);
 
     return (
@@ -36,9 +36,9 @@ export default function ReportList({ route, navigation }:any) {
             <ScrollView style={{ width: '100%' }}
                 keyboardDismissMode="on-drag"
             >
-                <View style={[styles.innerContainer, isLoading ? { display: "none" } : null]}>                    
-                    {isLoading || repots.length === 0 ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.TOPTEN.NO_TOPTEN[currentLanguage] /* TODO: ADD LANGUAGE */}</TextBlock> :
-                        repots.map((report: Report) => {
+                <View style={[styles.innerContainer, isLoading ? { display: "none" } : null]}>
+                    {isLoading || reports.length === 0 ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.TOPTEN.NO_TOPTEN[currentLanguage] /* TODO: ADD LANGUAGE */}</TextBlock> :
+                        reports.map((report: Report) => {
                             return (
                                 <ReportItem
                                     key={"report-" + report.REPORTID}
@@ -47,7 +47,7 @@ export default function ReportList({ route, navigation }:any) {
                         })
                     }
                 </View>
-        </ScrollView>
+            </ScrollView>
             <OwnButton title={language.BACK[currentLanguage]} style={{ margin: 32, alignSelf: "flex-start" }} onPress={() => {
                 navigation.navigate("MyProfile");
             }} />
@@ -73,24 +73,28 @@ function ReportItem(props: any) {
             setIsLoading(false);
         });
     }, [report]);
-    
+
     return (
-        <View style={isLoading || reportedPet == null ? {display: "none"} : null}>
+        <View style={isLoading || reportedPet == null ? { display: "none" } : null}>
             <View style={styles.row}>
                 <TouchableOpacity onPress={props.onPic} >
                     <Image style={styles.petpicture}
                         source={{ uri: reportedPet?.PROFILBILD != null ? Buffer.from(reportedPet.PROFILBILD, 'base64').toString('ascii') : "https://puu.sh/IsTPQ/5d69029437.png" }}
                     />
                 </TouchableOpacity>
-                <View style={{ marginLeft: 10, maxWidth: "80%", height: "100%", justifyContent: "space-around"}}>
+                <View style={{ marginLeft: 10, maxWidth: "80%", height: "100%", justifyContent: "space-around" }}>
                     <TextBlock>{language.PET.OWNER[currentLanguage]}: {reportedPet?.USERNAME ?? "<Name>"}</TextBlock>
                     <TextBlock>{language.PET.NAME[currentLanguage]}: {reportedPet?.NAME ?? "<Pet Name>"}</TextBlock>
                     <TextBlock>{language.REPORT.REASON[currentLanguage]}: {report.GRUND ?? "<Reasson>"}</TextBlock>
-                    
                 </View>
-                <TouchableOpacity onPress={() => { API.banUser(reportedPet?.USERID ?? 0, banUntil) }} style={{ marginLeft: "auto", marginRight: 6, alignSelf: "center"}}>
-                    <FontAwesomeIcon icon={faHammer} size={32} color="#f00" />
-                </TouchableOpacity>
+                <View style={{ flexDirection: "row", marginLeft: "auto", alignSelf: "center" }}>
+                    <TouchableOpacity onPress={() => { API.removeReport(report.REPORTID); setIsLoading(true) }} style={{ marginRight: 6 }}>
+                        <FontAwesomeIcon icon={faTrash} size={32} color="#555" />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => { API.banUser(reportedPet?.USERID ?? 0, banUntil.toISOString().substring(0, 10)); setIsLoading(true) }} style={{ marginRight: 6 }}>
+                        <FontAwesomeIcon icon={faUserSlash} size={32} color="#f00" />
+                    </TouchableOpacity>
+                </View>
             </View>
             <Seperator />
         </View>

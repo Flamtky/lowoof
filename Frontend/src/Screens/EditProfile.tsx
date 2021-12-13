@@ -61,7 +61,7 @@ export function EditProfile({ route, navigation }: any) {
                 // new user
                 const user: User = {
                     USERID: currentUser.USERID,
-                    SPRACHID: currentLanguage === 'DE' ? '2' : '1', //TODO: CHECK THIS
+                    SPRACHID: currentLanguage === 'DE' ? '2' : '1',
                     USERNAME: username,
                     EMAIL: email,
                     PASSWORD: password,

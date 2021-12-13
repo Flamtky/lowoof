@@ -19,6 +19,7 @@ export default function Register({ route, navigation }: any) {
     const isLargeScreen = dimensions.width >= 768;
     const [email, setEmail] = useState('');
     const [username, setUsername] = useState<string>('');
+    const [userLanguage, setUserLanguage] = useState<string>('');
     const [surename, setSurename] = useState<string>('');
     const [firstname, setFirstname] = useState<string>('');
     const [institution, setInstitution] = useState<string>('');
@@ -42,6 +43,8 @@ export default function Register({ route, navigation }: any) {
             alert(language.ERROR.NO_MATCH[currentLanguage]);
         } else if (email.trim().length < 5 || !email.trim().includes('@') || !email.trim().includes('.')) {
             alert(language.ERROR.INV_EMAIL[currentLanguage]);
+        } else if (userLanguage.trim().length !== 2) {
+            alert(language.ERROR.INV_LANG[currentLanguage]);
         } else if (['Male', 'Female', 'Other'].indexOf(gender.trim()) < 0) {
             alert(language.ERROR.INV_GENDER[currentLanguage])
         } else if (birthdate.trim().length !== 10) {
@@ -54,7 +57,7 @@ export default function Register({ route, navigation }: any) {
             // new user
             const user: User = {
                 USERID: 0,
-                SPRACHID: currentLanguage,
+                SPRACHID: userLanguage.trim().toUpperCase() === 'DE' ? '2' : '1',
                 USERNAME: username,
                 EMAIL: email,
                 PASSWORD: password,
@@ -108,6 +111,7 @@ export default function Register({ route, navigation }: any) {
                         <TextBlock>{language.LOGIN.ALREADY_REG[currentLanguage]}<TouchableOpacity onPress={() => { navigation.navigate("Login") }}><TextBlock style={{ color: "#00f", marginBottom: -3.7 }}>{language.LOGIN.HERE[currentLanguage]}</TextBlock></TouchableOpacity>!</TextBlock>
                         <SearchBar style={styles.input} placeholder={language.PROFILE.EMAIL[currentLanguage]} keyboardType='email-address' value={email} onChange={(event: any) => { setEmail(event.nativeEvent.text); }} />
                         <SearchBar style={styles.input} placeholder={language.PROFILE.USERNAME[currentLanguage]} value={username} onChange={(event: any) => { setUsername(event.nativeEvent.text); }} />
+                        <SearchBar style={styles.input} placeholder={language.PROFILE.USR_LANGUAGE[currentLanguage]} value={userLanguage} onChange={(event: any) => { setUserLanguage(event.nativeEvent.text); }} />
                         <SearchBar style={styles.input} placeholder={language.PROFILE.LAST_NAME[currentLanguage]} value={surename} onChange={(event: any) => { setSurename(event.nativeEvent.text); }} />
                         <SearchBar style={styles.input} placeholder={language.PROFILE.FIRST_NAME[currentLanguage]} value={firstname} onChange={(event: any) => { setFirstname(event.nativeEvent.text); }} />
                         <SearchBar style={styles.input} placeholder={language.PROFILE.INSTITUTION[currentLanguage]} value={institution} onChange={(event: any) => { setInstitution(event.nativeEvent.text); }} />

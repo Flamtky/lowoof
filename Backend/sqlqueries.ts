@@ -46,6 +46,26 @@ export default class Queries {
 
     }
 
+    async getAllPets(): Promise<Response | Pet[]> {
+        return new Promise<Response | Pet[]>((resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            var response: Response | Pet[] = { status: 0, message: '' };
+            connection.query(`SELECT * FROM TIER`,
+                (err, rows, fields) => {
+                    if (err) {
+                        console.log(err);
+                        response = this.errorResponse
+                        resolve(response);
+                    } else {
+                        response = rows as Pet[];
+                        resolve(response);
+                    }
+                }
+            );
+        });
+
+    }
+
     async getUserByID(id: number): Promise<Response | User> {
         return new Promise<Response | User>((resolve, reject) => {
             var response: Response | User = { status: 0, message: '' };
@@ -1011,6 +1031,25 @@ export default class Queries {
         }
         );
         
+    }
+
+    getPetsWithPrefereces(): Promise<Response | number[]> {
+        return new Promise<Response | number[]>(async (resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            connection.query(`SELECT DISTINCT PETID FROM USER_PREF_RELATION;`,
+                (err, rows, fields) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(this.errorResponse);
+                    } else {
+                        if (rows.length == 0) {
+                            resolve({ status: 404, message: "No Pets found" } as Response);
+                        } else {
+                            resolve(rows as number[]);
+                        }
+                    }
+                });
+        });
     }
 }
 

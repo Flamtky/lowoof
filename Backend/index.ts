@@ -333,7 +333,7 @@ app.post('/deleteuser', async (req, res) => {
 
 app.get('/areuserfriends', async (req, res) => {
     if(req.query.userid && req.query.friendid){
-        var isCorrectUser: boolean = await queries.authenticateByPetId(req.user, req.query.userid as unknown as number);
+        var isCorrectUser: boolean = await queries.authenticateByUserId(req.user, req.query.userid as unknown as number);
         if (!isCorrectUser) {
             return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
         }
@@ -344,7 +344,7 @@ app.get('/areuserfriends', async (req, res) => {
             return res.status(200).json(response);
         }
     }else{
-        res.status(400).json({ status: res.statusCode, message: "Missing PetID or FriendID" } as Response);
+        res.status(400).json({ status: res.statusCode, message: "Missing UserID or FriendID" } as Response);
     }
     });
 
@@ -793,6 +793,58 @@ app.get('/getpreferences', async (req, res) => {
         res.status(400).json({ status: res.statusCode, message: "You are missing petId" } as Response);
     }
 });
+
+app.post('/discover', async (req, res) => {
+    if(req.body.pref != undefined || (req.body.pref as number[]).length > 0) {
+        var preferences: Preference[] = req.body.pref as Preference[];
+        var response: Response | number[] = await queries.getPetsWithPrefereces();
+        if ("status" in response) {
+            return res.status(response.status).json(response);
+        }
+        var correspondingPets: any = {};
+        response.forEach(async petid => {
+            var petPrefs: Preference[] | Response = await queries.getPreferences(petid);
+            if ("status" in petPrefs) {
+                return res.status(petPrefs.status).json(petPrefs);
+            }
+            petPrefs.forEach(pref => {
+                if (preferences.includes(pref)) {
+                    correspondingPets[petid] = correspondingPets[petid] ? correspondingPets[petid] + 1 : 1;
+                }
+            });
+        });
+
+        var sortable = [];
+            for (var petid in correspondingPets) {
+                sortable.push([petid, correspondingPets[petid]]);
+            }
+
+            sortable.sort(function (a, b) {
+                return b[1] - a[1];
+            });
+            console.log(sortable);
+            sortable.reverse();
+            var sortedPets: Pet[] = [];
+            for (var i = 0; i < (req.query.limit as unknown as number); i++) {
+                var id = sortable.pop() as [number, number];
+                if (id == undefined) {
+                    break;
+                }
+                var pet: Pet | Response = await queries.getPetByID(id[0]);
+                if ("status" in pet) {
+                    console.log(id[0]);
+                    return res.status(pet.status).json(pet);
+                } else {
+                    sortedPets.push(pet as Pet);
+                }
+            }
+            res.status(200).json(sortedPets as Pet[]);
+    }else{
+        var allpets: Response | Pet[] = await queries.getAllPets();
+        res.status(200).json(allpets as Pet[]);
+    }
+});
+
 
 app.get('/logout', (req, res) => {
     const authHeader = req.headers.authorization;

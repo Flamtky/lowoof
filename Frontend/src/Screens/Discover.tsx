@@ -24,7 +24,7 @@ export default function Discover({ route, navigation }: any) {
             if (!res.hasOwnProperty('message')) {
                 API.getDiscover((res as Preference[]).map(p => p.ID)).then((data: any) => {
                     if (!data.hasOwnProperty('message')) {
-                        setDiscoverList(data as Pet[]);
+                        setDiscoverList((data as Pet[]).filter(p => p.TIERID !== ownPet.TIERID));
                         setIsLoading(false);
                     }
                 });

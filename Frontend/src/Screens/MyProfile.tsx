@@ -35,11 +35,24 @@ export default function MyProfile({ route, navigation }: any) {
             // If data has message as key, then the user does not exist or multiple users with the same username exist
             if (!data.hasOwnProperty("message")) {
                 setProfile(data as User);
-                api.getUserPets(route.params.userID).then(data => {
-                    if (!data.hasOwnProperty("message")) {
-                        setPets(data as Pet[]);
+                api.getUserPets(route.params.userID).then(data2 => {
+                    if (!data2.hasOwnProperty("message")) {
+                        setPets(data2 as Pet[]);
                     }
-                    setIsLoading(false);
+                    if (route.params.userID !== API.getCurrentUser()?.USERID) {
+                        API.areUserFriends(API.getCurrentUser()?.USERID ?? 0, (data as User).USERID).then(data => {
+                            if (!data.hasOwnProperty("message")) {
+                                setIsFriend(data as boolean);
+                            } else {
+                                setIsFriend(false);
+                                console.log(data);
+                            }
+                            setIsLoading(false);
+                        });
+                    } else {
+                        setIsFriend(false);
+                        setIsLoading(false);
+                    }
                 });
             } else {
                 console.log(data);
@@ -87,9 +100,9 @@ export default function MyProfile({ route, navigation }: any) {
                                 <>
                                     <TextBlock>{language.PROFILE.EMAIL[currentLanguage]}: {profile?.EMAIL ?? "<E-Mail>"}</TextBlock>
                                     <TextBlock>{language.PROFILE.PHONE[currentLanguage]}: {profile?.TELEFONNUMMER ?? "<Phone Number>"} </TextBlock>
-                                    <TextBlock>{language.PROFILE.INSTITUTION[currentLanguage]}: {profile?.INSTITUTION ?? "<Institution>"} </TextBlock>
                                 </>
                                 : null}
+                            <TextBlock>{language.PROFILE.INSTITUTION[currentLanguage]}: {profile?.INSTITUTION ?? "<Institution>"} </TextBlock>
                         </View>
                     </View>
                     <Seperator />

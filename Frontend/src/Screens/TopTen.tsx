@@ -45,6 +45,7 @@ export default function TopTen({ route, navigation }: any) {
                                 <PetItem
                                     key={"topten-" + topPet.TIERID}
                                     pet={topPet}
+                                    navigation={navigation}
                                 />)
                         })
                     }
@@ -65,7 +66,7 @@ function PetItem(props: any) {
     return (
         <View>
             <View style={styles.row}>
-                <TouchableOpacity onPress={props.onPic} >
+                <TouchableOpacity onPress={() => { props.navigation.navigate('PetProfile', { petID: pet.TIERID }); }} >
                     <Image style={styles.petpicture}
                         source={{ uri: pet?.PROFILBILD != null ? Buffer.from(pet.PROFILBILD, 'base64').toString('ascii') : "https://puu.sh/IsTPQ/5d69029437.png" }}
                     />

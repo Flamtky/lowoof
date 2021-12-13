@@ -6,7 +6,7 @@ import MyProfile from '../Screens/MyProfile';
 import Settings from '../Screens/Settings';
 import { BACKGROUNDCOLOR, BLACK, TITLECOLOR, WHITE } from '../Constants/colors';
 import language from '../../language.json';
-import { currentLanguage as cl} from '../Constants/language';
+import { currentLanguage as cl } from '../Constants/language';
 import { API } from '../Constants/api';
 import TopTen from '../Screens/TopTen';
 import ReportList from '../Screens/ReportList';
@@ -14,10 +14,12 @@ import ReportList from '../Screens/ReportList';
 
 const Drawer = createDrawerNavigator();
 
-export default function Sidebar() {
+export default function Sidebar({ route, navigation } : any) {
     const dimensions = useWindowDimensions();
     const isLargeScreen = dimensions.width >= 768;
     const [currentLanguage, setCurrentLanguage] = useState(cl);
+
+    const setLogin = route.params.setLogin;
 
     React.useEffect(() => {
         setCurrentLanguage(cl);
@@ -65,12 +67,12 @@ export default function Sidebar() {
             }}
             backBehavior='history'
         >
-            <Drawer.Screen name="MyProfile" component={MyProfile} options={{ title: language.PROFILE.HEADER[currentLanguage] }} initialParams={{ userID: API.getCurrentUser()?.USERID ?? 0}} />
-            <Drawer.Screen name="TopTen" component={TopTen} options={{ title: language.TOPTEN.HEADER[currentLanguage] }}/>
-            {API.getCurrentUser()?.ADMIN ? 
-                <Drawer.Screen name="Reports" component={ReportList} options={{ title: "Report List"/* TODO: ADD LANGUAGE */ }}/>
-            : null}
-            <Drawer.Screen name="Settings" component={Settings} options={{ title: language.SETTINGS.HEADER[currentLanguage] }}/>
+            <Drawer.Screen name="MyProfile" component={MyProfile} options={{ title: language.PROFILE.HEADER[currentLanguage] }} initialParams={{ userID: API.getCurrentUser()?.USERID ?? 0 }} />
+            <Drawer.Screen name="TopTen" component={TopTen} options={{ title: language.TOPTEN.HEADER[currentLanguage] }} />
+            {API.getCurrentUser()?.ADMIN ?
+                <Drawer.Screen name="Reports" component={ReportList} options={{ title: "Report List"/* TODO: ADD LANGUAGE */ }} />
+                : null}
+            <Drawer.Screen name="Settings" component={Settings} options={{ title: language.SETTINGS.HEADER[currentLanguage]}} initialParams={{ setLogin }} />
         </Drawer.Navigator>
     );
 }

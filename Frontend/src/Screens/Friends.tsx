@@ -31,8 +31,10 @@ export default function Friends({ route, navigation }: any) {
                 if (!data.hasOwnProperty("message")) {
 
                     setFriends((data as Relationship[]).filter(x => x.RELATIONSHIP === "Friends"));
-                    setFriendsIn((data as Relationship[]).filter(x => x.TIER_B_ID === route.params.petID && x.RELATIONSHIP !== "Friends"));
-                    setFriendsOut((data as Relationship[]).filter(x => x.TIER_A_ID === route.params.petID && x.RELATIONSHIP !== "Friends"));
+                    setFriendsIn((data as Relationship[]).filter(x => (x.RELATIONSHIP === "A requested B" && x.TIER_B_ID === route.params.petID) 
+                    || (x.RELATIONSHIP === "B requested A" && x.TIER_A_ID === route.params.petID)));
+                    setFriendsOut((data as Relationship[]).filter(x => (x.RELATIONSHIP === "A requested B" && x.TIER_A_ID === route.params.petID) 
+                    || (x.RELATIONSHIP === "B requested A" && x.TIER_B_ID === route.params.petID)));
 
                     if ((data as Relationship[]).length === 0) {
                         setMatchedFriends([]);
@@ -40,20 +42,22 @@ export default function Friends({ route, navigation }: any) {
                         setIsLoading(false);
                     }
 
-                    let temp: Pet[] = [];
+                    let tempFriendsPets: Pet[] = [];
                     (data as Relationship[]).forEach(async rel => {
                         await API.getPetData(rel.TIER_A_ID !== route.params.petID ? rel.TIER_A_ID : rel.TIER_B_ID).then((data2) => {
-
                             if (!data2.hasOwnProperty("message")) {
-                                temp.push((data2 as Pet));
+                                tempFriendsPets.push((data2 as Pet));
                             }
                         });
+
                         // if last iteration
-                        if (temp.length === (data as Relationship[]).length) {
-                            setFriendsPets(temp);
-                            API.getPetMatches(route.params.petID).then(data3 => { //TODO: TEST
-                                if (!data.hasOwnProperty("message")) {
-                                    setMatchedFriends((data3 as Relationship[]).filter(x => temp.some(t => t.TIERID === x.TIER_A_ID) || temp.some(t => t.TIERID === x.TIER_B_ID)));
+                        if (tempFriendsPets.length === (data as Relationship[]).length) {
+                            setFriendsPets(tempFriendsPets);
+                            API.getPetMatches(route.params.petID).then(data3 => {
+                                if (!data3.hasOwnProperty("message")) {
+                                    setMatchedFriends((data3 as Relationship[]).filter(x => tempFriendsPets
+                                        .some(t => (t.TIERID === x.TIER_A_ID) && x.RELATIONSHIP !== "B removed A") || tempFriendsPets
+                                        .some(t => (t.TIERID === x.TIER_B_ID) && x.RELATIONSHIP !== "A removed B")));
                                     setIsLoading(false);
                                 }
                             });
@@ -82,7 +86,7 @@ export default function Friends({ route, navigation }: any) {
                                 <PetItem
                                     key={friend.RELATIONID}
                                     petID={route.params.petID}
-                                    pet={friendsPets.find(x => x.TIERID === friend.TIER_A_ID) as Pet}
+                                    pet={friendsPets.find(x => x.TIERID === (friend.TIER_A_ID !== route.params.petID ? friend.TIER_A_ID : friend.TIER_B_ID)) as Pet}
                                     isFriend={false}
                                     hasRequested={true}
                                     hasOwnRequest={false}
@@ -124,7 +128,7 @@ export default function Friends({ route, navigation }: any) {
                                 <PetItem
                                     key={friend.RELATIONID}
                                     petID={route.params.petID}
-                                    pet={friendsPets.find(x => x.TIERID === friend.TIER_B_ID) as Pet}
+                                    pet={friendsPets.find(x => x.TIERID === (friend.TIER_A_ID !== route.params.petID ? friend.TIER_A_ID : friend.TIER_B_ID)) as Pet}
                                     isFriend={false}
                                     hasRequested={false}
                                     hasOwnRequest={true}

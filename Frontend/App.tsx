@@ -73,7 +73,7 @@ export default function App() {
 						</Stack.Group>
 					) : (
 						<>
-							<Stack.Screen name="Root" component={Sidebar} options={{ headerShown: false }} />
+							<Stack.Screen name="Root" component={Sidebar} options={{ headerShown: false }} initialParams={{ setLogin }} />
 							<Stack.Group screenOptions={{ presentation: 'modal' }}>
 								<Stack.Screen name="PetProfile" component={PetProfile} options={{
 									title: language.PET.HEADER[currentLanguage],

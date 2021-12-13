@@ -27,7 +27,7 @@ export default function Matches({ route, navigation }:any) {
         } else {
             API.getPetMatches(route.params.petID).then((data: any) => {
                 if (!data.hasOwnProperty("message")) {
-                    setmatches(data as Relationship[]);
+                    setmatches((data as Relationship[]).filter((match: Relationship) => match.RELATIONSHIP == "Matched"));
                     
                     let temp: Pet[] = [];
                     (data as Relationship[]).forEach(async rel => {
@@ -66,14 +66,18 @@ export default function Matches({ route, navigation }:any) {
                 
                 {matches === null || matchesPets === null || matchedFriends === null || matches.length === 0 || isLoading ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.MATCHES.NO_MATCHES[currentLanguage]}</TextBlock> :
                     matches.map((match: Relationship) => {
+                        const notMe = match.TIER_A_ID !== route.params.petID ? match.TIER_A_ID : match.TIER_B_ID;
                         return (
                             <PetItem
                                 key={match.RELATIONID}
                                 petID={route.params.petID}
                                 pet={matchesPets.find(x => x.TIERID === (match.TIER_A_ID !== route.params.petID ? match.TIER_A_ID : match.TIER_B_ID)) as Pet}
-                                isFriend={matchedFriends.filter(x => x.RELATIONSHIP === "Friends").some(x => x.TIER_A_ID === (match.TIER_A_ID !== route.params.petID ? match.TIER_A_ID : match.TIER_B_ID) || x.TIER_B_ID === (match.TIER_A_ID !== route.params.petID ? match.TIER_A_ID : match.TIER_B_ID))}
-                                hasRequested={matchedFriends.filter(x => x.TIER_B_ID === route.params.petID && x.RELATIONSHIP !== "Friends").some(x => x.TIER_A_ID === (match.TIER_A_ID !== route.params.petID ? match.TIER_A_ID : match.TIER_B_ID) || x.TIER_B_ID === (match.TIER_A_ID !== route.params.petID ? match.TIER_A_ID : match.TIER_B_ID))}
-                                hasOwnRequest={matchedFriends.filter(x => x.TIER_A_ID === route.params.petID && x.RELATIONSHIP !== "Friends").some(x => x.TIER_A_ID === (match.TIER_A_ID !== route.params.petID ? match.TIER_A_ID : match.TIER_B_ID) || x.TIER_B_ID === (match.TIER_A_ID !== route.params.petID ? match.TIER_A_ID : match.TIER_B_ID))}
+                                isFriend={matchedFriends.filter(x => x.RELATIONSHIP === "Friends")
+                                .some(x => x.TIER_A_ID === notMe || x.TIER_B_ID === notMe)}
+                                hasRequested={matchedFriends.filter(x => (x.TIER_B_ID === route.params.petID && x.RELATIONSHIP === "A requested B") || (x.TIER_A_ID === route.params.petID && x.RELATIONSHIP === "B requested A"))
+                                .some(x => x.TIER_A_ID === notMe || x.TIER_B_ID ===notMe)}
+                                hasOwnRequest={matchedFriends.filter(x => (x.TIER_A_ID === route.params.petID && x.RELATIONSHIP === "A requested B") || (x.TIER_B_ID === route.params.petID && x.RELATIONSHIP === "B requested A"))
+                                .some(x => x.TIER_A_ID === notMe || x.TIER_B_ID === notMe)}
                                 isMarkedAttractive={true}
                                 navigation={navigation}
                                 api={API}

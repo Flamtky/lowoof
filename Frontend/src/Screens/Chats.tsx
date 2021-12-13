@@ -59,7 +59,6 @@ export default function Chats({ route, navigation }: any) {
 
                     {isLoading || pets.length === 0 || pets.length !== lastMessages.length ? <TextBlock style={{ textAlign: 'center', marginTop: 20 }}>{language.CHATS.NO_CHATS[currentLanguage]}</TextBlock>
                         : pets.map((pet: Pet, index: number) => {
-                            console.log(lastMessages);
                             return (
                                 <ChatItem
                                     key={index}
@@ -82,9 +81,11 @@ export default function Chats({ route, navigation }: any) {
 
 export function ChatItem(props: any) {
     const pet: Pet = props.pet; /* The pet to display */
+    const [hasChanged, setHasChanged] = React.useState(false);
+
     return (
         <>
-            <TouchableOpacity style={[styles.row, { marginTop: 0, height: 60 }]} onPress={() => { props.navigation.navigate('Chat', { targetPet: pet.TIERID, ownPet: props.ownID, navigation: props.navigation }) }}>
+            <TouchableOpacity style={[styles.row, { marginTop: 0, height: 60 }, hasChanged ? {display:"none"}:null]} onPress={() => { props.navigation.navigate('Chat', { targetPet: pet.TIERID, ownPet: props.ownID, navigation: props.navigation }) }}>
                 <View style={[styles.row, { width: "100%", marginLeft: 15, marginTop: 0 }]}>
                     <TouchableOpacity onPress={() => { props.navigation.navigate('PetProfile', { petID: pet.TIERID }) }}>
                         <Image style={styles.profilepicture}
@@ -98,7 +99,7 @@ export function ChatItem(props: any) {
                         <TextBlock>{language.PET.NAME[currentLanguage]}: {pet.NAME}</TextBlock>
                         <TextBlock>{language.CHATS.LAST_MSG[currentLanguage]}: {props.lastMessage}</TextBlock>
                     </View>
-                    <TouchableOpacity onPress={() => { API.deleteChat(props.ownID, pet.TIERID) /* TODO: REALTIME UPDATE */ }} style={{ marginLeft: "auto", alignSelf: "center", right: 20 }}>
+                    <TouchableOpacity onPress={() => { API.deleteChat(props.ownID, pet.TIERID).then(() => {setHasChanged(true)})}} style={{ marginLeft: "auto", alignSelf: "center", right: 20 }}>
                         <FontAwesomeIcon icon={faTrashAlt} size={32} color="#555" />
                     </TouchableOpacity>
                 </View>

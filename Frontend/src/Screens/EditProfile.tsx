@@ -30,7 +30,7 @@ export function EditProfile({ route, navigation }: any) {
     const [institution, setInstitution] = useState<string>(currentUser.INSTITUTION);
     const [gender, setGender] = useState<string>(currentUser.GESCHLECHT);
     const [profilePic, setProfilePic] = useState<string>(Buffer.from(currentUser.PROFILBILD, 'base64').toString('ascii'));
-    const [birthdate, setBirthdate] = useState<string>(currentUser.GEBURTSTAG);
+    const [birthdate, setBirthdate] = useState<string>(currentUser.GEBURTSTAG.substring(0, 10));
     const [zip, setZip] = useState<string>(String(currentUser.PLZ));
     const [city, setCity] = useState<string>(currentUser.WOHNORT);
     const [number, setNumber] = useState<string>(currentUser.TELEFONNUMMER);
@@ -55,7 +55,7 @@ export function EditProfile({ route, navigation }: any) {
                 alert(language.ERROR.INV_BIRTHDATE[currentLanguage]);
             } else if (zip.trim().length !== 5 || isNaN(Number(zip))) {
                 alert(language.ERROR.INV_ZIP[currentLanguage]);
-            } else if (number.trim().length !== 10 || isNaN(Number(number))) {
+            } else if (number.trim().length < 6 || isNaN(Number(number))) {
                 alert(language.ERROR.INV_PHONE[currentLanguage]);
             } else {
                 // new user
@@ -179,14 +179,103 @@ export function EditProfile({ route, navigation }: any) {
     }
 }
 
-export function EditPet() {
+export function EditPet({ route, props }: any) {
     const dimensions = useWindowDimensions();
     const isLargeScreen = dimensions.width >= 768;
+    console.log(route.params);
+    const currentPet: Pet = route.params.petToEdit;
+    const [petName, setPetName] = React.useState(currentPet.NAME);
+    const [petType, setPetType] = React.useState(currentPet.ART);
+    const [petBreed, setPetBreed] = React.useState(currentPet.RASSE);
+    const [petGender, setPetGender] = React.useState(currentPet.GESCHLECHT);
+    const [petBirthDate, setPetBirthDate] = React.useState(currentPet.GEBURTSTAG);
+    const [petProfilePic, setPetProfilePic] = React.useState(Buffer.from(currentPet.PROFILBILD, "base64").toString("ascii"));
+    const [showDatePicker, setShowDatePicker] = React.useState(false);
+
+    const editPet = () => {
+        const newPet: Pet = {
+            TIERID: currentPet.TIERID,
+            USERID: currentPet.USERID,
+            NAME: petName,
+            ART: petType,
+            RASSE: petBreed,
+            GESCHLECHT: petGender.charAt(0).toUpperCase() + petGender.slice(1).toLowerCase(),
+            GEBURTSTAG: petBirthDate.substring(0, 10),
+            PROFILBILD: petProfilePic
+        };
+
+        if (newPet.NAME === "" || newPet.ART === "" || newPet.RASSE === "") {
+            alert(language.ERROR.NAME_SPECIES_BREED[currentLanguage]);
+        } else if (['male', 'female', 'other'].indexOf(petGender.trim().toLowerCase().replace("diverse", "other")) < 0) {
+            alert(language.ERROR.INV_GENDER[currentLanguage])
+        } else {
+            (route.params.api as Api).updatePet(newPet).then((resp) => {
+                if (resp.status === 413) {
+                    alert(language.ERROR.IMG_TOO_BIG[currentLanguage]);
+                } else if (resp.status !== 200) {
+                    alert(language.ERROR.CREATE_PET_ERR[currentLanguage]);
+                    console.log(resp);
+                } else {
+                    route.params.navigation.navigate('MyProfile');
+                }
+            });
+        }
+    }
+
+    const formatDate = (date: string) => {
+        if (date.length === 10) {
+            return date.substring(8, 10) + "." + date.substring(5, 7) + "." + date.substring(0, 4);
+        }
+        return date;
+    }
+
+
     return (
         <View style={{ backgroundColor: BACKGROUNDCOLOR, height: "100%" }}>
-            <View style={[styles.container, isLargeScreen ? { width: '43%', left: "28%" } : { width: "100%" }]}>
-                <Text>{language.EDIT_PET.HEADER[currentLanguage]}</Text>
-            </View>
+            <ScrollView style={[isLargeScreen ? { width: '43%', left: "28%" } : null, { height: "100%", backgroundColor: MAINCOLOR }]}>
+                <View style={{ backgroundColor: MAINCOLOR, height: "auto" }}>
+                    <View style={styles.inputContainer}>
+                        <TextBlock style={styles.title}>{language.EDIT_PET.HEADER[currentLanguage]}</TextBlock>
+                        <Seperator />
+                        <SearchBar style={styles.input} placeholder={language.PET.NAME[currentLanguage]} value={petName} onChange={(event: any) => { setPetName(event.nativeEvent.text); }} />
+                        <SearchBar style={styles.input} placeholder={language.PET.SPECIES[currentLanguage]} value={petType} onChange={(event: any) => { setPetType(event.nativeEvent.text); }} />
+                        <SearchBar style={styles.input} placeholder={language.PET.BREED[currentLanguage]} value={petBreed} onChange={(event: any) => { setPetBreed(event.nativeEvent.text); }} />
+                        <SearchBar style={styles.input} placeholder={language.PET.GENDER[currentLanguage] + " (Male, Female, Other)"} value={petGender} onChange={(event: any) => { setPetGender(event.nativeEvent.text); }} />
+                        {Platform.OS === "web" ?
+                            createElement('input', { style: { background: "#f5f5f5", borderWidth: 0, color: "#333", fontFamily: "arial", paddingLeft: 9, overflow: "hidden", marginBottom: 5, width: 272, height: 28, fontSize: 16 }, type: 'date', value: petBirthDate.substring(0, 10), onChange: (event: any) => { setPetBirthDate(event.target.value); } })
+                            :
+                            <View style={{ flexDirection: 'row', width: "auto" }}>
+                                <SearchBar editable={false} style={[styles.input, { width: 50, flexGrow: 1 }]} placeholder={language.PET.BIRTHDAY[currentLanguage]} value={formatDate(petBirthDate)} onChange={(event: any) => { setPetBirthDate(event.nativeEvent.text); }} />
+                                <TouchableOpacity style={{ marginTop: 4 }} onPress={() => { setShowDatePicker(true) }}>
+                                    <FontAwesomeIcon icon={faCalendar} size={24} color={BLUE} />
+                                </TouchableOpacity>
+                                {showDatePicker ?
+                                    <DateTimePicker
+                                        testID="dateTimePicker"
+                                        value={new Date()}
+                                        is24Hour={true}
+                                        display="default"
+                                        onChange={(event: any, date: Date | undefined) => {
+                                            if (event.type === "set" && date) {
+                                                setPetBirthDate(date.toISOString().substring(0, 10));
+                                            }
+                                            setShowDatePicker(false);
+                                        }} />
+                                    : null}
+                            </View>
+                        }
+                        <View style={{ flexDirection: "row", width: "100%", marginBottom: 5, backgroundColor: "#f5f5f5" }}>
+                            <ImagePickerField showPreview={false} onChange={setPetProfilePic} title={language.PROFILE.PIC_PICK[currentLanguage]} />
+                            {petProfilePic !== '' ? <Image source={{ uri: petProfilePic }} style={{ width: 35, height: 35, alignSelf: "center" }} /> : null}
+                        </View>
+                    </View>
+                    <OwnButton
+                        title={language.SAVE[currentLanguage]}
+                        style={{ width: "auto", padding: 0, minWidth: 0, borderRadius: 0, alignSelf: "center", marginTop: 5, paddingBottom: 20 }}
+                        onPress={editPet}
+                    />
+                </View>
+            </ScrollView>
         </View>
     );
 }

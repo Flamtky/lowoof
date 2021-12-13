@@ -98,7 +98,7 @@ export default function MyProfile({ route, navigation }: any) {
                                 navigation={navigation}
                                 owned={ownProfile}
                                 onPic={() => { navigation.navigate('PetProfile', { petID: pet.TIERID }) }}
-                                onEdit={() => { navigation.navigate('EditPet', { petID: pet.TIERID }) }}
+                                onEdit={() => { navigation.navigate('EditPet', { petToEdit: pet, api: api, navigation: navigation }) }}
                                 onDelete={() => {
                                     navigation.navigate('DeletePet', { petToDelete: pet, api: api, navigation: navigation });
                                 }}

@@ -75,7 +75,7 @@ export default function PetProfile({ route, navigation }: any) {
                             {ownProfile || API.getCurrentUser()?.ADMIN ?
                                 <View style={[styles.row, { position: "absolute", right: "10%" }]}>
                                     {ownProfile ?
-                                        <TouchableOpacity onPress={() => { navigation.navigate('EditPet') }} >
+                                        <TouchableOpacity onPress={() => { navigation.navigate('EditPet', { petToEdit: petProfile, api: api, navigation: navigation }); }} >
                                             <FontAwesomeIcon icon={faUserEdit} size={40} />
                                         </TouchableOpacity>
                                         : null}

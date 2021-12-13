@@ -48,7 +48,7 @@ export default function Register({ route, navigation }: any) {
             alert(language.ERROR.INV_BIRTHDATE[currentLanguage]);
         } else if (zip.trim().length !== 5 || isNaN(Number(zip))) {
             alert(language.ERROR.INV_ZIP[currentLanguage]);
-        } else if (number.trim().length !== 10 || isNaN(Number(number))) {
+        } else if (number.trim().length < 6 || isNaN(Number(number))) {
             alert(language.ERROR.INV_PHONE[currentLanguage]);
         } else {
             // new user
@@ -117,7 +117,7 @@ export default function Register({ route, navigation }: any) {
                             {profilePic !== '' ? <Image source={{ uri: profilePic }} style={{ width: 35, height: 35, alignSelf: "center" }} /> : null}
                         </View>
                         {Platform.OS === "web" ?
-                            createElement('input', { style: { background: "#f5f5f5", borderWidth: 0, color: "#333", fontFamily: "arial", paddingLeft: 9, overflow: "hidden", marginBottom: 5, width: 272, height: 28, fontSize: 16 }, type: 'date', value: birthdate, onChange: (event: any) => { setBirthdate(event.target.value); } })
+                            createElement('input', { style: { background: "#f5f5f5", borderWidth: 0, color: "#333", fontFamily: "arial", paddingLeft: 9, overflow: "hidden", marginBottom: 5, width: 272, height: 28, fontSize: 16 }, type: 'date', value: birthdate.substring(0, 10), onChange: (event: any) => { setBirthdate(event.target.value); } })
                             :
                             <View style={{ flexDirection: 'row' }}>
                                 <SearchBar editable={false} style={[styles.input, { width: 50, flexGrow: 1 }]} placeholder={language.PET.BIRTHDAY[currentLanguage]} value={formatDate(birthdate)} onChange={(event: any) => { setBirthdate(event.nativeEvent.text); }} />

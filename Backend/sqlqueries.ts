@@ -1045,7 +1045,10 @@ export default class Queries {
                         if (rows.length == 0) {
                             resolve({ status: 404, message: "No Pets found" } as Response);
                         } else {
-                            resolve(rows as number[]);
+                            console.log(rows)
+                            var temp:number[] = rows.map((e:any) => e.PETID)
+                            console.log(temp);
+                            resolve(temp);
                         }
                     }
                 });

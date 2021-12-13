@@ -301,12 +301,12 @@ app.post('/deleteuser', async (req, res) => {
         }
         console.log("Deleting Users Pets Chats...");
         pets.forEach(async (pet: Pet) => {
-            var chats : Response|Pet[] = await queries.getChats(pet.TIERID as unknown as number);
+            var chats: Response | Pet[] = await queries.getChats(pet.TIERID as unknown as number);
             if ("status" in chats) {
                 return res.status(chats.status).json(chats);
-            }else{
+            } else {
                 chats.forEach(async (chat: Pet) => {
-                    await queries.deleteChat(pet.TIERID,chat.TIERID);
+                    await queries.deleteChat(pet.TIERID, chat.TIERID);
                 });
             }
         });
@@ -314,7 +314,7 @@ app.post('/deleteuser', async (req, res) => {
         pets.forEach(async (pet: Pet) => {
             var response = await queries.deletePetMatches(pet.TIERID);
         });
-        
+
         console.log("Deleting Users Pets Relationships...");
         pets.forEach(async element => {
             await queries.deletePetRelationships(element.TIERID);
@@ -322,7 +322,7 @@ app.post('/deleteuser', async (req, res) => {
         console.log("Deleting Users Pets...");
         await queries.deleteUserPets(req.body.userid as unknown as number);
         console.log("Deleting User...");
-        var response: Response = await queries.deleteUser(req.body.userid as unknown as number,req.body.reason);
+        var response: Response = await queries.deleteUser(req.body.userid as unknown as number, req.body.reason);
         console.log("Finished Deleting User");
         return res.status(response.status).json(response);
 
@@ -332,21 +332,21 @@ app.post('/deleteuser', async (req, res) => {
 });
 
 app.get('/areuserfriends', async (req, res) => {
-    if(req.query.userid && req.query.friendid){
+    if (req.query.userid && req.query.friendid) {
         var isCorrectUser: boolean = await queries.authenticateByUserId(req.user, req.query.userid as unknown as number);
         if (!isCorrectUser) {
             return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
         }
         var response: Response | boolean = await queries.areUserFriends(req.query.userid as unknown as number, req.query.friendid as unknown as number);
-        if(typeof response != "boolean"){
+        if (typeof response != "boolean") {
             return res.status(response.status).json(response);
-        }else{
+        } else {
             return res.status(200).json(response);
         }
-    }else{
+    } else {
         res.status(400).json({ status: res.statusCode, message: "Missing UserID or FriendID" } as Response);
     }
-    });
+});
 
 //Allowed Users: User
 app.post('/deletepet', async (req, res) => {
@@ -446,7 +446,7 @@ app.get('/getfriendship', async (req, res) => {
             return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
         }
 
-        var relation: Relationship|Response = await queries.getRelationshipBetweenPets(req.query.petid as unknown as number, req.query.friendid as unknown as number);
+        var relation: Relationship | Response = await queries.getRelationshipBetweenPets(req.query.petid as unknown as number, req.query.friendid as unknown as number);
         if ("status" in relation) {
             return res.status(400).json({ status: res.statusCode, message: "There is no relationship" } as Response);
         } else {
@@ -778,7 +778,7 @@ app.get('/gettoppets', async (req, res) => {
     } else {
         res.status(400).json({ status: res.statusCode, message: "You are missing limit" } as Response);
     }
-    
+
 });
 
 app.get('/getpreferences', async (req, res) => {
@@ -795,51 +795,66 @@ app.get('/getpreferences', async (req, res) => {
 });
 
 app.post('/discover', async (req, res) => {
-    if(req.body.pref != undefined || (req.body.pref as number[]).length > 0) {
+    if (req.body.pref != undefined) {
         var preferences: number[] = req.body.pref as number[];
+        if(preferences.length > 0){
         var response: Response | number[] = await queries.getPetsWithPrefereces();
+        //console.log(response)
         if ("status" in response) {
             return res.status(response.status).json(response);
-        }
-        var correspondingPets: any = {};
-        response.forEach(async petid => {
-            var petPrefs: Preference[] | Response = await queries.getPreferences(petid);
-            if ("status" in petPrefs) {
-                return res.status(petPrefs.status).json(petPrefs);
-            }
-            petPrefs.forEach(pref => {
-                if (preferences.includes(pref.ID)) {
-                    correspondingPets[petid] = correspondingPets[petid] ? correspondingPets[petid] + 1 : 1;
+        } else {
+            var correspondingPets: any = {};
+            for (let petid of response) {
+                var petPrefs: Preference[] | Response = await queries.getPreferences(petid);
+                if ("status" in petPrefs) {
+                    console.log("Pet: " + petid + " existiert nicht");
+                }else{
+                    petPrefs.forEach(pref => {
+                        //console.log("Parameter Preferences: " + petPrefs);
+                        console.log("Comparing Pref " + pref.ID);
+                        if (preferences.includes(pref.ID)) {
+                            correspondingPets[petid] = correspondingPets[petid] ? correspondingPets[petid] + 1 : 1;
+                        }
+                    });
+                    console.log(correspondingPets);
                 }
-            });
-        });
+                
+            };
 
-        var sortable = [];
+            var sortable = [];
             for (var petid in correspondingPets) {
                 sortable.push([petid, correspondingPets[petid]]);
             }
-
+            console.log("Sortable: " + sortable);
             sortable.sort(function (a, b) {
                 return b[1] - a[1];
             });
             console.log(sortable);
-            sortable.reverse();
             var sortedPets: Pet[] = [];
-            for (var i = 0; i < (req.query.limit as unknown as number); i++) {
-                var id = sortable.pop() as [number, number];
+
+            for (var i = 0; i < sortable.length; i++) {
+                var id = sortable[i] as [number, number];
                 if (id == undefined) {
                     break;
                 }
+                console.log(id)
                 var pet: Pet | Response = await queries.getPetByID(id[0]);
                 if ("status" in pet) {
                     console.log(id[0]);
                     return res.status(pet.status).json(pet);
                 } else {
+                    //delete pet.PROFILBILD;
                     sortedPets.push(pet as Pet);
                 }
             }
+            console.log(sortedPets);
             res.status(200).json(sortedPets as Pet[]);
-    }else{
+        }
+    }else {
+        var allpets: Response | Pet[] = await queries.getAllPets();
+        res.status(200).json(allpets as Pet[]);
+    }
+    } else {
         var allpets: Response | Pet[] = await queries.getAllPets();
         res.status(200).json(allpets as Pet[]);
     }

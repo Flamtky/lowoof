@@ -316,7 +316,7 @@ export class Api {
 
     async areUserFriends(petId: number, friendId: number): Promise<Response | boolean> {
         var res: Response | boolean = { status: 500, message: "Error" };
-        await axios.get(this.url + '/areuserfriends?petid=' + petId + '&friendid=' + friendId, {
+        await axios.get(this.url + '/areuserfriends?userid=' + petId + '&friendid=' + friendId, {
             headers: {
                 'Authorization': `Beaver ${this.apiToken}`
             }

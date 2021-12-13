@@ -42,12 +42,6 @@ export default function Sidebar({ route, navigation } : any) {
                     borderRightWidth: 0,
                 },
                 swipeEdgeWidth: dimensions.width,
-                headerRight: () => (
-                    <SearchBar mobileStyle={{ width: "100%", height: "60%" }} />
-                ),
-                headerRightContainerStyle: {
-                    right: isLargeScreen ? "40%" : "10%",
-                },
                 headerStyle: {
                     backgroundColor: BACKGROUNDCOLOR,
                     borderBottomWidth: 0,

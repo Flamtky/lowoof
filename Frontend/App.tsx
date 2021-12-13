@@ -18,6 +18,7 @@ import { Response } from './src/Api/interfaces';
 import Matches from './src/Screens/Matches';
 import Friends from './src/Screens/Friends';
 import Chats from './src/Screens/Chats';
+import Discover from './src/Screens/Discover';
 
 const Stack = createNativeStackNavigator<any>();
 
@@ -77,6 +78,17 @@ export default function App() {
 							<Stack.Group screenOptions={{ presentation: 'modal' }}>
 								<Stack.Screen name="PetProfile" component={PetProfile} options={{
 									title: language.PET.HEADER[currentLanguage],
+									headerStyle: {
+										backgroundColor: BACKGROUNDCOLOR,
+									},
+									headerTitleStyle: {
+										fontSize: 24,
+										color: TITLECOLOR,
+										fontWeight: "bold",
+									},
+								}} />
+								<Stack.Screen name="Discover" component={Discover} options={{
+									title: "Discover",
 									headerStyle: {
 										backgroundColor: BACKGROUNDCOLOR,
 									},

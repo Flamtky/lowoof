@@ -280,7 +280,7 @@ export function EditPet({ route, props }: any) {
     );
 }
 
-export function AddPet(props: any) {  //TODO: Profile pictures uploaded from android doesnt show up on any other device
+export function AddPet(props: any) { 
     const dimensions = useWindowDimensions();
     const isLargeScreen = dimensions.width >= 768;
 

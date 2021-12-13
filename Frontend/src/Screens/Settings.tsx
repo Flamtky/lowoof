@@ -5,12 +5,14 @@ import { BLACK, MAINCOLOR } from '../Constants/colors';
 import language from '../../language.json';
 import { currentLanguage } from '../Constants/language';
 import { API } from '../Constants/api';
+import SearchBar from '../Components/searchbar';
 
 export default function Settings({ route, navigation }: any) {
     const dimensions = useWindowDimensions();
     const isLargeScreen = dimensions.width >= 768;
     const [showPause, setShowPause] = React.useState(false);
     const [showDelete, setShowDelete] = React.useState(false);
+    const [deleteReason, setDeleteReason] = React.useState('');
 
     React.useEffect(() => {
         setShowPause(false);
@@ -50,20 +52,27 @@ export default function Settings({ route, navigation }: any) {
                         setShowDelete(true);
                     }} />
                     {showDelete ?
-                        <OwnButton title="Sicher?" style={[styles.button, { marginTop: 0 }]} innerStyle={{ backgroundColor: "#f00" }} onPress={() => {
-                            API.deleteUser(API.getCurrentUser()?.USERID ?? 0).then((resp) => {
-                                API.setOnlineStatus(API.getCurrentUser()?.USERID ?? 0, false);
-                                setShowDelete(false);
-                                if (resp.status === 200) {
-                                    alert("Deine Mitgliedschaft wurde erfolgreich gelöscht.");
-                                    route.params.setLogin(false);
-                                    navigation.navigate("Login");
+                        <View style={{ flexDirection: "row" }}>
+                            <OwnButton title="Sicher?" style={[styles.button, { marginTop: 0, marginRight: 0 }]} innerStyle={{ backgroundColor: "#f00" }} onPress={() => {
+                                if (deleteReason.trim().length > 0) {
+                                    API.deleteUser(API.getCurrentUser()?.USERID ?? 0, deleteReason).then((resp) => {
+                                        API.setOnlineStatus(API.getCurrentUser()?.USERID ?? 0, false);
+                                        setShowDelete(false);
+                                        if (resp.status === 200) {
+                                            alert("Deine Mitgliedschaft wurde erfolgreich gelöscht.");
+                                            route.params.setLogin(false);
+                                            navigation.navigate("Login");
+                                        } else {
+                                            alert(resp.message);
+                                            console.log(resp);
+                                        }
+                                    });
                                 } else {
-                                    alert(resp.message);
-                                    console.log(resp);
+                                    alert("Bitte gib einen Grund an.");
                                 }
-                            });
-                        }} />
+                            }} />
+                            <SearchBar style={styles.input} placeholder="Grund der Löschung" value={deleteReason} onChange={(event: any) => { setDeleteReason(event.nativeEvent.text); }} />
+                        </View>
                         : null}
                 </View>
             </ScrollView>
@@ -90,5 +99,9 @@ const styles = StyleSheet.create({
     button: {
         margin: 32,
         alignSelf: "flex-start",
-    }
+    },
+    input: {
+        height: 40,
+        alignSelf: "flex-start",
+    },
 });

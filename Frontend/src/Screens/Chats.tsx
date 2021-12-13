@@ -59,7 +59,6 @@ export default function Chats({ route, navigation }: any) {
 
                     {isLoading || pets.length === 0 || pets.length !== lastMessages.length ? <TextBlock style={{ textAlign: 'center', marginTop: 20 }}>{language.CHATS.NO_CHATS[currentLanguage]}</TextBlock>
                         : pets.map((pet: Pet, index: number) => {
-                            console.log(lastMessages);
                             return (
                                 <ChatItem
                                     key={index}

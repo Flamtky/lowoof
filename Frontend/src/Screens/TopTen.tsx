@@ -77,7 +77,7 @@ function PetItem(props: any) {
                     <TextBlock>{language.PET.BREED[currentLanguage]}: {pet.RASSE ?? "<Breed>"}</TextBlock>
                 </View>
                 <View style={{ flexDirection: "row", marginLeft: "auto", alignSelf: "center" }}>
-                    <TextBlock style={{ marginRight: 6, alignSelf:"center" }}>{"Matches: "} {pet.TOTALMATCHES ?? "<Match Count>"}</TextBlock>
+                    <TextBlock style={{ marginRight: 6, alignSelf:"center" }}>{language.MATCHES.HEADER[currentLanguage]} {pet.TOTALMATCHES ?? "<Match Count>"}</TextBlock>
                     <TouchableOpacity onPress={() => { props.navigation.navigate('Report', { petToReport: pet }); }} style={{ marginRight: 6 }}>
                         <FontAwesomeIcon icon={faExclamationTriangle} size={32} color="#f66" />
                     </TouchableOpacity>

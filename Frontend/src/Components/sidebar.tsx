@@ -70,7 +70,7 @@ export default function Sidebar({ route, navigation } : any) {
             <Drawer.Screen name="MyProfile" component={MyProfile} options={{ title: language.PROFILE.HEADER[currentLanguage] }} initialParams={{ userID: API.getCurrentUser()?.USERID ?? 0 }} />
             <Drawer.Screen name="TopTen" component={TopTen} options={{ title: language.TOPTEN.HEADER[currentLanguage] }} />
             {API.getCurrentUser()?.ADMIN ?
-                <Drawer.Screen name="Reports" component={ReportList} options={{ title: "Report List"/* TODO: ADD LANGUAGE */ }} />
+                <Drawer.Screen name="Reports" component={ReportList} options={{ title: language.REPORT.LIST[currentLanguage] }} />
                 : null}
             <Drawer.Screen name="Settings" component={Settings} options={{ title: language.SETTINGS.HEADER[currentLanguage]}} initialParams={{ setLogin }} />
         </Drawer.Navigator>

@@ -24,21 +24,21 @@ export default function Settings({ route, navigation }: any) {
                 keyboardDismissMode="on-drag"
             >
                 <View style={[styles.innerContainer]}>
-                    <OwnButton title="Abmelden" style={styles.button} onPress={() => {
+                    <OwnButton title={language.SETTINGS.LOGOUT[currentLanguage]} style={styles.button} onPress={() => {
                         API.setOnlineStatus(API.getCurrentUser()?.USERID ?? 0, false);
                         route.params.setLogin(false);
                         navigation.navigate("Login");
                     }} />
-                    <OwnButton title="Mitgliedschaft pausieren" style={[styles.button, { marginBottom: 2 }]} innerStyle={{ color: BLACK, backgroundColor: "#ff0" }} onPress={() => {
+                    <OwnButton title={language.SETTINGS.PAUSE[currentLanguage]} style={[styles.button, { marginBottom: 2 }]} innerStyle={{ color: BLACK, backgroundColor: "#ff0" }} onPress={() => {
                         setShowPause(true);
                     }} />
                     {showPause ?
-                        <OwnButton title="Sicher?" style={[styles.button, { marginTop: 0 }]} innerStyle={{ color: BLACK, backgroundColor: "#ff0" }} onPress={() => {
+                        <OwnButton title={language.SETTINGS.SURE[currentLanguage]} style={[styles.button, { marginTop: 0 }]} innerStyle={{ color: BLACK, backgroundColor: "#ff0" }} onPress={() => {
                             API.banUser(API.getCurrentUser()?.USERID ?? 0).then((resp) => {
                                 API.setOnlineStatus(API.getCurrentUser()?.USERID ?? 0, false);
                                 setShowPause(false);
                                 if (resp.status === 200) {
-                                    alert("Deine Mitgliedschaft wurde erfolgreich pausiert.");
+                                    alert(language.SETTINGS.SUCCESS_PAUSE[currentLanguage]);
                                     route.params.setLogin(false);
                                     navigation.navigate("Login");
                                 } else {
@@ -48,18 +48,18 @@ export default function Settings({ route, navigation }: any) {
                             });
                         }} />
                         : null}
-                    <OwnButton title="Mitgliedschaft löschen" style={[styles.button, { marginBottom: 2 }]} innerStyle={{ backgroundColor: "#f00" }} onPress={() => {
+                    <OwnButton title={language.SETTINGS.QUIT[currentLanguage]} style={[styles.button, { marginBottom: 2 }]} innerStyle={{ backgroundColor: "#f00" }} onPress={() => {
                         setShowDelete(true);
                     }} />
                     {showDelete ?
                         <View style={{ flexDirection: "row" }}>
-                            <OwnButton title="Sicher?" style={[styles.button, { marginTop: 0, marginRight: 0 }]} innerStyle={{ backgroundColor: "#f00" }} onPress={() => {
+                            <OwnButton title={language.SETTINGS.SURE[currentLanguage]} style={[styles.button, { marginTop: 0, marginRight: 0 }]} innerStyle={{ backgroundColor: "#f00" }} onPress={() => {
                                 if (deleteReason.trim().length > 0) {
                                     API.deleteUser(API.getCurrentUser()?.USERID ?? 0, deleteReason).then((resp) => {
                                         API.setOnlineStatus(API.getCurrentUser()?.USERID ?? 0, false);
                                         setShowDelete(false);
                                         if (resp.status === 200) {
-                                            alert("Deine Mitgliedschaft wurde erfolgreich gelöscht.");
+                                            alert(language.SETTINGS.SUCCESS_QUIT[currentLanguage]);
                                             route.params.setLogin(false);
                                             navigation.navigate("Login");
                                         } else {
@@ -68,10 +68,10 @@ export default function Settings({ route, navigation }: any) {
                                         }
                                     });
                                 } else {
-                                    alert("Bitte gib einen Grund an.");
+                                    alert(language.SETTINGS.GIVE_REASON[currentLanguage]);
                                 }
                             }} />
-                            <SearchBar style={styles.input} placeholder="Grund der Löschung" value={deleteReason} onChange={(event: any) => { setDeleteReason(event.nativeEvent.text); }} />
+                            <SearchBar style={styles.input} placeholder={language.SETTINGS.REASON[currentLanguage]} value={deleteReason} onChange={(event: any) => { setDeleteReason(event.nativeEvent.text); }} />
                         </View>
                         : null}
                 </View>

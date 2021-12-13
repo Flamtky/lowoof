@@ -291,12 +291,6 @@
             "DE": "Es wurde noch kein Haustier als attraktiv bewertet"
         }
     },
-    "SETTINGS": {
-        "HEADER": {
-            "EN": "Settings",
-            "DE": "Einstellungen"
-        }
-    },
     "IMAGE_PICKER": {
         "HEADER": {
             "EN": "Image Picker",
@@ -331,6 +325,10 @@
         "SUCCESS_REPORTED": {
             "EN": "User was reported!",
             "DE": "Der Nutzer wurde gemeldet!"
+        },
+        "LIST": {
+            "EN": "Report List",
+            "DE": "Report Liste"
         }
     },
     "ERROR": {
@@ -397,6 +395,44 @@
         "REASON_TOO_LONG": {
             "EN": "The reason can't be longer than 255 characters!",
             "DE": "Der Grund darf nicht länger als 255 Zeichen sein!"
+        }
+    },
+    "SETTINGS": {
+        "HEADER": {
+            "EN": "Settings",
+            "DE": "Einstellungen"
+        },
+        "LOGOUT": {
+            "EN": "Log out",
+            "DE": "Abmelden"
+        },
+        "PAUSE": {
+            "EN": "Pause account",
+            "DE": "Mitgliedschaft pausieren"
+        },
+        "SUCCESS_PAUSE": {
+            "EN": "Your account was paused",
+            "DE": "Deine Mitgliedschaft wurde pausiert."
+        },
+        "QUIT": {
+            "EN": "Delete account",
+            "DE": "Mitgliedschaft löschen"
+        },
+        "SUCCESS_QUIT": {
+            "EN": "Your account was deleted",
+            "DE": "Deine Mitgliedschaft wurde gelöscht."
+        },
+        "SURE": {
+            "EN": "Are you sure?",
+            "DE": "Bist du sicher?"
+        },
+        "GIVE_REASON": {
+            "EN": "Please enter a reason.",
+            "DE": "Bitte gib einen Grund an."
+        },
+        "REASON": {
+            "EN": "Reason to Quit",
+            "DE": "Grund der Löschung"
         }
     }
 }

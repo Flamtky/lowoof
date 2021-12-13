@@ -207,8 +207,34 @@ export default class Queries {
         });
     }
 
-    async deleteUser(userid: number): Promise<Response> {
-        return new Promise<Response>((resolve, reject) => {
+    async addUserAsDelete(userid: number,reason:string): Promise<Response> {
+        return new Promise<Response>(async(resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            var user:User|Response = await this.getUserByID(userid);
+            if("status" in user){
+                resolve(this.errorResponse);
+            }else{
+                connection.query(`INSERT INTO DELETEDUSER (USERID, USERNAME, REASON);`, [user.USERID, user.USERNAME, reason],
+                (err, rows, fields) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(this.errorResponse);
+                    } else {
+                        resolve({ status: 200, message: "User deleted" } as Response);
+                    }
+                }
+            );
+            }
+            
+        });
+    }
+
+    async deleteUser(userid: number,reason:string): Promise<Response> {
+        return new Promise<Response>(async(resolve, reject) => {
+            var response = await this.addUserAsDelete(userid,reason);
+            if(response.status != 200){
+                resolve(response);
+            }else{
             const connection: mysql.Pool = this.getConnection();
             connection.query(`DELETE FROM USER WHERE USERID = ?;`, [userid],
                 (err, rows, fields) => {
@@ -220,7 +246,9 @@ export default class Queries {
                     }
                 }
             );
+            }
         });
+        
     }
 
     async deletePet(petid: number): Promise<Response> {
@@ -731,6 +759,42 @@ export default class Queries {
                 );
             }
             resolve({ status: 200, message: 'Preferences removed' } as Response);
+        });
+    }
+
+    deletePetMatches(petid: number): Promise<Response> {
+        return new Promise<Response>(async (resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            connection.query(`DELETE FROM TIER_MATCHES WHERE TIER_A_ID = ? OR TIER_B_ID = ?;`, [petid,petid],
+                (err, rows, fields) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(this.errorResponse);
+                    } else {
+                        resolve({ status: 200, message: 'Pet matches removed' } as Response);
+                    }
+                }
+            );
+        });
+    }
+
+    areUserFriends(userid: number, friendid: number): Promise<Response|boolean> {
+        return new Promise<Response|boolean>(async (resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            connection.query(`SELECT * FROM TIER_RELATIONSHIPS WHERE ((TIER_A_ID IN (SELECT TIERID FROM TIER WHERE USERID = ?)) AND (TIER_B_ID IN (SELECT TIERID FROM TIER WHERE USERID = ?))) OR ((TIER_A_ID IN (SELECT TIERID FROM TIER WHERE USERID = ?)) AND (TIER_B_ID IN (SELECT TIERID FROM TIER WHERE USERID = ?))) AND RELATIONSHIP = "Friends"`, [userid, friendid, friendid, userid],
+                (err, rows, fields) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(this.errorResponse);
+                    } else {
+                        if (rows.length == 0) {
+                            resolve(false);
+                        } else {
+                            resolve(true);
+                        }
+                    }
+                }
+            );
         });
     }
 

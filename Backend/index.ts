@@ -289,7 +289,7 @@ app.get('/getpetrelationships', async (req, res) => {
 app.post('/deleteuser', async (req, res) => {
 
     console.log("Delete User " + req.body.userid + "...");
-    if (req.body.userid) {
+    if (req.body.userid && req.body.reason) {
         var isCorrectUser: boolean = await queries.authenticateByUserId(req.user, req.body.userid as unknown as number);
         if (!isCorrectUser) {
             return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
@@ -299,6 +299,22 @@ app.post('/deleteuser', async (req, res) => {
         if ("status" in pets) {
             return res.status(pets.status).json(pets);
         }
+        console.log("Deleting Users Pets Chats...");
+        pets.forEach(async (pet: Pet) => {
+            var chats : Response|Pet[] = await queries.getChats(pet.TIERID as unknown as number);
+            if ("status" in chats) {
+                return res.status(chats.status).json(chats);
+            }else{
+                chats.forEach(async (chat: Pet) => {
+                    await queries.deleteChat(pet.TIERID,chat.TIERID);
+                });
+            }
+        });
+        console.log("Deleting Users Pets Matches...");
+        pets.forEach(async (pet: Pet) => {
+            var response = await queries.deletePetMatches(pet.TIERID);
+        });
+        
         console.log("Deleting Users Pets Relationships...");
         pets.forEach(async element => {
             await queries.deletePetRelationships(element.TIERID);
@@ -306,7 +322,7 @@ app.post('/deleteuser', async (req, res) => {
         console.log("Deleting Users Pets...");
         await queries.deleteUserPets(req.body.userid as unknown as number);
         console.log("Deleting User...");
-        var response: Response = await queries.deleteUser(req.body.userid as unknown as number);
+        var response: Response = await queries.deleteUser(req.body.userid as unknown as number,req.body.reason);
         console.log("Finished Deleting User");
         return res.status(response.status).json(response);
 
@@ -314,6 +330,24 @@ app.post('/deleteuser', async (req, res) => {
         res.status(400).json({ status: res.statusCode, message: "Missing UserID" } as Response);
     }
 });
+
+app.get('/areuserfriends', async (req, res) => {
+    if(req.query.userid && req.query.friendid){
+        var isCorrectUser: boolean = await queries.authenticateByPetId(req.user, req.query.userid as unknown as number);
+        if (!isCorrectUser) {
+            return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
+        }
+        var response: Response | boolean = await queries.areUserFriends(req.query.userid as unknown as number, req.query.friendid as unknown as number);
+        if(typeof response != "boolean"){
+            return res.status(response.status).json(response);
+        }else{
+            return res.status(200).json(response);
+        }
+    }else{
+        res.status(400).json({ status: res.statusCode, message: "Missing PetID or FriendID" } as Response);
+    }
+    });
+
 //Allowed Users: User
 app.post('/deletepet', async (req, res) => {
     if (req.body.petid) {
@@ -400,6 +434,24 @@ app.post('/removefriend', async (req, res) => {
             response = await queries.removeFriend(relation.RELATIONID);
         }
         res.status(response.status).json(response);
+    } else {
+        res.status(400).json({ status: res.statusCode, message: "You are missing atleast one of two arguments" } as Response);
+    }
+});
+
+app.get('/getfriendship', async (req, res) => {
+    if (req.query.petid && req.query.friendid) {
+        var isCorrectUser: boolean = await queries.authenticateByPetId(req.user, req.query.petid as unknown as number);
+        if (!isCorrectUser) {
+            return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
+        }
+
+        var relation: Relationship|Response = await queries.getRelationshipBetweenPets(req.query.petid as unknown as number, req.query.friendid as unknown as number);
+        if ("status" in relation) {
+            return res.status(400).json({ status: res.statusCode, message: "There is no relationship" } as Response);
+        } else {
+            return res.status(200).json(relation as Relationship);
+        }
     } else {
         res.status(400).json({ status: res.statusCode, message: "You are missing atleast one of two arguments" } as Response);
     }
@@ -546,10 +598,6 @@ app.post('/removepreferences', async (req, res) => {
 
 app.get('/getpreferences', async (req, res) => {
     if (req.query.petid) {
-        var isCorrectUser: boolean = await queries.authenticateByPetId(req.user, req.query.petid as unknown as number);
-        if (!isCorrectUser) {
-            return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
-        }
         var response: Response | Preference[] = await queries.getPreferences(req.query.petid as unknown as number);
         if ("status" in response) {
             res.status(response.status).json(response);

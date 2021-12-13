@@ -235,12 +235,12 @@ export class Api {
     /**
      * Deletes a User from the Database. If a User is deleted all his Pets and Relationships will be deleted too
      * @param userId :number UserID to delete from the database
-     * @param pwd :string Password of the User to delete
+     * @param reason :string Delete Reason
      * @returns {Response} Response Object with message from the server
      */
-    async deleteUser(userId: number): Promise<Response> {
+    async deleteUser(userId: number,reason:string): Promise<Response> {
         var res: Response = { status: 500, message: "Error" };
-        await axios.post(this.url + '/deleteuser', { userid: userId }, {
+        await axios.post(this.url + '/deleteuser', { userid: userId,reason: reason }, {
             headers: {
                 'Authorization': `Beaver ${this.apiToken}`
             }
@@ -295,6 +295,38 @@ export class Api {
             }
         }).then(response => { res = response.data as Response; })
             .catch((error) => { res = error.response.data as Response; });
+        return res;
+    }
+
+    async getFriendship(petId: number, friendId: number): Promise<Response|Relationship> {
+        var res: Response | Relationship = { status: 500, message: "Error" };
+        await axios.get(this.url + '/getfriendship?petid=' + petId + '&friendid=' + friendId, {
+            headers: {
+                'Authorization': `Beaver ${this.apiToken}`
+            }
+        }).then(response => {
+            if (response.status == 200) {
+                res = response.data as Relationship;
+            } else {
+                res = response.data as Response;
+            }
+        }).catch((error) => { res = error.response.data as Response });
+        return res;
+    }
+
+    async areUserFriends(petId: number, friendId: number): Promise<Response | boolean> {
+        var res: Response | boolean = { status: 500, message: "Error" };
+        await axios.get(this.url + '/areuserfriends?petid=' + petId + '&friendid=' + friendId, {
+            headers: {
+                'Authorization': `Beaver ${this.apiToken}`
+            }
+        }).then(response => {
+            if (response.status == 200) {
+                res = response.data as boolean;
+            } else {
+                res = response.data as Response;
+            }
+        }).catch((error) => { res = error.response.data as Response });
         return res;
     }
 

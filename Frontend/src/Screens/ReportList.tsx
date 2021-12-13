@@ -43,6 +43,7 @@ export default function ReportList({ route, navigation }: any) {
                                 <ReportItem
                                     key={"report-" + report.REPORTID}
                                     report={report}
+                                    navigation={navigation}
                                 />)
                         })
                     }
@@ -77,13 +78,15 @@ function ReportItem(props: any) {
     return (
         <View style={isLoading || reportedPet == null ? { display: "none" } : null}>
             <View style={styles.row}>
-                <TouchableOpacity onPress={props.onPic} >
+                <TouchableOpacity onPress={() => { props.navigation.navigate('PetProfile', { petID: reportedPet?.TIERID }); }} >
                     <Image style={styles.petpicture}
                         source={{ uri: reportedPet?.PROFILBILD != null ? Buffer.from(reportedPet.PROFILBILD, 'base64').toString('ascii') : "https://puu.sh/IsTPQ/5d69029437.png" }}
                     />
                 </TouchableOpacity>
                 <View style={{ marginLeft: 10, maxWidth: "80%", height: "100%", justifyContent: "space-around" }}>
-                    <TextBlock>{language.PET.OWNER[currentLanguage]}: {reportedPet?.USERNAME ?? "<Name>"}</TextBlock>
+                    <TouchableOpacity onPress={() => { props.navigation.navigate('MyProfile', { userID: reportedPet?.USERID }) }}>
+                        <TextBlock style={{ color: "#00f" }}>{language.PET.OWNER[currentLanguage]}: {reportedPet?.USERNAME}</TextBlock>
+                    </TouchableOpacity>
                     <TextBlock>{language.PET.NAME[currentLanguage]}: {reportedPet?.NAME ?? "<Pet Name>"}</TextBlock>
                     <TextBlock>{language.REPORT.REASON[currentLanguage]}: {report.GRUND ?? "<Reasson>"}</TextBlock>
                 </View>

@@ -23,6 +23,8 @@ export default function MyProfile({ route, navigation }: any) {
     const [pets, setPets] = React.useState<Pet[]>([]);
     const [ownProfile, setOwnProfile] = React.useState<boolean>(false);
     const [isLoading, setIsLoading] = React.useState(true);
+    const [isFriend, setIsFriend] = React.useState(false);
+
     const api: Api = API;
     React.useEffect(() => {
         if (route.params.userID == undefined) {
@@ -81,10 +83,13 @@ export default function MyProfile({ route, navigation }: any) {
                             <TextBlock>{language.PROFILE.BIRTHDAY[currentLanguage]}: {moment(profile?.GEBURTSTAG).format("DD.MM.YYYY") ?? "<Date Of Birth>"} </TextBlock>
                         </View>
                         <View style={{ width: "50%" }}>
-                            <TextBlock>{language.PROFILE.EMAIL[currentLanguage]}: {profile?.EMAIL ?? "<E-Mail>"}</TextBlock>
-                            <TextBlock>{language.PROFILE.PHONE[currentLanguage]}: {profile?.TELEFONNUMMER ?? "<Phone Number>"} </TextBlock>
-                            <TextBlock>{language.PROFILE.INSTITUTION[currentLanguage]}: {profile?.INSTITUTION ?? "<Institution>"} </TextBlock>
-
+                            {ownProfile || isFriend ?
+                                <>
+                                    <TextBlock>{language.PROFILE.EMAIL[currentLanguage]}: {profile?.EMAIL ?? "<E-Mail>"}</TextBlock>
+                                    <TextBlock>{language.PROFILE.PHONE[currentLanguage]}: {profile?.TELEFONNUMMER ?? "<Phone Number>"} </TextBlock>
+                                    <TextBlock>{language.PROFILE.INSTITUTION[currentLanguage]}: {profile?.INSTITUTION ?? "<Institution>"} </TextBlock>
+                                </>
+                                : null}
                         </View>
                     </View>
                     <Seperator />

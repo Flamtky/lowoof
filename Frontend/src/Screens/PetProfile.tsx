@@ -119,7 +119,7 @@ export default function PetProfile({ route, navigation }: any) {
                         {ownProfile ?
                             <>
                                 <View style={[styles.row, { marginVertical: 10, justifyContent: "space-around" }]}>
-                                    <OwnButton title={language.MATCHES.HEADER[currentLanguage]} onPress={() => {  //TODO: Crashes, when viewing matches/friends pages of different pets (First one has matches, second has no matches).
+                                    <OwnButton title={language.MATCHES.HEADER[currentLanguage]} onPress={() => {
                                         navigation.navigate('Matches', { petID: petProfile?.TIERID });
                                     }} />
                                     <OwnButton title={language.FRIENDS.HEADER[currentLanguage]} onPress={() => {

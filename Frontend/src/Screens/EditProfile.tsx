@@ -134,7 +134,7 @@ export function EditProfile({ route, navigation }: any) {
                                 {showDatePicker ?
                                     <DateTimePicker
                                         testID="dateTimePicker"
-                                        value={new Date(birthdate)} // TODO: TEST THIS
+                                        value={new Date(birthdate)}
                                         is24Hour={true}
                                         display="default"
                                         onChange={(event: any, date: Date | undefined) => {

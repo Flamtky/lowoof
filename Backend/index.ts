@@ -115,7 +115,7 @@ app.get('/getpet', async (req, res) => {
 app.get('/users', async (req, res) => {
     var response: Response | User[] = await queries.getAllUsers();
 
-    if (response instanceof Response) {
+    if ("status" in response) {
         res.status(response.status).json(response);
     } else {
         res.status(200).json(response);

@@ -702,8 +702,8 @@ export default class Queries {
     async updatePet(pet: Pet): Promise<Response> {
         return new Promise<Response>((resolve, reject) => {
             const connection: mysql.Pool = this.getConnection();
-            connection.query(`UPDATE TIER SET NAME = ?, ART = ?, RASSE = ?, GESCHLECHT = ?, GEBURTSTAG = ?, PROFILBILD = ? WHERE TIERID = ?;`,
-                [pet["NAME"], pet["ART"], pet["RASSE"], pet["GESCHLECHT"], pet["GEBURTSTAG"], pet["PROFILBILD"], pet["TIERID"]],
+            connection.query(`UPDATE TIER SET USERID = ? NAME = ?, ART = ?, RASSE = ?, GESCHLECHT = ?, GEBURTSTAG = ?, PROFILBILD = ? WHERE TIERID = ?;`,
+                [pet["USERID"],pet["NAME"], pet["ART"], pet["RASSE"], pet["GESCHLECHT"], pet["GEBURTSTAG"], pet["PROFILBILD"], pet["TIERID"]],
                 (err, rows, fields) => {
                     if (err) {
                         console.log(err);

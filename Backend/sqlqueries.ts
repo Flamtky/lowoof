@@ -430,7 +430,7 @@ export default class Queries {
     async getPetMatches(petid: number): Promise<Response | Relationship[]> {
         return new Promise<Response | Relationship[]>((resolve, reject) => {
             const connection: mysql.Pool = this.getConnection();
-            connection.query(`SELECT * FROM TIER_MATCHES WHERE (TIER_A_ID = ? OR TIER_B_ID = ?) AND RELATIONSHIP = ?;`, [petid, petid, "Matched"],
+            connection.query(`SELECT * FROM TIER_MATCHES WHERE (TIER_A_ID = ? OR TIER_B_ID = ?);`, [petid, petid],
                 (err, rows, fields) => {
                     if (err) {
                         console.log(err);
@@ -702,7 +702,7 @@ export default class Queries {
     async updatePet(pet: Pet): Promise<Response> {
         return new Promise<Response>((resolve, reject) => {
             const connection: mysql.Pool = this.getConnection();
-            connection.query(`UPDATE TIER SET USERID = ? NAME = ?, ART = ?, RASSE = ?, GESCHLECHT = ?, GEBURTSTAG = ?, PROFILBILD = ? WHERE TIERID = ?;`,
+            connection.query(`UPDATE TIER SET USERID = ?, NAME = ?, ART = ?, RASSE = ?, GESCHLECHT = ?, GEBURTSTAG = ?, PROFILBILD = ? WHERE TIERID = ?;`,
                 [pet["USERID"],pet["NAME"], pet["ART"], pet["RASSE"], pet["GESCHLECHT"], pet["GEBURTSTAG"], pet["PROFILBILD"], pet["TIERID"]],
                 (err, rows, fields) => {
                     if (err) {

@@ -626,7 +626,7 @@ export class Api {
 
     async getDiscover(preferences:number[]):Promise<Response|Pet[]>{
         var res:Response|Pet[] = {status:500,message:"Error"};
-        await axios.post(this.url + '/discover',{preferences:preferences},{
+        await axios.post(this.url + '/discover',{pref:preferences},{
             headers:{
                 'Authorization':`Beaver ${this.apiToken}`
             }

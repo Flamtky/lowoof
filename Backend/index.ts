@@ -796,7 +796,7 @@ app.get('/getpreferences', async (req, res) => {
 
 app.post('/discover', async (req, res) => {
     if(req.body.pref != undefined || (req.body.pref as number[]).length > 0) {
-        var preferences: Preference[] = req.body.pref as Preference[];
+        var preferences: number[] = req.body.pref as number[];
         var response: Response | number[] = await queries.getPetsWithPrefereces();
         if ("status" in response) {
             return res.status(response.status).json(response);
@@ -808,7 +808,7 @@ app.post('/discover', async (req, res) => {
                 return res.status(petPrefs.status).json(petPrefs);
             }
             petPrefs.forEach(pref => {
-                if (preferences.includes(pref)) {
+                if (preferences.includes(pref.ID)) {
                     correspondingPets[petid] = correspondingPets[petid] ? correspondingPets[petid] + 1 : 1;
                 }
             });

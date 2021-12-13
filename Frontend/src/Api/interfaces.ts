@@ -53,7 +53,7 @@ export interface Message {
 }
 
 export interface Preference {
-    ID: string,
+    ID: number,
     PREF: string,
 }
 

@@ -191,7 +191,9 @@ export function EditPet({ route, props }: any) {
     const [petBirthDate, setPetBirthDate] = React.useState(currentPet.GEBURTSTAG);
     const [petProfilePic, setPetProfilePic] = React.useState(Buffer.from(currentPet.PROFILBILD, "base64").toString("ascii"));
     const [showDatePicker, setShowDatePicker] = React.useState(false);
-    const allPrefs: Preference[] = [{ID:1, PREF:"Streicheln"},{ID:2, PREF:"Spazieren"},{ID:3, PREF:"Kuscheln"},{ID:4, PREF:"Rennen"},{ID:5, PREF:"Spielen"},{ID:6, PREF:"Kleine Hunde"},{ID:7, PREF:"Große Hunde"},{ID:8, PREF:"Männlich"},{ID:9, PREF:"Weiblich"},{ID:10, PREF:"Nicht Raucher"},{ID:11, PREF:"Party Raucher"}];
+    const allPrefs: Preference[] = [{ID:1, PREF:"Streicheln"},{ID:2, PREF:"Spazieren"},     {ID:3, PREF:"Kuscheln"},      {ID:4, PREF:"Rennen"},
+                                    {ID:5, PREF:"Spielen"},   {ID:6, PREF:"Kleine Hunde"},  {ID:7, PREF:"Große Hunde"},   {ID:8, PREF:"Männlich"},
+                                    {ID:9, PREF:"Weiblich"},  {ID:10, PREF:"Nicht Raucher"},{ID:11, PREF:"Party Raucher"},{ID:12, PREF:"Offen für alles"}];
     const [prefs, setPrefs] = useState<Preference[]>([]);
     const [prefState1, setPrefState1] = React.useState<boolean>(false);
     const [prefState2, setPrefState2] = React.useState<boolean>(false);
@@ -204,6 +206,7 @@ export function EditPet({ route, props }: any) {
     const [prefState9, setPrefState9] = React.useState<boolean>(false);
     const [prefState10, setPrefState10] = React.useState<boolean>(false);
     const [prefState11, setPrefState11] = React.useState<boolean>(false);
+    const [prefState12, setPrefState12] = React.useState<boolean>(false);
     const [isLoading, setIsLoading] = React.useState(true);
 
     React.useEffect(() => {
@@ -224,6 +227,7 @@ export function EditPet({ route, props }: any) {
                         case 9: setPrefState9(true); break;
                         case 10: setPrefState10(true); break;
                         case 11: setPrefState11(true); break;
+                        case 12: setPrefState12(true); break;
                     }
                 })
             } else {
@@ -269,6 +273,7 @@ export function EditPet({ route, props }: any) {
                     prefState9 ? newPrefIDs.push(9):null;
                     prefState10 ? newPrefIDs.push(10):null;
                     prefState11 ? newPrefIDs.push(11):null;
+                    prefState12 ? newPrefIDs.push(12):null;
                     (route.params.api as Api).setPreferences(currentPet.TIERID, newPrefIDs).then((resp) => {
                         if (resp.status !== 200) {
                             alert(language.ERROR.UPDATE_PREF_ERR[currentLanguage]);
@@ -330,85 +335,92 @@ export function EditPet({ route, props }: any) {
                         </View>
                     </View>
                     {prefs === null || isLoading ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.TOPTEN.NO_TOPTEN[currentLanguage]}</TextBlock> :
-                    <>
+                    <View style={[styles.row, { marginVertical: 10, justifyContent: "space-around", flexWrap: 'wrap' }]}>
                         <OwnButton
                             key={"PrefButton1"}
                             title={allPrefs[0].PREF}
-                            innerStyle= {prefState1 ? {backgroundColor: GREEN} : {backgroundColor: GRAY}}
-                            style={{ width: 150, padding: 0, minWidth: 0, borderRadius: 0, alignSelf: "center", marginTop: 5, paddingBottom: 0 }}
+                            innerStyle= {prefState1 ? styles.activePref : styles.inactivePref}
+                            style={styles.prefButton}
                             onPress={() => { setPrefState1(!prefState1) }}
                         />
                         <OwnButton
                             key={"PrefButton2"}
                             title={allPrefs[1].PREF}
-                            innerStyle= {prefState2 ? {backgroundColor: GREEN} : {backgroundColor: GRAY}}
-                            style={{ width: 150, padding: 0, minWidth: 0, borderRadius: 0, alignSelf: "center", marginTop: 5, paddingBottom: 0 }}
+                            innerStyle= {prefState2 ? styles.activePref : styles.inactivePref}
+                            style={styles.prefButton}
                             onPress={() => { setPrefState2(!prefState2) }}
                         />
                         <OwnButton
                             key={"PrefButton3"}
                             title={allPrefs[2].PREF}
-                            innerStyle= {prefState3 ? {backgroundColor: GREEN} : {backgroundColor: GRAY}}
-                            style={{ width: 150, padding: 0, minWidth: 0, borderRadius: 0, alignSelf: "center", marginTop: 5, paddingBottom: 0 }}
+                            innerStyle= {prefState3 ? styles.activePref : styles.inactivePref}
+                            style={styles.prefButton}
                             onPress={() => { setPrefState3(!prefState3) }}
-                        />
+                            />
                         <OwnButton
                             key={"PrefButton4"}
                             title={allPrefs[3].PREF}
-                            innerStyle= {prefState4 ? {backgroundColor: GREEN} : {backgroundColor: GRAY}}
-                            style={{ width: 150, padding: 0, minWidth: 0, borderRadius: 0, alignSelf: "center", marginTop: 5, paddingBottom: 0 }}
+                            innerStyle= {prefState4 ? styles.activePref : styles.inactivePref}
+                            style={styles.prefButton}
                             onPress={() => { setPrefState4(!prefState4) }}
-                        />
+                            />
                         <OwnButton
                             key={"PrefButton5"}
                             title={allPrefs[4].PREF}
-                            innerStyle= {prefState5 ? {backgroundColor: GREEN} : {backgroundColor: GRAY}}
-                            style={{ width: 150, padding: 0, minWidth: 0, borderRadius: 0, alignSelf: "center", marginTop: 5, paddingBottom: 0 }}
+                            innerStyle= {prefState5 ? styles.activePref : styles.inactivePref}
+                            style={styles.prefButton}
                             onPress={() => { setPrefState5(!prefState5) }}
-                        />
+                            />
                         <OwnButton
                             key={"PrefButton6"}
                             title={allPrefs[5].PREF}
-                            innerStyle= {prefState6 ? {backgroundColor: GREEN} : {backgroundColor: GRAY}}
-                            style={{ width: 150, padding: 0, minWidth: 0, borderRadius: 0, alignSelf: "center", marginTop: 5, paddingBottom: 0 }}
+                            innerStyle= {prefState6 ? styles.activePref : styles.inactivePref}
+                            style={styles.prefButton}
                             onPress={() => { setPrefState6(!prefState6) }}
                         />
                         <OwnButton
                             key={"PrefButton7"}
                             title={allPrefs[6].PREF}
-                            innerStyle= {prefState7 ? {backgroundColor: GREEN} : {backgroundColor: GRAY}}
-                            style={{ width: 150, padding: 0, minWidth: 0, borderRadius: 0, alignSelf: "center", marginTop: 5, paddingBottom: 0 }}
+                            innerStyle= {prefState7 ? styles.activePref : styles.inactivePref}
+                            style={styles.prefButton}
                             onPress={() => { setPrefState7(!prefState7) }}
-                        />
+                            />
                         <OwnButton
                             key={"PrefButton8"}
                             title={allPrefs[7].PREF}
-                            innerStyle= {prefState8 ? {backgroundColor: GREEN} : {backgroundColor: GRAY}}
-                            style={{ width: 150, padding: 0, minWidth: 0, borderRadius: 0, alignSelf: "center", marginTop: 5, paddingBottom: 0 }}
+                            innerStyle= {prefState8 ? styles.activePref : styles.inactivePref}
+                            style={styles.prefButton}
                             onPress={() => { setPrefState8(!prefState8) }}
-                        />
+                            />
                         <OwnButton
                             key={"PrefButton9"}
                             title={allPrefs[8].PREF}
-                            innerStyle= {prefState9 ? {backgroundColor: GREEN} : {backgroundColor: GRAY}}
-                            style={{ width: 150, padding: 0, minWidth: 0, borderRadius: 0, alignSelf: "center", marginTop: 5, paddingBottom: 0 }}
+                            innerStyle= {prefState9 ? styles.activePref : styles.inactivePref}
+                            style={styles.prefButton}
                             onPress={() => { setPrefState9(!prefState9) }}
-                        />
+                            />
                         <OwnButton
                             key={"PrefButton10"}
                             title={allPrefs[9].PREF}
-                            innerStyle= {prefState10 ? {backgroundColor: GREEN} : {backgroundColor: GRAY}}
-                            style={{ width: 150, padding: 0, minWidth: 0, borderRadius: 0, alignSelf: "center", marginTop: 5, paddingBottom: 0 }}
+                            innerStyle= {prefState10 ?styles.activePref  :styles.inactivePref}
+                            style={styles.prefButton}
                             onPress={() => { setPrefState10(!prefState10) }}
                         />
                         <OwnButton
                             key={"PrefButton11"}
                             title={allPrefs[10].PREF}
-                            innerStyle= {prefState11 ? {backgroundColor: GREEN} : {backgroundColor: GRAY}}
-                            style={{ width: 150, padding: 0, minWidth: 0, borderRadius: 0, alignSelf: "center", marginTop: 5, paddingBottom: 0 }}
+                            innerStyle= {prefState11 ?styles.activePref  :styles.inactivePref}
+                            style={styles.prefButton}
                             onPress={() => { setPrefState11(!prefState11) }}
                         />
-                        </>
+                        <OwnButton
+                            key={"PrefButton12"}
+                            title={allPrefs[11].PREF}
+                            innerStyle= {prefState12 ?styles.activePref  :styles.inactivePref}
+                            style={styles.prefButton}
+                            onPress={() => { setPrefState12(!prefState12) }}
+                        />
+                        </View>
                     }
                     <OwnButton
                         title={language.SAVE[currentLanguage]}
@@ -424,7 +436,7 @@ export function EditPet({ route, props }: any) {
 export function AddPet(props: any) {
     const dimensions = useWindowDimensions();
     const isLargeScreen = dimensions.width >= 768;
-
+    
     const [petName, setPetName] = React.useState("");
     const [petType, setPetType] = React.useState("");
     const [petBreed, setPetBreed] = React.useState("");
@@ -530,6 +542,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         height: "100%"
     },
+    row: {
+        marginTop: 10,
+        flexDirection: "row",
+        alignItems: "flex-start",
+    },
     title: {
         fontSize: 20,
         fontWeight: 'bold',
@@ -557,5 +574,20 @@ const styles = StyleSheet.create({
         width: "100%",
         height: 300,
         resizeMode: "contain"
+    },
+    prefButton: {
+        width: 160,
+        padding: 0,
+        minWidth: 0,
+        borderRadius: 0,
+        alignSelf: "center",
+        marginTop: 5,
+        paddingBottom: 0
+    },
+    activePref: {
+        backgroundColor: GREEN
+    },
+    inactivePref: {
+        backgroundColor: GRAY
     }
 });

@@ -33,9 +33,9 @@ export default function Discover({ route, navigation }: any) {
                     }
                     API.getDiscover((res as Preference[]).map(p => p.ID)).then((data: any) => {
                         if (!data.hasOwnProperty('message')) {
-                            setDiscoverList((data as Pet[]).filter(p => p.TIERID !== ownPet.TIERID).filter(p => !blacklisted.includes(p)));
+                            setDiscoverList((data as Pet[]).filter(p => p.TIERID !== ownPet.TIERID && !blacklisted.some(p2 => p2.TIERID === p.TIERID)));
                         }
-                        if ((data as Pet[]).length !== 0) {
+                        if ((data as Pet[]).length === 0) {
                             setIsLoading(false);
                         }
                         const tempRelPets: Relationship[] = [];
@@ -43,21 +43,22 @@ export default function Discover({ route, navigation }: any) {
                             API.getFriendship(ownPet.TIERID, pet.TIERID).then((data2: any) => {
                                 if (!data2.hasOwnProperty("message")) {
                                     tempRelPets.push(data2 as Relationship);
+                                } else if (data2.status !== 404) {
+                                    setIsLoading(false);
+                                }
+                                // if last iteration
+                                if (data.length === tempRelPets.length) {
+                                    setRelPets(tempRelPets);
+                                    API.getPetMatches(route.params.petID).then(data3 => {
+                                        if (!data3.hasOwnProperty("message")) {
+                                            setMatchedFriends((data3 as Relationship[]).filter(x => (data as Pet[])
+                                                .some(t => (t.TIERID === x.TIER_A_ID) && x.RELATIONSHIP !== "B removed A") || (data as Pet[])
+                                                    .some(t => (t.TIERID === x.TIER_B_ID) && x.RELATIONSHIP !== "A removed B")));
+                                        }
+                                        setIsLoading(false);
+                                    });
                                 }
                             });
-
-                            // if last iteration
-                            if (data.length === tempRelPets.length) {
-                                setRelPets(tempRelPets);
-                                API.getPetMatches(route.params.petID).then(data3 => {
-                                    if (!data3.hasOwnProperty("message")) {
-                                        setMatchedFriends((data3 as Relationship[]).filter(x => (data as Pet[])
-                                            .some(t => (t.TIERID === x.TIER_A_ID) && x.RELATIONSHIP !== "B removed A") || (data as Pet[])
-                                                .some(t => (t.TIERID === x.TIER_B_ID) && x.RELATIONSHIP !== "A removed B")));
-                                    }
-                                    setIsLoading(false);
-                                });
-                            }
                         });
                     })
                 });

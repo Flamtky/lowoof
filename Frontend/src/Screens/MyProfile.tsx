@@ -152,7 +152,7 @@ function PetItem(props: any) {
                         source={{ uri: pet?.PROFILBILD != null ? Buffer.from(pet.PROFILBILD, 'base64').toString('ascii') : "https://puu.sh/IsTPQ/5d69029437.png" }}
                     />
                 </TouchableOpacity>
-                <View style={{ marginLeft: 10 }}>
+                <View style={{ marginLeft: 10, height: 64, justifyContent: "space-between"}}>
                     <TextBlock>{language.PET.NAME[currentLanguage]}: {pet.NAME ?? "<Name>"}</TextBlock>
                     <TextBlock>{language.PET.SPECIES[currentLanguage]}: {pet.ART ?? "<Species>"} </TextBlock>
                     <TextBlock>{language.PET.BREED[currentLanguage]}: {pet.RASSE ?? "<Breed>"}</TextBlock>

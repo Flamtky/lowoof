@@ -484,6 +484,17 @@ export class Api {
         return res;
     }
 
+    async setPreferences(petId: number, preferences: number[]): Promise<Response> {
+        var res: Response = { status: 500, message: "Error" };
+        await axios.post(this.url + '/setpreferences', { petid: petId, preferences: preferences }, {
+            headers: {
+                'Authorization': `Beaver ${this.apiToken}`
+            }
+        }).then(response => { res = response.data as Response; })
+            .catch((error) => { res = error.response.data as Response; });
+        return res;
+    }
+
     async deleteChat(petId: number, chatPartnerID: number): Promise<Response> {
         var res: Response = { status: 500, message: "Error" };
         await axios.post(this.url + '/deletechat', { petid: petId, chatpartnerid: chatPartnerID }, {

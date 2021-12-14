@@ -922,4 +922,26 @@ app.get('/getwatchlaterlist', async (req, res) => {
     }
 });
 
+app.post('/setpreferences', async (req, res) => {
+    if(req.body.petid && req.body.preferences){
+        var isCorrectUser: boolean = await queries.authenticateByPetId(req.user, req.body.petid as unknown as number);
+        if (!isCorrectUser) {
+            return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
+        }else{
+            var Paramprefs: number[] = req.body.preferences as number[];
+            var dbprefs: Response|Preference[] = await queries.getPreferences(req.body.petid as unknown as number);
+            if("status" in dbprefs){
+                return res.status(dbprefs.status).json(dbprefs);
+            }else{
+                await queries.removePreferences(req.body.petid as unknown as number,dbprefs.map(pref => pref.ID));
+                var response: Response = await queries.addPreferences(req.body.petid as unknown as number, Paramprefs);
+            res.status(response.status).json(response); 
+            }
+
+            
+        }
+        
+    }
+});
+
 app.listen(port, () => console.log(`Lowoof API running on port ${port}!`));

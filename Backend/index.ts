@@ -948,4 +948,59 @@ app.post('/setpreferences', async (req, res) => {
     }
 });
 
+app.post('/addtosearchblacklist', async(req, res) => {
+    if(req.body.petid && req.body.blacklistid){
+        var isCorrectUser: boolean = await queries.authenticateByPetId(req.user, req.body.petid as unknown as number);
+        if (!isCorrectUser) {
+            return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
+        }else{
+            var response: Response = await queries.addToSearchBlacklist(req.body.petid as unknown as number,req.body.blacklistid as unknown as number);
+            res.status(response.status).json(response); 
+        }
+        
+    }
+});
+
+app.post('/removefromsearchblacklist', async(req, res) => {
+    if(req.body.petid && req.body.blacklistid){
+        var isCorrectUser: boolean = await queries.authenticateByPetId(req.user, req.body.petid as unknown as number);
+        if (!isCorrectUser) {
+            return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
+        }else{
+            var response: Response = await queries.removeFromSearchBlacklist(req.body.petid as unknown as number,req.body.blacklistid as unknown as number);
+            res.status(response.status).json(response); 
+        }
+        
+    }
+});
+
+app.post('/removeallfromsearchblacklist', async(req, res) => {
+    if(req.body.petid){
+        var isCorrectUser: boolean = await queries.authenticateByPetId(req.user, req.body.petid as unknown as number);
+        if (!isCorrectUser) {
+            return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
+        }else{
+            var response: Response = await queries.removeAllFromSearchBlacklist(req.body.petid as unknown as number);
+            res.status(response.status).json(response); 
+        }
+        
+    }
+});
+
+app.get('/getsearchblacklist', async(req, res) => {
+    if(req.query.petid){
+        var isCorrectUser: boolean = await queries.authenticateByPetId(req.user, req.query.petid as unknown as number);
+        if (!isCorrectUser) {
+            return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
+        }else{
+            var response: Response | Pet[] = await queries.getSearchBlacklist(req.query.petid as unknown as number);
+            if ("status" in response) {
+                return res.status(response.status).json(response);
+            } else {
+                res.status(200).json(response as Pet[]);
+            }
+        }
+    }
+});
+
 app.listen(port, () => console.log(`Lowoof API running on port ${port}!`));

@@ -690,4 +690,48 @@ export class Api {
         return res;
     }
 
+    async addToSearchBlacklist(petId:number, blacklistid:number):Promise<Response>{
+        var res:Response = {status:500,message:"Error"};
+        await axios.post(this.url + '/addtosearchblacklist',{petid:petId,blacklistid:blacklistid},{
+            headers:{
+                'Authorization':`Beaver ${this.apiToken}`
+            }
+        }).then(response => {res = response.data as Response;})
+            .catch((error) => {res = error.response.data as Response;});
+        return res;
+    }
+
+    async removeFromSearchBlacklist(petId:number, blacklistid:number):Promise<Response>{
+        var res:Response = {status:500,message:"Error"};
+        await axios.post(this.url + '/removefromsearchblacklist',{petid:petId,blacklistid:blacklistid},{
+            headers:{
+                'Authorization':`Beaver ${this.apiToken}`
+            }
+        }).then(response => {res = response.data as Response;})
+            .catch((error) => {res = error.response.data as Response;});
+        return res;
+    }
+
+    async removeAllFromSearchBlacklist(petId:number):Promise<Response>{
+        var res:Response = {status:500,message:"Error"};
+        await axios.post(this.url + '/removeallfromsearchblacklist',{petid:petId},{
+            headers:{
+                'Authorization':`Beaver ${this.apiToken}`
+            }
+        }).then(response => {res = response.data as Response;})
+            .catch((error) => {res = error.response.data as Response;});
+        return res;
+    }
+
+    async getSearchBlacklist(petId:number):Promise<Response|Pet[]>{
+        var res:Response|Pet[] = {status:500,message:"Error"};
+        await axios.get(this.url + '/getsearchblacklist?petid=' + petId,{
+            headers:{
+                'Authorization':`Beaver ${this.apiToken}`
+            }
+        }).then(response => {res = response.data as Pet[];})
+            .catch((error) => {res = error.response.data as Response;});
+        return res;
+    }
+
 }

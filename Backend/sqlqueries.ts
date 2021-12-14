@@ -1061,7 +1061,7 @@ export default class Queries {
                 });
         });
     }
-    //TODO
+
     addWatchlater(petid: number, watchlaterid: number): Promise<Response> {
         return new Promise<Response>(async (resolve, reject) => {
             const connection: mysql.Pool = this.getConnection();
@@ -1111,6 +1111,70 @@ export default class Queries {
         return new Promise<Response | Pet[]>(async (resolve, reject) => {
             const connection: mysql.Pool = this.getConnection();
             connection.query(`SELECT * FROM TIER WHERE TIERID IN (SELECT WATCHLATERID FROM WATCHLATER WHERE PETID=?);`, [petid],
+                (err, rows, fields) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(this.errorResponse);
+                    } else {
+                        if (rows.length == 0) {
+                            resolve({ status: 404, message: "No Pets found" } as Response);
+                        } else {
+                            resolve(rows as Pet[]);
+                        }
+                    }
+                });
+        });
+    }
+
+    addToSearchBlacklist(petid: number, blacklistid: number): Promise<Response> {
+        return new Promise<Response>(async (resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            connection.query(`INSERT INTO SEARCHBLACKLIST (PETID, BLACKLISTID) VALUES (?,?);`, [petid, blacklistid],
+                (err, rows, fields) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(this.errorResponse);
+                    } else {
+                        resolve({ status: 200, message: 'Blacklist added' } as Response);
+                    }
+                });
+        });
+    }
+
+    removeFromSearchBlacklist(petid: number, blacklistid: number): Promise<Response> {
+        return new Promise<Response>(async (resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            connection.query(`DELETE FROM SEARCHBLACKLIST WHERE PETID=? AND BLACKLISTID=?;`, [petid, blacklistid],
+                (err, rows, fields) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(this.errorResponse);
+                    } else {
+                        resolve({ status: 200, message: 'Blacklist removed' } as Response);
+                    }
+                });
+        });
+    }
+
+    removeAllFromSearchBlacklist(petid: number): Promise<Response> {
+        return new Promise<Response>(async (resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            connection.query(`DELETE FROM SEARCHBLACKLIST WHERE PETID=?;`, [petid],
+                (err, rows, fields) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(this.errorResponse);
+                    } else {
+                        resolve({ status: 200, message: 'Removed All Pets from Blacklist' } as Response);
+                    }
+                });
+        });
+    }
+
+    getSearchBlacklist(petid: number): Promise<Response | Pet[]> {
+        return new Promise<Response | Pet[]>(async (resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            connection.query(`SELECT * FROM TIER WHERE TIERID IN (SELECT BLACKLISTID FROM SEARCHBLACKLIST WHERE PETID=?);`, [petid],
                 (err, rows, fields) => {
                     if (err) {
                         console.log(err);

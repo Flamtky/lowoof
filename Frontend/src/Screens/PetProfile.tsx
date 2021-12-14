@@ -7,7 +7,7 @@ import { TextBlock } from '../Components/styledText';
 import { BLACK, DARKGRAY, MAINCOLOR, TITLECOLOR } from '../Constants/colors';
 import Seperator from '../Components/seperator';
 import OwnButton from '../Components/ownButton';
-import { Pet, Preference, User } from '../Api/interfaces';
+import { Pet, Preference } from '../Api/interfaces';
 import { Api } from '../Api/lowoof-api';
 import language from '../../language.json';
 import { currentLanguage } from '../Constants/language';

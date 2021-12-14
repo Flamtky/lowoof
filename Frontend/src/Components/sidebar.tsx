@@ -1,7 +1,6 @@
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import React, { useState } from 'react';
 import { useWindowDimensions } from 'react-native';
-import SearchBar from './searchbar';
 import MyProfile from '../Screens/MyProfile';
 import Settings from '../Screens/Settings';
 import { BACKGROUNDCOLOR, BLACK, TITLECOLOR, WHITE } from '../Constants/colors';

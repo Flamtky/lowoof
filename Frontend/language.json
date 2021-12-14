@@ -11,6 +11,28 @@
         "EN": "Delete",
         "DE": "Löschen"
     },
+    "SEARCH": {
+        "HEADER": {
+            "EN": "Search",
+            "DE": "Suchen"
+        }
+    },
+    "DISCOVER": {
+        "HEADER": {
+            "EN": "Discover",
+            "DE": "Entdecken"
+        }
+    },
+    "WATCH_LATER": {
+        "HEADER": {
+            "EN": "Watch later",
+            "DE": "Später ansehen"
+        },
+        "WATCH_LATER_LIST": {
+            "EN": "Watch later List",
+            "DE": "Später ansehen Liste"
+        }
+    },
     "LOGIN": {
         "LOGIN": {
             "EN": "➤ Login",
@@ -38,10 +60,6 @@
         }
     },
     "PLACEHOLDER": {
-        "Search": {
-            "EN": "Search...",
-            "DE": "Suchen..."
-        },
         "USERNAME": {
             "EN": "Username",
             "DE": "Benutzername"
@@ -229,6 +247,10 @@
         "SUCCESS_DELETE": {
             "EN": "Pet was successfully deleted.",
             "DE": "Haustier wurde erfolgreich gelöscht."
+        },
+        "NO_PREFS": {
+            "EN": "No preferences found!",
+            "DE": "Keine Präferenzen gefunden!"
         }
     },
     "MATCHES": {

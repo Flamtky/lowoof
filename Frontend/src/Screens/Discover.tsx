@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, useWindowDimensions, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, View, useWindowDimensions, ScrollView } from 'react-native';
 import { BACKGROUNDCOLOR, BLACK, DARKGRAY, MAINCOLOR } from '../Constants/colors';
 import { TextBlock } from '../Components/styledText';
 import OwnButton from '../Components/ownButton';
@@ -60,12 +60,12 @@ export default function Discover({ route, navigation }: any) {
             <View style={[isLargeScreen ? { width: '43%', left: "28%" } : null, { height: "100%", backgroundColor: MAINCOLOR }]}>
                 <View style={{ flexDirection:"row" }}>
                     <OwnButton
-                        title="Search"
+                        title={language.SEARCH.HEADER[currentLanguage]}
                         style={{ width: "auto", padding: 0, minWidth: 0, borderRadius: 0, alignSelf: "center", marginTop: 5, paddingBottom: 20 }}
                         onPress={() => { }}
                     />
                     <OwnButton
-                        title="Watch Later List"
+                        title={language.WATCH_LATER.HEADER[currentLanguage]}
                         style={{ width: "auto", padding: 0, minWidth: 0, borderRadius: 0, alignSelf: "center", marginTop: 5, paddingBottom: 20 }}
                         onPress={() => {navigation.navigate("WatchLater" , { ownPet: ownPet })}}
                     />

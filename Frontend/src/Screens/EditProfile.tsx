@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, useWindowDimensions, Image, ScrollView, createElement } from 'react-native';
-import { BACKGROUNDCOLOR, BLUE, DARKGRAY, GRAY, GREEN, LIGHTGRAY, MAINCOLOR } from '../Constants/colors';
+import { View, StyleSheet, useWindowDimensions, Image, ScrollView, createElement } from 'react-native';
+import { BACKGROUNDCOLOR, BLUE, GRAY, GREEN, MAINCOLOR } from '../Constants/colors';
 import language from '../../language.json';
 import { currentLanguage } from '../Constants/language';
 import { TextBlock } from '../Components/styledText';
@@ -182,7 +182,6 @@ export function EditProfile({ route, navigation }: any) {
 export function EditPet({ route, props }: any) {
     const dimensions = useWindowDimensions();
     const isLargeScreen = dimensions.width >= 768;
-    console.log(route.params);
     const currentPet: Pet = route.params.petToEdit;
     const [petName, setPetName] = React.useState(currentPet.NAME);
     const [petType, setPetType] = React.useState(currentPet.ART);
@@ -211,7 +210,6 @@ export function EditPet({ route, props }: any) {
 
     React.useEffect(() => {
         API.getPreferences(currentPet.TIERID).then((res) => {
-            console.log(res);
             if (!res.hasOwnProperty("message")) {
                 setPrefs(res as Preference[]);
                 (res as Preference[]).forEach((e) => {
@@ -236,7 +234,6 @@ export function EditPet({ route, props }: any) {
             setIsLoading(false);
         });
     }, [route]);
-    console.log(prefs);
     const editPet = () => {
         const newPet: Pet = {
             TIERID: currentPet.TIERID,
@@ -275,6 +272,7 @@ export function EditPet({ route, props }: any) {
                     prefState11 ? newPrefIDs.push(11):null;
                     prefState12 ? newPrefIDs.push(12):null;
                     (route.params.api as Api).setPreferences(currentPet.TIERID, newPrefIDs).then((resp) => {
+                        console.log(currentPet.TIERID);
                         if (resp.status !== 200) {
                             alert(language.ERROR.UPDATE_PREF_ERR[currentLanguage]);
                             console.log(resp);
@@ -334,7 +332,7 @@ export function EditPet({ route, props }: any) {
                             {petProfilePic !== '' ? <Image source={{ uri: petProfilePic }} style={{ width: 35, height: 35, alignSelf: "center" }} /> : null}
                         </View>
                     </View>
-                    {prefs === null || isLoading ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.TOPTEN.NO_TOPTEN[currentLanguage]}</TextBlock> :
+                    {prefs === null || isLoading ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.EDIT_PET.NO_PREFS[currentLanguage]}</TextBlock> :
                     <View style={[styles.row, { marginVertical: 10, justifyContent: "space-around", flexWrap: 'wrap' }]}>
                         <OwnButton
                             key={"PrefButton1"}

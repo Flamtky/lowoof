@@ -110,8 +110,8 @@ export default function PetItem(props: any) {
                         <FontAwesomeIcon icon={faTrash} size={32} color={GRAY} />
                     </TouchableOpacity>
                     : null}
-                {showAddToBlackList ?
-                    <TouchableOpacity onPress={() => { API.addToBlackList(ownPet?.TIERID, pet.TIERID).then(() => setHasChanged(true)) }} style={{ marginRight: 6 }}>
+                {showAddToBlackList && ownPet != null ?
+                    <TouchableOpacity onPress={() => { API.addToSearchBlacklist(ownPet.TIERID, pet.TIERID).then(() => setHasChanged(true)) }} style={{ marginRight: 6 }}>
                         <FontAwesomeIcon icon={faTrash} size={32} color={GRAY} />
                     </TouchableOpacity>
                     : null}

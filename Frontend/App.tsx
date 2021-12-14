@@ -89,7 +89,7 @@ export default function App() {
 									},
 								}} />
 								<Stack.Screen name="Discover" component={Discover} options={{
-									title: "Discover",
+									title: language.DISCOVER.HEADER[currentLanguage],
 									headerStyle: {
 										backgroundColor: BACKGROUNDCOLOR,
 									},
@@ -100,7 +100,7 @@ export default function App() {
 									},
 								}} />
 								<Stack.Screen name="WatchLater" component={WatchLater} options={{
-									title: "Watch Later",
+									title: language.WATCH_LATER.HEADER[currentLanguage],
 									headerStyle: {
 										backgroundColor: BACKGROUNDCOLOR,
 									},
@@ -144,7 +144,7 @@ export default function App() {
 									},
 								}} />
 								<Stack.Screen name="Chat" component={Chat} options={({ route }) => ({
-									title: route?.params?.name ?? language.CHATS.CHAT_WITH[currentLanguage] + "XY",
+									title: route?.params?.name ?? language.CHATS.CHAT_WITH[currentLanguage] + "user",
 									headerStyle: {
 										backgroundColor: BACKGROUNDCOLOR,
 									},

@@ -14,7 +14,7 @@ export default function SearchBar(props: any) {
         <View style={[styles.container, !isLargeScreen && isFocused ? props.mobileStyle : {}, props.style]}>
             <TextInput
                 style={styles.input}
-                placeholder={props.placeholder || language.PLACEHOLDER.Search[currentLanguage]}
+                placeholder={props.placeholder || language.SEARCH.HEADER[currentLanguage]}
                 placeholderTextColor={DARKGRAY}
                 returnKeyType="search"
                 onBlur={() => setIsFocused(false)}

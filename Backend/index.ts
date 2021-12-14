@@ -923,7 +923,8 @@ app.get('/getwatchlaterlist', async (req, res) => {
 });
 
 app.post('/setpreferences', async (req, res) => {
-    if(req.body.petid && req.body.preferences){
+    if(req.body.petid){
+        if(req.body.preferences != undefined){
         var isCorrectUser: boolean = await queries.authenticateByPetId(req.user, req.body.petid as unknown as number);
         if (!isCorrectUser) {
             return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
@@ -932,19 +933,31 @@ app.post('/setpreferences', async (req, res) => {
             console.log(Paramprefs);
             var dbprefs: Response|Preference[] = await queries.getPreferences(req.body.petid as unknown as number);
             if("status" in dbprefs){
-                var response: Response = await queries.addPreferences(req.body.petid as unknown as number, Paramprefs);
-                res.status(response.status).json(response);
+                if(Paramprefs.length > 0){
+                    var response: Response = await queries.addPreferences(req.body.petid as unknown as number, Paramprefs);
+                    return res.status(response.status).json(response);
+                }else{
+                    return res.status(200).json({status:200, message:"Edited Preferences"});
+                }
             }else{
                 console.log("Removing: " + dbprefs.map(pref => pref.ID));
                 await queries.removePreferences(req.body.petid as unknown as number,dbprefs.map(pref => pref.ID));
                 console.log("Adding: " + Paramprefs)
-                var response: Response = await queries.addPreferences(req.body.petid as unknown as number, Paramprefs);
-            res.status(response.status).json(response); 
+                if(Paramprefs.length > 0){
+                    var response: Response = await queries.addPreferences(req.body.petid as unknown as number, Paramprefs);
+                    return res.status(response.status).json(response);
+                }
+                return res.status(200).json({status:200, message:"Edited Preferences"});
             }
 
             
         }
+    }else{
+        res.status(400).json({status: 400, message: "No preferences given"});
+    }
         
+    }else{
+        res.status(400).json({status: 400, message: "No PetId given"});
     }
 });
 

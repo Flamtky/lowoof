@@ -733,7 +733,7 @@ export default class Queries {
     async addPreferences(petid: number, preferences: number[]): Promise<Response> {
         return new Promise<Response>(async (resolve, reject) => {
             const connection: mysql.Pool = this.getConnection();
-            var i = 0;
+            var j = 0;
             for (let i = 0; i < preferences.length; i++) {
                 connection.query(`INSERT INTO USER_PREF_RELATION (PETID, PREFID) VALUES (?, ?);`, [petid, preferences[i]],
                     (err, rows, fields) => {
@@ -741,8 +741,8 @@ export default class Queries {
                             console.log(err);
                             resolve(this.errorResponse);
                         } else {
-                            i++;
-                            if(i == preferences.length-1){
+                            j++;
+                            if(j == preferences.length){
                                 resolve({ status: 200, message: 'Preferences added' } as Response);
                             }
                         }

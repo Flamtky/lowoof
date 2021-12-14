@@ -123,5 +123,6 @@ const styles = StyleSheet.create({
         marginTop: 10,
         flexDirection: "row",
         alignItems: "flex-start",
+        maxHeight: 64
     },
 });

@@ -625,16 +625,13 @@ app.post('/deletechat', async (req, res) => {
 
 
 app.post('/addreport', async (req, res) => {
-    if (await queries.isUserAdmin(req.user)) {
+    
         if (req.body.reportedpetid && req.body.reason) {
             var response: Response = await queries.addReport(req.body.reportedpetid as unknown as number, req.body.reason as unknown as string);
             return res.status(response.status).json(response);
         } else {
             res.status(400).json({ status: res.statusCode, message: "You are missing atleast one of two arguments" } as Response);
         }
-    } else {
-        res.status(403).json({ status: res.statusCode, message: "You are not an Admin" } as Response);
-    }
 
 });
 
@@ -868,6 +865,61 @@ app.get('/logout', (req, res) => {
         const token = authHeader.split(' ')[1];
         tokenBlacklist.push(token);
     };
+});
+
+app.post('/addwatchlater', async (req, res) => {
+    if(req.body.petid && req.body.watchlaterid){
+        var isCorrectUser: boolean = await queries.authenticateByPetId(req.user, req.body.petid as unknown as number);
+        if (!isCorrectUser) {
+            return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
+        }else{
+            var response: Response = await queries.addWatchlater(req.body.petid as unknown as number, req.body.watchlaterid as unknown as number);
+            res.status(response.status).json(response); 
+        }
+        
+    }
+});
+
+app.post('/removewatchlater', async (req, res) => {
+    if(req.body.petid && req.body.watchlaterid){
+        var isCorrectUser: boolean = await queries.authenticateByPetId(req.user, req.body.petid as unknown as number);
+        if (!isCorrectUser) {
+            return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
+        }else{
+            var response: Response = await queries.removeWatchlater(req.body.petid as unknown as number, req.body.watchlaterid as unknown as number);
+            res.status(response.status).json(response); 
+        }
+        
+    }
+});
+
+app.post('/removeallwatchlater', async (req, res) => {
+    if(req.body.petid){
+        var isCorrectUser: boolean = await queries.authenticateByPetId(req.user, req.body.petid as unknown as number);
+        if (!isCorrectUser) {
+            return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
+        }else{
+            var response: Response = await queries.removeAllWatchlater(req.body.petid as unknown as number);
+            res.status(response.status).json(response); 
+        }
+        
+    }
+});
+
+app.get('/getwatchlaterlist', async (req, res) => {
+    if(req.query.petid){
+        var isCorrectUser: boolean = await queries.authenticateByPetId(req.user, req.query.petid as unknown as number);
+        if (!isCorrectUser) {
+            return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
+        }else{
+            var response: Response | Pet[] = await queries.getWatchlaterList(req.query.petid as unknown as number);
+            if ("status" in response) {
+                return res.status(response.status).json(response);
+            } else {
+                res.status(200).json(response as Pet[]);
+            }
+        }
+    }
 });
 
 app.listen(port, () => console.log(`Lowoof API running on port ${port}!`));

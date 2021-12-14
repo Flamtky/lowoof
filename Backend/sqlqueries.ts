@@ -1054,6 +1054,70 @@ export default class Queries {
                 });
         });
     }
+    //TODO
+    addWatchlater(petid:number, watchlaterid:number): Promise<Response> {
+        return new Promise<Response>(async (resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            connection.query(`INSERT INTO WATCHLATER (PETID, WATCHLATERID) VALUES (?,?);`, [petid, watchlaterid],
+                (err, rows, fields) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(this.errorResponse);
+                    } else {
+                        resolve({ status: 200, message: 'Watchlater added' } as Response);
+                    }
+                });
+        });
+    }
+
+    removeWatchlater(petid:number, watchlaterid:number): Promise<Response> {
+        return new Promise<Response>(async (resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            connection.query(`DELETE FROM WATCHLATER WHERE PETID=? AND WATCHLATERID=?;`, [petid, watchlaterid],
+                (err, rows, fields) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(this.errorResponse);
+                    } else {
+                        resolve({ status: 200, message: 'Watchlater removed' } as Response);
+                    }
+                });
+        });
+    }
+
+    removeAllWatchlater(petid:number): Promise<Response> {
+        return new Promise<Response>(async (resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            connection.query(`DELETE FROM WATCHLATER WHERE PETID=?;`, [petid],
+                (err, rows, fields) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(this.errorResponse);
+                    } else {
+                        resolve({ status: 200, message: 'Removed All Pets from Watch later list' } as Response);
+                    }
+                });
+        });
+    }
+
+    getWatchlaterList(petid:number): Promise<Response | Pet[]> {
+        return new Promise<Response | Pet[]>(async (resolve, reject) => {
+            const connection: mysql.Pool = this.getConnection();
+            connection.query(`SELECT * FROM TIER WHERE TIERID IN (SELECT WATCHLATERID FROM WATCHLATER WHERE PETID=?);`, [petid],
+                (err, rows, fields) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(this.errorResponse);
+                    } else {
+                        if (rows.length == 0) {
+                            resolve({ status: 404, message: "No Pets found" } as Response);
+                        } else {
+                            resolve(rows as Pet[]);
+                        }
+                    }
+                });
+        });
+    }
 }
 
 

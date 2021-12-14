@@ -635,4 +635,48 @@ export class Api {
         return res;
     }
 
+    async addWatchlater(petId:number, watchlaterid:number):Promise<Response>{
+        var res:Response = {status:500,message:"Error"};
+        await axios.post(this.url + '/addwatchlater',{petid:petId,watchlaterid:watchlaterid},{
+            headers:{
+                'Authorization':`Beaver ${this.apiToken}`
+            }
+        }).then(response => {res = response.data as Response;})
+            .catch((error) => {res = error.response.data as Response;});
+        return res;
+    }
+
+    async removeWatchlater(petId:number, watchlaterid:number):Promise<Response>{
+        var res:Response = {status:500,message:"Error"};
+        await axios.post(this.url + '/removewatchlater',{petid:petId,watchlaterid:watchlaterid},{
+            headers:{
+                'Authorization':`Beaver ${this.apiToken}`
+            }
+        }).then(response => {res = response.data as Response;})
+            .catch((error) => {res = error.response.data as Response;});
+        return res;
+    }
+
+    async removeAllWatchlater(petId:number):Promise<Response>{
+        var res:Response = {status:500,message:"Error"};
+        await axios.post(this.url + '/removeallwatchlater',{petid:petId},{
+            headers:{
+                'Authorization':`Beaver ${this.apiToken}`
+            }
+        }).then(response => {res = response.data as Response;})
+            .catch((error) => {res = error.response.data as Response;});
+        return res;
+    }
+
+    async getWatchlaterList(petId:number):Promise<Response|Pet[]>{
+        var res:Response|Pet[] = {status:500,message:"Error"};
+        await axios.get(this.url + '/getwatchlaterlist?petid=' + petId,{
+            headers:{
+                'Authorization':`Beaver ${this.apiToken}`
+            }
+        }).then(response => {res = response.data as Pet[];})
+            .catch((error) => {res = error.response.data as Response;});
+        return res;
+    }
+
 }

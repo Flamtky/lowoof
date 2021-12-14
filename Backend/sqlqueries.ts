@@ -769,7 +769,7 @@ export default class Queries {
         return new Promise<Response>(async (resolve, reject) => {
             const connection: mysql.Pool = this.getConnection();
             for (let i = 0; i < preferences.length; i++) {
-                connection.query(`INSERT INTO USER_PREF_RELATION (PETID, PREFID) VALUES (?, ?);`, [petid, preferences[i]],
+                connection.query(`DELETE FROM USER_PREF_RELATION WHERE PETID = ? AND PREFID = ?;`, [petid, preferences[i]],
                     (err, rows, fields) => {
                         if (err) {
                             console.log(err);

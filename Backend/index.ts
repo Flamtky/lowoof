@@ -929,11 +929,15 @@ app.post('/setpreferences', async (req, res) => {
             return res.status(403).json({ status: res.statusCode, message: "You are not allowed to edit this user" } as Response);
         }else{
             var Paramprefs: number[] = req.body.preferences as number[];
+            console.log(Paramprefs);
             var dbprefs: Response|Preference[] = await queries.getPreferences(req.body.petid as unknown as number);
             if("status" in dbprefs){
-                return res.status(dbprefs.status).json(dbprefs);
+                var response: Response = await queries.addPreferences(req.body.petid as unknown as number, Paramprefs);
+                res.status(response.status).json(response);
             }else{
+                console.log("Removing: " + dbprefs.map(pref => pref.ID));
                 await queries.removePreferences(req.body.petid as unknown as number,dbprefs.map(pref => pref.ID));
+                console.log("Adding: " + Paramprefs)
                 var response: Response = await queries.addPreferences(req.body.petid as unknown as number, Paramprefs);
             res.status(response.status).json(response); 
             }

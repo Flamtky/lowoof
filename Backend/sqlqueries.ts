@@ -227,48 +227,48 @@ export default class Queries {
         });
     }
 
-    async addUserAsDelete(userid: number,reason:string): Promise<Response> {
-        return new Promise<Response>(async(resolve, reject) => {
+    async addUserAsDelete(userid: number, reason: string): Promise<Response> {
+        return new Promise<Response>(async (resolve, reject) => {
             const connection: mysql.Pool = this.getConnection();
-            var user:User|Response = await this.getUserByID(userid);
-            if("status" in user){
+            var user: User | Response = await this.getUserByID(userid);
+            if ("status" in user) {
                 resolve(this.errorResponse);
-            }else{
+            } else {
                 connection.query(`INSERT INTO DELETEDUSER (USERID, USERNAME, REASON);`, [user.USERID, user.USERNAME, reason],
-                (err, rows, fields) => {
-                    if (err) {
-                        console.log(err);
-                        resolve(this.errorResponse);
-                    } else {
-                        resolve({ status: 200, message: "User deleted" } as Response);
+                    (err, rows, fields) => {
+                        if (err) {
+                            console.log(err);
+                            resolve(this.errorResponse);
+                        } else {
+                            resolve({ status: 200, message: "User deleted" } as Response);
+                        }
                     }
-                }
-            );
+                );
             }
-            
+
         });
     }
 
-    async deleteUser(userid: number,reason:string): Promise<Response> {
-        return new Promise<Response>(async(resolve, reject) => {
-            var response = await this.addUserAsDelete(userid,reason);
-            if(response.status != 200){
+    async deleteUser(userid: number, reason: string): Promise<Response> {
+        return new Promise<Response>(async (resolve, reject) => {
+            var response = await this.addUserAsDelete(userid, reason);
+            if (response.status != 200) {
                 resolve(response);
-            }else{
-            const connection: mysql.Pool = this.getConnection();
-            connection.query(`DELETE FROM USER WHERE USERID = ?;`, [userid],
-                (err, rows, fields) => {
-                    if (err) {
-                        console.log(err);
-                        resolve(this.errorResponse);
-                    } else {
-                        resolve({ status: 200, message: "User deleted" } as Response);
+            } else {
+                const connection: mysql.Pool = this.getConnection();
+                connection.query(`DELETE FROM USER WHERE USERID = ?;`, [userid],
+                    (err, rows, fields) => {
+                        if (err) {
+                            console.log(err);
+                            resolve(this.errorResponse);
+                        } else {
+                            resolve({ status: 200, message: "User deleted" } as Response);
+                        }
                     }
-                }
-            );
+                );
             }
         });
-        
+
     }
 
     async deletePet(petid: number): Promise<Response> {
@@ -730,20 +730,26 @@ export default class Queries {
         });
     }
 
-    addPreferences(petid: number, preferences: number[]): Promise<Response> {
+    async addPreferences(petid: number, preferences: number[]): Promise<Response> {
         return new Promise<Response>(async (resolve, reject) => {
             const connection: mysql.Pool = this.getConnection();
+            var i = 0;
             for (let i = 0; i < preferences.length; i++) {
                 connection.query(`INSERT INTO USER_PREF_RELATION (PETID, PREFID) VALUES (?, ?);`, [petid, preferences[i]],
                     (err, rows, fields) => {
                         if (err) {
                             console.log(err);
                             resolve(this.errorResponse);
+                        } else {
+                            i++;
+                            if(i == preferences.length-1){
+                                resolve({ status: 200, message: 'Preferences added' } as Response);
+                            }
                         }
                     }
                 );
             }
-            resolve({ status: 200, message: 'Preferences added' } as Response);
+            
         });
     }
 
@@ -751,7 +757,7 @@ export default class Queries {
         return new Promise<Response>((resolve, reject) => {
             const connection: mysql.Pool = this.getConnection();
             connection.query(`UPDATE TIER SET USERID = ?, NAME = ?, ART = ?, RASSE = ?, GESCHLECHT = ?, GEBURTSTAG = ?, PROFILBILD = ? WHERE TIERID = ?;`,
-                [pet["USERID"],pet["NAME"], pet["ART"], pet["RASSE"], pet["GESCHLECHT"], pet["GEBURTSTAG"], pet["PROFILBILD"], pet["TIERID"]],
+                [pet["USERID"], pet["NAME"], pet["ART"], pet["RASSE"], pet["GESCHLECHT"], pet["GEBURTSTAG"], pet["PROFILBILD"], pet["TIERID"]],
                 (err, rows, fields) => {
                     if (err) {
                         console.log(err);
@@ -765,27 +771,28 @@ export default class Queries {
     }
 
 
-    removePreferences(petid: number, preferences: number[]): Promise<Response> {
+    async removePreferences(petid: number, preferences: number[]): Promise<Response> {
         return new Promise<Response>(async (resolve, reject) => {
             const connection: mysql.Pool = this.getConnection();
-            for (let i = 0; i < preferences.length; i++) {
-                connection.query(`DELETE FROM USER_PREF_RELATION WHERE PETID = ? AND PREFID = ?;`, [petid, preferences[i]],
-                    (err, rows, fields) => {
-                        if (err) {
-                            console.log(err);
-                            resolve(this.errorResponse);
-                        }
+            
+            connection.query(`DELETE FROM USER_PREF_RELATION WHERE PETID = ? AND PREFID IN (?) ;`, [petid, preferences],
+                (err, rows, fields) => {
+                    if (err) {
+                        console.log(err);
+                        resolve(this.errorResponse);
+                    } else {
+                        resolve({ status: 200, message: 'Preferences removed' } as Response);
                     }
-                );
-            }
-            resolve({ status: 200, message: 'Preferences removed' } as Response);
+                }
+            );
+
         });
     }
 
     deletePetMatches(petid: number): Promise<Response> {
         return new Promise<Response>(async (resolve, reject) => {
             const connection: mysql.Pool = this.getConnection();
-            connection.query(`DELETE FROM TIER_MATCHES WHERE TIER_A_ID = ? OR TIER_B_ID = ?;`, [petid,petid],
+            connection.query(`DELETE FROM TIER_MATCHES WHERE TIER_A_ID = ? OR TIER_B_ID = ?;`, [petid, petid],
                 (err, rows, fields) => {
                     if (err) {
                         console.log(err);
@@ -798,8 +805,8 @@ export default class Queries {
         });
     }
 
-    areUserFriends(userid: number, friendid: number): Promise<Response|boolean> {
-        return new Promise<Response|boolean>(async (resolve, reject) => {
+    areUserFriends(userid: number, friendid: number): Promise<Response | boolean> {
+        return new Promise<Response | boolean>(async (resolve, reject) => {
             const connection: mysql.Pool = this.getConnection();
             connection.query(`SELECT * FROM TIER_RELATIONSHIPS WHERE ((TIER_A_ID IN (SELECT TIERID FROM TIER WHERE USERID = ?)) AND (TIER_B_ID IN (SELECT TIERID FROM TIER WHERE USERID = ?))) OR ((TIER_A_ID IN (SELECT TIERID FROM TIER WHERE USERID = ?)) AND (TIER_B_ID IN (SELECT TIERID FROM TIER WHERE USERID = ?))) AND RELATIONSHIP = "Friends"`, [userid, friendid, friendid, userid],
                 (err, rows, fields) => {
@@ -921,16 +928,16 @@ export default class Queries {
         });
     }
     //Set User Mitgliedschaftpausiert auf true
-    banUser(userid: number ,until:string): Promise<Response> {
+    banUser(userid: number, until: string): Promise<Response> {
         return new Promise<Response>(async (resolve, reject) => {
             const connection: mysql.Pool = this.getConnection();
-            var query:string = "";
-            var params:any[] = [];
-            if(until != undefined){
-                until = until.slice(0,10);
+            var query: string = "";
+            var params: any[] = [];
+            if (until != undefined) {
+                until = until.slice(0, 10);
                 query = `UPDATE USER SET MITGLIEDSCHAFTPAUSIERT = 1 , BANNEDUNTIL = ? WHERE USERID = ?;`
-                params = [until,userid];
-            }else{
+                params = [until, userid];
+            } else {
                 query = `UPDATE USER SET MITGLIEDSCHAFTPAUSIERT = 1 WHERE USERID = ?;`
                 params = [userid];
             }
@@ -978,7 +985,7 @@ export default class Queries {
         });
     }
     //Check of ADMIN in USER is True
-    isUserAdmin(tokenUser:any): Promise<boolean> {
+    isUserAdmin(tokenUser: any): Promise<boolean> {
         return new Promise<boolean>(async (resolve, reject) => {
             const connection: mysql.Pool = this.getConnection();
             connection.query(`SELECT ADMIN FROM USER WHERE USERNAME = ?;`, [tokenUser.username],
@@ -1030,7 +1037,7 @@ export default class Queries {
                 });
         }
         );
-        
+
     }
 
     getPetsWithPrefereces(): Promise<Response | number[]> {
@@ -1046,7 +1053,7 @@ export default class Queries {
                             resolve({ status: 404, message: "No Pets found" } as Response);
                         } else {
                             console.log(rows)
-                            var temp:number[] = rows.map((e:any) => e.PETID)
+                            var temp: number[] = rows.map((e: any) => e.PETID)
                             console.log(temp);
                             resolve(temp);
                         }
@@ -1055,7 +1062,7 @@ export default class Queries {
         });
     }
     //TODO
-    addWatchlater(petid:number, watchlaterid:number): Promise<Response> {
+    addWatchlater(petid: number, watchlaterid: number): Promise<Response> {
         return new Promise<Response>(async (resolve, reject) => {
             const connection: mysql.Pool = this.getConnection();
             connection.query(`INSERT INTO WATCHLATER (PETID, WATCHLATERID) VALUES (?,?);`, [petid, watchlaterid],
@@ -1070,7 +1077,7 @@ export default class Queries {
         });
     }
 
-    removeWatchlater(petid:number, watchlaterid:number): Promise<Response> {
+    removeWatchlater(petid: number, watchlaterid: number): Promise<Response> {
         return new Promise<Response>(async (resolve, reject) => {
             const connection: mysql.Pool = this.getConnection();
             connection.query(`DELETE FROM WATCHLATER WHERE PETID=? AND WATCHLATERID=?;`, [petid, watchlaterid],
@@ -1085,7 +1092,7 @@ export default class Queries {
         });
     }
 
-    removeAllWatchlater(petid:number): Promise<Response> {
+    removeAllWatchlater(petid: number): Promise<Response> {
         return new Promise<Response>(async (resolve, reject) => {
             const connection: mysql.Pool = this.getConnection();
             connection.query(`DELETE FROM WATCHLATER WHERE PETID=?;`, [petid],
@@ -1100,7 +1107,7 @@ export default class Queries {
         });
     }
 
-    getWatchlaterList(petid:number): Promise<Response | Pet[]> {
+    getWatchlaterList(petid: number): Promise<Response | Pet[]> {
         return new Promise<Response | Pet[]>(async (resolve, reject) => {
             const connection: mysql.Pool = this.getConnection();
             connection.query(`SELECT * FROM TIER WHERE TIERID IN (SELECT WATCHLATERID FROM WATCHLATER WHERE PETID=?);`, [petid],

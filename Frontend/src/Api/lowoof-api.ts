@@ -612,7 +612,7 @@ export class Api {
             .catch((error) => { res = error.response.data as Response; });
         return res;
     }
-    //TODO: Add change password
+    
     async getBannedUsers():Promise<Response|User[]>{
         var res:Response|User[] = {status:500,message:"Error"};
         await axios.get(this.url + '/getallbannedusers',{

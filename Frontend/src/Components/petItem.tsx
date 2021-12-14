@@ -1,9 +1,9 @@
 import React from "react"
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome"
-import { faCommentDots, faExclamationTriangle, faStar as fasStar, faHeart, faHeartBroken } from "@fortawesome/free-solid-svg-icons"
+import { faCommentDots, faExclamationTriangle, faStar as fasStar, faHeart, faHeartBroken, faTrash, faClock } from "@fortawesome/free-solid-svg-icons"
 import { faStar as farStar } from "@fortawesome/free-regular-svg-icons"
 import { StyleSheet, View, Image, TouchableOpacity } from "react-native"
-import { BLACK, MAINCOLOR } from "../Constants/colors"
+import { BLACK, GRAY, MAINCOLOR } from "../Constants/colors"
 import { TextBlock } from "./styledText"
 import { Pet } from "../Api/interfaces"
 import { Buffer } from "buffer"
@@ -13,6 +13,7 @@ import { API } from "../Constants/api"
 
 export default function PetItem(props: any) {
     const pet: Pet = props.pet; /* The pet to display */
+    const ownPet: Pet | undefined = props.ownPet; /* The pet the user owns */
 
     const [hasChanged, setHasChanged] = React.useState(false);
 
@@ -20,6 +21,9 @@ export default function PetItem(props: any) {
     let hasRequested = props.hasRequested; /* Has this pet requested to become my friend? */
     let hasOwnRequest = props.hasOwnRequest; /* Have I requested to become this pet's friend? */
     let isMarkedAttractive = props.isMarkedAttractive; /* Have I marked this pet as attractive? */
+    let showWatchLater = props.showWatchLater ?? false; /* Should we show the watch later button? */
+    let showRemoveWatchLater = props.showRemoveWatchLater ?? false; /* Should we show the remove watch later button? */
+    let showAddToBlackList = props.showAddToBlackList ?? false; /* Should we show the add to black list button? */
     return (
         <View style={[styles.row, { marginLeft: 15, height: 80 }, hasChanged ? { display: "none" } : null]}>
             <TouchableOpacity onPress={() => { props.navigation.navigate('PetProfile', { petID: pet.TIERID }); }} >
@@ -27,8 +31,8 @@ export default function PetItem(props: any) {
                     source={{ uri: pet.PROFILBILD != null ? Buffer.from(pet.PROFILBILD, 'base64').toString('ascii') : "https://puu.sh/IsTPQ/5d69029437.png" }}
                 />
             </TouchableOpacity>
-            <View style={{ marginLeft: 10, height: 20, justifyContent: "space-between" }}>
-                <TouchableOpacity onPress={() => { props.navigation.navigate('MyProfile', { userID: pet.USERID }) }}>
+            <View style={{ marginLeft: 10, height: 64, justifyContent: "space-between" }}>
+                <TouchableOpacity style={pet.USERNAME !== undefined ? null : { display: "none" }} onPress={() => { props.navigation.navigate('MyProfile', { userID: pet.USERID }) }}>
                     <TextBlock style={{ color: "#00f" }}>{language.PET.OWNER[currentLanguage]}: {pet.USERNAME}</TextBlock>
                 </TouchableOpacity>
                 <TextBlock>{language.PET.NAME[currentLanguage]}: {pet.NAME}</TextBlock>
@@ -96,6 +100,21 @@ export default function PetItem(props: any) {
                 <TouchableOpacity onPress={() => { props.navigation.navigate('Report', { petToReport: pet }); }} style={{ marginRight: 6 }}>
                     <FontAwesomeIcon icon={faExclamationTriangle} size={32} color="#f66" />
                 </TouchableOpacity>
+                {showWatchLater ?
+                    <TouchableOpacity onPress={() => { API.addWatchlater(ownPet?.TIERID ?? 0, pet.TIERID).then(() => setHasChanged(true)) }} style={{ marginRight: 6 }}>
+                        <FontAwesomeIcon icon={faClock} size={32} color={GRAY} />
+                    </TouchableOpacity>
+                    : null}
+                {showRemoveWatchLater ?
+                    <TouchableOpacity onPress={() => { API.removeWatchlater(ownPet?.TIERID ?? 0, pet.TIERID).then(() => setHasChanged(true)) }} style={{ marginRight: 6 }}>
+                        <FontAwesomeIcon icon={faTrash} size={32} color={GRAY} />
+                    </TouchableOpacity>
+                    : null}
+                {showAddToBlackList ?
+                    <TouchableOpacity onPress={() => { API.addToBlackList(ownPet?.TIERID, pet.TIERID).then(() => setHasChanged(true)) }} style={{ marginRight: 6 }}>
+                        <FontAwesomeIcon icon={faTrash} size={32} color={GRAY} />
+                    </TouchableOpacity>
+                    : null}
             </View>
         </View>)
 }

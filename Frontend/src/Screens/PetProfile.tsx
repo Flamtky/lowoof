@@ -107,7 +107,7 @@ export default function PetProfile({ route, navigation }: any) {
                                         <TextBlock>{language.PET.PREFERENCES[currentLanguage]}: </TextBlock>
                                         {prefs.map((pref, index) => {
                                             return (
-                                                <TextBlock key={"petpref-"+index}>{index+1 + ": " + pref.PREF}</TextBlock>
+                                                <TextBlock key={"petpref-" + index}>{index + 1 + ": " + pref.PREF}</TextBlock>
                                             )
                                         })}
                                     </>
@@ -118,17 +118,17 @@ export default function PetProfile({ route, navigation }: any) {
                         <Seperator />
                         {ownProfile ?
                             <>
-                                <View style={[styles.row, { marginVertical: 10, justifyContent: "space-around", flexWrap:'wrap'}]}>
-                                    <OwnButton style={!isLargeScreen ? {minWidth: 200, marginBottom: 5} : null} title={"Discover"} onPress={() => {
+                                <View style={[styles.row, { marginVertical: 10, justifyContent: "space-around", flexWrap: 'wrap' }]}>
+                                    <OwnButton style={!isLargeScreen ? { minWidth: 200, marginBottom: 5 } : null} title={"Discover"} onPress={() => {
                                         navigation.navigate('Discover', { ownPet: petProfile });
                                     }} />
-                                    <OwnButton style={!isLargeScreen ? {minWidth: 200, marginBottom: 5} : null} title={language.MATCHES.HEADER[currentLanguage]} onPress={() => {
+                                    <OwnButton style={!isLargeScreen ? { minWidth: 200, marginBottom: 5 } : null} title={language.MATCHES.HEADER[currentLanguage]} onPress={() => {
                                         navigation.navigate('Matches', { petID: petProfile?.TIERID });
                                     }} />
-                                    <OwnButton style={!isLargeScreen ? {minWidth: 200, marginBottom: 5} : null} title={language.FRIENDS.HEADER[currentLanguage]} onPress={() => {
+                                    <OwnButton style={!isLargeScreen ? { minWidth: 200, marginBottom: 5 } : null} title={language.FRIENDS.HEADER[currentLanguage]} onPress={() => {
                                         navigation.navigate('Friends', { petID: petProfile?.TIERID });
                                     }} />
-                                    <OwnButton style={!isLargeScreen ? {minWidth: 200, marginBottom: 5} : null} title={language.CHATS.HEADER[currentLanguage]} onPress={() => {
+                                    <OwnButton style={!isLargeScreen ? { minWidth: 200, marginBottom: 5 } : null} title={language.CHATS.HEADER[currentLanguage]} onPress={() => {
                                         navigation.navigate('Chats', { pet: petProfile });
                                     }} />
                                 </View>

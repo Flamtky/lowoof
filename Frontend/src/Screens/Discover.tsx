@@ -2,13 +2,12 @@ import React from 'react';
 import { StyleSheet, View, useWindowDimensions, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { BACKGROUNDCOLOR, BLACK, GRAY, MAINCOLOR } from '../Constants/colors';
 import { TextBlock } from '../Components/styledText';
-import Seperator from '../Components/seperator';
 import OwnButton from '../Components/ownButton';
 import language from '../../language.json';
 import { currentLanguage } from '../Constants/language';
 import { API } from '../Constants/api';
-import { Pet, Preference, Report } from '../Api/interfaces';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import PetItem from '../Components/petItem';
+import { Pet, Preference, Relationship } from '../Api/interfaces';
 
 export default function Discover({ route, navigation }: any) {
     const dimensions = useWindowDimensions();
@@ -16,6 +15,8 @@ export default function Discover({ route, navigation }: any) {
     const ownPet: Pet = route.params.ownPet;
 
     const [discoverList, setDiscoverList] = React.useState<Pet[]>([]);
+    const [relPets, setRelPets] = React.useState<Relationship[]>([]);
+    const [machtedPets, setMatchedFriends] = React.useState<Relationship[]>([]);
 
     const [isLoading, setIsLoading] = React.useState(true);
 
@@ -25,8 +26,30 @@ export default function Discover({ route, navigation }: any) {
                 API.getDiscover((res as Preference[]).map(p => p.ID)).then((data: any) => {
                     if (!data.hasOwnProperty('message')) {
                         setDiscoverList((data as Pet[]).filter(p => p.TIERID !== ownPet.TIERID));
-                        setIsLoading(false);
                     }
+                    setIsLoading(false);
+                    
+                    const tempRelPets: Relationship[] = [];
+                    (data as Pet[]).forEach((pet: Pet) => {
+                        API.getFriendship(ownPet.TIERID, pet.TIERID).then((data2: any) => {
+                            if (!data2.hasOwnProperty("message")) {
+                                tempRelPets.push(data2 as Relationship);
+                            }
+                        });
+    
+                        // if last iteration
+                        if (data.length === tempRelPets.length) {
+                            setRelPets(tempRelPets);
+                            API.getPetMatches(route.params.petID).then(data3 => {
+                                if (!data3.hasOwnProperty("message")) {
+                                    setMatchedFriends((data3 as Relationship[]).filter(x => (data as Pet[])
+                                        .some(t => (t.TIERID === x.TIER_A_ID) && x.RELATIONSHIP !== "B removed A") || (data as Pet[])
+                                        .some(t => (t.TIERID === x.TIER_B_ID) && x.RELATIONSHIP !== "A removed B")));
+                                    setIsLoading(false);
+                                }
+                            });
+                        }
+                    });
                 });
             }
         });
@@ -35,52 +58,43 @@ export default function Discover({ route, navigation }: any) {
     return (
         <View style={{ backgroundColor: BACKGROUNDCOLOR, height: "100%" }}>
             <View style={[isLargeScreen ? { width: '43%', left: "28%" } : null, { height: "100%", backgroundColor: MAINCOLOR }]}>
-                <OwnButton
-                    title="Search"
-                    style={{ width: "auto", padding: 0, minWidth: 0, borderRadius: 0, alignSelf: "center", marginTop: 5, paddingBottom: 20 }}
-                    onPress={() => { }}
-                />
+                <View style={{ flexDirection:"row" }}>
+                    <OwnButton
+                        title="Search"
+                        style={{ width: "auto", padding: 0, minWidth: 0, borderRadius: 0, alignSelf: "center", marginTop: 5, paddingBottom: 20 }}
+                        onPress={() => { }}
+                    />
+                    <OwnButton
+                        title="Watch Later List"
+                        style={{ width: "auto", padding: 0, minWidth: 0, borderRadius: 0, alignSelf: "center", marginTop: 5, paddingBottom: 20 }}
+                        onPress={() => {navigation.navigate("WatchLater" , { ownPet: ownPet })}}
+                    />
+                </View>
                 <ScrollView style={{ height: "100%", width: "100%", padding: 10 }}>
                     <View style={[styles.innerContainer, isLoading ? { display: "none" } : null, { backgroundColor: MAINCOLOR, height: "auto" }]}>
-                        {isLoading || discoverList.length === 0 ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{"Nichts gefunden :("}</TextBlock> :
-                            discoverList.map((discoveredPet: Pet) => {
-                                return (
-                                    <DiscoverItem
-                                        key={"discover-" + discoveredPet.TIERID}
-                                        pet={discoveredPet}
-                                        navigation={navigation}
-                                    />)
-                            })
-                        }
+                    {isLoading || discoverList.length === 0 ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>Nichts gefunden :(</TextBlock> :
+                        discoverList.map((pet: Pet) => {
+                            return (
+                                <PetItem
+                                    key={"discover-" + pet.TIERID}
+                                    pet={pet}
+                                    ownPet={ownPet}
+                                    isFriend={relPets.some(x => (x.TIER_A_ID === pet.TIERID || x.TIER_B_ID === pet.TIERID) && x.RELATIONSHIP === "Friends")}
+                                    hasRequested={relPets.some(x => (x.RELATIONSHIP === "A requested B" && (x.TIER_B_ID === ownPet.TIERID)) 
+                                    || (x.RELATIONSHIP === "B requested A" && (x.TIER_A_ID === ownPet.TIERID)))}
+                                    hasOwnRequest={relPets.some(x => (x.RELATIONSHIP === "A requested B" && (x.TIER_A_ID === ownPet.TIERID)) 
+                                    || (x.RELATIONSHIP === "B requested A" && (x.TIER_B_ID === ownPet.TIERID)))}
+                                    isMarkedAttractive={machtedPets.some(x => x.TIER_A_ID === (x.TIER_A_ID !== route.params.petID ? x.TIER_A_ID : x.TIER_B_ID) 
+                                        || x.TIER_B_ID === (x.TIER_A_ID !== route.params.petID ? x.TIER_A_ID : x.TIER_B_ID))}
+                                    showWatchLater={true}
+                                    navigation={navigation}
+                                    api={API}
+                                />)
+                        })
+                    }
                     </View>
                 </ScrollView>
             </View>
-        </View>
-    );
-}
-
-function DiscoverItem(props: any) {
-    const petToDisplay: Pet = props.pet;
-
-    return (
-        <View style={petToDisplay == null ? { display: "none" } : null}>
-            <View style={styles.row}>
-                <TouchableOpacity onPress={() => { props.navigation.navigate('PetProfile', { petID: petToDisplay?.TIERID }); }} >
-                    <Image style={styles.petpicture}
-                        source={{ uri: petToDisplay?.PROFILBILD != null ? Buffer.from(petToDisplay.PROFILBILD, 'base64').toString('ascii') : "https://puu.sh/IsTPQ/5d69029437.png" }}
-                    />
-                </TouchableOpacity>
-                <View style={{ marginLeft: 10, maxWidth: "80%", height: "100%", justifyContent: "space-around" }}>
-                    <TouchableOpacity onPress={() => { props.navigation.navigate('MyProfile', { userID: petToDisplay?.USERID }) }}>
-                        <TextBlock style={{ color: "#00f" }}>{language.PET.OWNER[currentLanguage]}: {petToDisplay?.USERNAME}</TextBlock>
-                    </TouchableOpacity>
-                    <TextBlock>{language.PET.NAME[currentLanguage]}: {petToDisplay?.NAME ?? "<Pet Name>"}</TextBlock>
-                </View>
-                <View style={{ flexDirection: "row", marginLeft: "auto", alignSelf: "center" }}>
-
-                </View>
-            </View>
-            <Seperator />
         </View>
     );
 }

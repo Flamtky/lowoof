@@ -10,6 +10,7 @@ import { API } from '../Constants/api';
 import { Pet } from '../Api/interfaces';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import { Buffer } from 'buffer';
 
 export default function TopTen({ route, navigation }: any) {
     const dimensions = useWindowDimensions();

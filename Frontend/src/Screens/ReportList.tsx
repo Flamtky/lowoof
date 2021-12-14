@@ -10,6 +10,7 @@ import { API } from '../Constants/api';
 import { Pet, Report } from '../Api/interfaces';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faTrash, faUserSlash } from '@fortawesome/free-solid-svg-icons';
+import { Buffer } from 'buffer';
 
 export default function ReportList({ route, navigation }: any) {
     const dimensions = useWindowDimensions();

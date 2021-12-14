@@ -82,7 +82,7 @@ export default function Discover({ route, navigation }: any) {
                     />
                 </View>
                 <ScrollView style={{ height: "100%", width: "100%", padding: 10 }}>
-                    <View style={[styles.innerContainer, isLoading ? { display: "none" } : null, { backgroundColor: MAINCOLOR, height: "auto" }]}>
+                    <View style={[styles.innerContainer, isLoading ? { display: "none" } : null, isLargeScreen ? null : {margin: 0}, { backgroundColor: MAINCOLOR, height: "auto" }]}>
                         {isLoading || discoverList.length === 0 ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>Nichts gefunden :(</TextBlock> :
                             discoverList.map((pet: Pet) => {
                                 return (

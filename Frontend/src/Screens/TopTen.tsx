@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, useWindowDimensions, ScrollView, TouchableOpacity, Image } from 'react-native';
-import { BLACK, GRAY, MAINCOLOR } from '../Constants/colors';
+import { BLACK, DARKGRAY, MAINCOLOR } from '../Constants/colors';
 import { TextBlock } from '../Components/styledText';
 import Seperator from '../Components/seperator';
 import OwnButton from '../Components/ownButton';
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
         height: 64,
         borderWidth: 1.5,
         borderRadius: 10,
-        borderColor: GRAY,
+        borderColor: DARKGRAY,
         backgroundColor: BLACK
     },
     row: {

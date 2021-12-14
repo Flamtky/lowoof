@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, useWindowDimensions, ScrollView, TouchableOpacity, Image } from 'react-native';
-import { BACKGROUNDCOLOR, BLACK, GRAY, MAINCOLOR } from '../Constants/colors';
+import { BACKGROUNDCOLOR, BLACK, DARKGRAY, MAINCOLOR } from '../Constants/colors';
 import { TextBlock } from '../Components/styledText';
 import OwnButton from '../Components/ownButton';
 import language from '../../language.json';
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
         height: 64,
         borderWidth: 1.5,
         borderRadius: 10,
-        borderColor: GRAY,
+        borderColor: DARKGRAY,
         backgroundColor: BLACK
     },
     row: {

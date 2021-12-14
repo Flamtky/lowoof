@@ -133,7 +133,7 @@ export default function App() {
 									},
 								}} />
 								<Stack.Screen name="AddPet" component={AddPet} options={{
-									title: language.EDIT_PET.HEADER[currentLanguage], // TODO: ADD NEW LANGUAGE
+									title: language.EDIT_PET.CREATE_PET[currentLanguage],
 									headerStyle: {
 										backgroundColor: BACKGROUNDCOLOR,
 									},

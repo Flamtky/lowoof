@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, useWindowDimensions } from "react-native";
 import { View, TextInput } from "react-native";
-import { BLACK, GRAY, LIGHTGRAY } from '../Constants/colors';
+import { BLACK, DARKGRAY, LIGHTGRAY } from '../Constants/colors';
 import language from '../../language.json';
 import { currentLanguage } from '../Constants/language';
 
@@ -15,7 +15,7 @@ export default function SearchBar(props: any) {
             <TextInput
                 style={styles.input}
                 placeholder={props.placeholder || language.PLACEHOLDER.Search[currentLanguage]}
-                placeholderTextColor={GRAY}
+                placeholderTextColor={DARKGRAY}
                 returnKeyType="search"
                 onBlur={() => setIsFocused(false)}
                 onFocus={() => setIsFocused(true)}

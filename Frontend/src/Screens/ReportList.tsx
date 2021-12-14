@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, useWindowDimensions, ScrollView, TouchableOpacity, Image } from 'react-native';
-import { BLACK, GRAY, MAINCOLOR } from '../Constants/colors';
+import { BLACK, DARKGRAY, MAINCOLOR } from '../Constants/colors';
 import { TextBlock } from '../Components/styledText';
 import Seperator from '../Components/seperator';
 import OwnButton from '../Components/ownButton';
@@ -37,7 +37,7 @@ export default function ReportList({ route, navigation }: any) {
                 keyboardDismissMode="on-drag"
             >
                 <View style={[styles.innerContainer, isLoading ? { display: "none" } : null]}>
-                    {isLoading || reports.length === 0 ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.TOPTEN.NO_TOPTEN[currentLanguage] /* TODO: ADD LANGUAGE */}</TextBlock> :
+                    {isLoading || reports.length === 0 ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>{language.REPORT.NO_REPORTS[currentLanguage]}</TextBlock> :
                         reports.map((report: Report) => {
                             return (
                                 <ReportItem
@@ -131,7 +131,7 @@ const styles = StyleSheet.create({
         height: 64,
         borderWidth: 1.5,
         borderRadius: 10,
-        borderColor: GRAY,
+        borderColor: DARKGRAY,
         backgroundColor: BLACK
     },
     row: {

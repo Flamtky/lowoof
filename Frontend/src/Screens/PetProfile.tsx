@@ -4,7 +4,7 @@ import React from 'react';
 import { StyleSheet, View, useWindowDimensions, ScrollView, Image } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { TextBlock } from '../Components/styledText';
-import { BLACK, GRAY, MAINCOLOR, TITLECOLOR } from '../Constants/colors';
+import { BLACK, DARKGRAY, MAINCOLOR, TITLECOLOR } from '../Constants/colors';
 import Seperator from '../Components/seperator';
 import OwnButton from '../Components/ownButton';
 import { Pet, Preference, User } from '../Api/interfaces';
@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
         height: 64,
         borderWidth: 1.5,
         borderRadius: 10,
-        borderColor: GRAY,
+        borderColor: DARKGRAY,
         backgroundColor: BLACK
     },
     row: {

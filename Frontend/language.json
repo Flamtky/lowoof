@@ -56,6 +56,10 @@
             "EN": "My Profile",
             "DE": "Mein Profil"
         },
+        "USR_LANG": {
+            "EN": "EN",
+            "DE": "DE"
+        },
         "USERNAME": {
             "EN": "Username",
             "DE": "Benutzername"
@@ -329,6 +333,10 @@
         "LIST": {
             "EN": "Report List",
             "DE": "Report Liste"
+        },
+        "NO_REPORTS": {
+            "EN": "No Reports!",
+            "DE": "Keine Meldungen!"
         }
     },
     "ERROR": {
@@ -355,6 +363,10 @@
         "INV_EMAIL": {
             "EN": "Invalid email address!",
             "DE": "Ungültige Email-adresse!"
+        },
+        "INV_LANG": {
+            "EN": "Invalid language!",
+            "DE": "Ungültige Sprache!"
         },
         "INV_GENDER": {
             "EN": "Invalid gender!",
@@ -387,6 +399,10 @@
         "CREATE_PET_ERR": {
             "EN": "Error while creating the pet!",
             "DE": "Fehler beim Erstellen des Haustieres!"
+        },
+        "UPDATE_PREF_ERR": {
+            "EN": "Error while updating pet preferences!",
+            "DE": "Fehler beim aktualisieren der Präferenzen!"
         },
         "NEED_REASON": {
             "EN": "Please enter a reason!",

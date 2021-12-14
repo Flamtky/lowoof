@@ -23,33 +23,43 @@ export default function Discover({ route, navigation }: any) {
     React.useEffect(() => {
         API.getPreferences(ownPet.TIERID).then(res => {
             if (!res.hasOwnProperty('message')) {
-                API.getDiscover((res as Preference[]).map(p => p.ID)).then((data: any) => {
-                    if (!data.hasOwnProperty('message')) {
-                        setDiscoverList((data as Pet[]).filter(p => p.TIERID !== ownPet.TIERID));
+                API.getSearchBlacklist(ownPet.TIERID).then((blacklistedRes: any) => {
+                    let blacklisted: Pet[] = [];
+                    if (!blacklistedRes.hasOwnProperty('message')) {
+                        blacklisted = blacklistedRes as Pet[];
+                    } else if (blacklistedRes.status !== 404) {
+                        console.log(blacklistedRes);
+                        return;
                     }
-                    setIsLoading(false);
-                    
-                    const tempRelPets: Relationship[] = [];
-                    (data as Pet[]).forEach((pet: Pet) => {
-                        API.getFriendship(ownPet.TIERID, pet.TIERID).then((data2: any) => {
-                            if (!data2.hasOwnProperty("message")) {
-                                tempRelPets.push(data2 as Relationship);
-                            }
-                        });
-    
-                        // if last iteration
-                        if (data.length === tempRelPets.length) {
-                            setRelPets(tempRelPets);
-                            API.getPetMatches(route.params.petID).then(data3 => {
-                                if (!data3.hasOwnProperty("message")) {
-                                    setMatchedFriends((data3 as Relationship[]).filter(x => (data as Pet[])
-                                        .some(t => (t.TIERID === x.TIER_A_ID) && x.RELATIONSHIP !== "B removed A") || (data as Pet[])
-                                        .some(t => (t.TIERID === x.TIER_B_ID) && x.RELATIONSHIP !== "A removed B")));
-                                    setIsLoading(false);
+                    API.getDiscover((res as Preference[]).map(p => p.ID)).then((data: any) => {
+                        if (!data.hasOwnProperty('message')) {
+                            setDiscoverList((data as Pet[]).filter(p => p.TIERID !== ownPet.TIERID).filter(p => !blacklisted.includes(p)));
+                        }
+                        if ((data as Pet[]).length !== 0) {
+                            setIsLoading(false);
+                        }
+                        const tempRelPets: Relationship[] = [];
+                        (data as Pet[]).forEach((pet: Pet) => {
+                            API.getFriendship(ownPet.TIERID, pet.TIERID).then((data2: any) => {
+                                if (!data2.hasOwnProperty("message")) {
+                                    tempRelPets.push(data2 as Relationship);
                                 }
                             });
-                        }
-                    });
+
+                            // if last iteration
+                            if (data.length === tempRelPets.length) {
+                                setRelPets(tempRelPets);
+                                API.getPetMatches(route.params.petID).then(data3 => {
+                                    if (!data3.hasOwnProperty("message")) {
+                                        setMatchedFriends((data3 as Relationship[]).filter(x => (data as Pet[])
+                                            .some(t => (t.TIERID === x.TIER_A_ID) && x.RELATIONSHIP !== "B removed A") || (data as Pet[])
+                                                .some(t => (t.TIERID === x.TIER_B_ID) && x.RELATIONSHIP !== "A removed B")));
+                                    }
+                                    setIsLoading(false);
+                                });
+                            }
+                        });
+                    })
                 });
             }
         });
@@ -58,40 +68,41 @@ export default function Discover({ route, navigation }: any) {
     return (
         <View style={{ backgroundColor: BACKGROUNDCOLOR, height: "100%" }}>
             <View style={[isLargeScreen ? { width: '43%', left: "28%" } : null, { height: "100%", backgroundColor: MAINCOLOR }]}>
-                <View style={{ flexDirection:"row" }}>
+                <View style={{ flexDirection: "row", alignSelf: "center" }}>
                     <OwnButton
                         title={language.SEARCH.HEADER[currentLanguage]}
-                        style={{ width: "auto", padding: 0, minWidth: 0, borderRadius: 0, alignSelf: "center", marginTop: 5, paddingBottom: 20 }}
+                        style={{ width: "auto", padding: 0, minWidth: 0, borderRadius: 0, alignSelf: "center", marginTop: 5, marginHorizontal: 10, paddingBottom: 20 }}
                         onPress={() => { }}
                     />
                     <OwnButton
                         title={language.WATCH_LATER.HEADER[currentLanguage]}
-                        style={{ width: "auto", padding: 0, minWidth: 0, borderRadius: 0, alignSelf: "center", marginTop: 5, paddingBottom: 20 }}
-                        onPress={() => {navigation.navigate("WatchLater" , { ownPet: ownPet })}}
+                        style={{ width: "auto", padding: 0, minWidth: 0, borderRadius: 0, alignSelf: "center", marginTop: 5, marginHorizontal: 10, paddingBottom: 20 }}
+                        onPress={() => { navigation.navigate("WatchLater", { ownPet: ownPet }) }}
                     />
                 </View>
                 <ScrollView style={{ height: "100%", width: "100%", padding: 10 }}>
                     <View style={[styles.innerContainer, isLoading ? { display: "none" } : null, { backgroundColor: MAINCOLOR, height: "auto" }]}>
-                    {isLoading || discoverList.length === 0 ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>Nichts gefunden :(</TextBlock> :
-                        discoverList.map((pet: Pet) => {
-                            return (
-                                <PetItem
-                                    key={"discover-" + pet.TIERID}
-                                    pet={pet}
-                                    ownPet={ownPet}
-                                    isFriend={relPets.some(x => (x.TIER_A_ID === pet.TIERID || x.TIER_B_ID === pet.TIERID) && x.RELATIONSHIP === "Friends")}
-                                    hasRequested={relPets.some(x => (x.RELATIONSHIP === "A requested B" && (x.TIER_B_ID === ownPet.TIERID)) 
-                                    || (x.RELATIONSHIP === "B requested A" && (x.TIER_A_ID === ownPet.TIERID)))}
-                                    hasOwnRequest={relPets.some(x => (x.RELATIONSHIP === "A requested B" && (x.TIER_A_ID === ownPet.TIERID)) 
-                                    || (x.RELATIONSHIP === "B requested A" && (x.TIER_B_ID === ownPet.TIERID)))}
-                                    isMarkedAttractive={machtedPets.some(x => x.TIER_A_ID === (x.TIER_A_ID !== route.params.petID ? x.TIER_A_ID : x.TIER_B_ID) 
-                                        || x.TIER_B_ID === (x.TIER_A_ID !== route.params.petID ? x.TIER_A_ID : x.TIER_B_ID))}
-                                    showWatchLater={true}
-                                    navigation={navigation}
-                                    api={API}
-                                />)
-                        })
-                    }
+                        {isLoading || discoverList.length === 0 ? <TextBlock style={{ marginLeft: 15, marginTop: 15 }}>Nichts gefunden :(</TextBlock> :
+                            discoverList.map((pet: Pet) => {
+                                return (
+                                    <PetItem
+                                        key={"discover-" + pet.TIERID}
+                                        pet={pet}
+                                        ownPet={ownPet}
+                                        isFriend={relPets.some(x => (x.TIER_A_ID === pet.TIERID || x.TIER_B_ID === pet.TIERID) && x.RELATIONSHIP === "Friends")}
+                                        hasRequested={relPets.some(x => (x.RELATIONSHIP === "A requested B" && (x.TIER_B_ID === ownPet.TIERID))
+                                            || (x.RELATIONSHIP === "B requested A" && (x.TIER_A_ID === ownPet.TIERID)))}
+                                        hasOwnRequest={relPets.some(x => (x.RELATIONSHIP === "A requested B" && (x.TIER_A_ID === ownPet.TIERID))
+                                            || (x.RELATIONSHIP === "B requested A" && (x.TIER_B_ID === ownPet.TIERID)))}
+                                        isMarkedAttractive={machtedPets.some(x => x.TIER_A_ID === (x.TIER_A_ID !== route.params.petID ? x.TIER_A_ID : x.TIER_B_ID)
+                                            || x.TIER_B_ID === (x.TIER_A_ID !== route.params.petID ? x.TIER_A_ID : x.TIER_B_ID))}
+                                        showWatchLater={true}
+                                        showAddToBlackList={true}
+                                        navigation={navigation}
+                                        api={API}
+                                    />)
+                            })
+                        }
                     </View>
                 </ScrollView>
             </View>

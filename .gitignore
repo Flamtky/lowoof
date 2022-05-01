@@ -1,3 +1,28 @@
+node_modules/**/*
+.expo/*
+npm-debug.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+*.env
+web-build/
+package-lock.json
+# macOS
+.DS_Store
+ios/
+ios/*
+ios/main.jsbundle
+ios/**/*
+android/
+android/*
+android/**/*
+
+.vs/
+*.log
+
 # OSX
 #
 .DS_Store
@@ -29,24 +54,29 @@ build/
 .gradle
 local.properties
 *.iml
+*.hprof
 
 # node.js
 #
 node_modules/
-package-lock.json # include if you are using npm - don't use both yarn and npm
 npm-debug.log
 yarn-error.log
-yarn.lock # include if you are using yarn - don't use both npm and yarn
 
 # BUCK
 buck-out/
 \.buckd/
 *.keystore
+!debug.keystore
 
-# Fastlane
-*/fastlane/report.xml
-*/fastlane/Preview.html
-*/fastlane/screenshots
-
-# Bundle artifact
+# Bundle artifacts
 *.jsbundle
+
+# CocoaPods
+/ios/Pods/
+
+# Expo
+.expo/
+web-build/
+
+# Visual Studio Code
+.vscode/

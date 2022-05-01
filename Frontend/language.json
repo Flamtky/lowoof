@@ -1,0 +1,476 @@
+{
+    "BACK": {
+        "EN": "Back",
+        "DE": "Zurück"
+    },
+    "SAVE": {
+        "EN": "Save",
+        "DE": "Speichern"
+    },
+    "DELETE": {
+        "EN": "Delete",
+        "DE": "Löschen"
+    },
+    "SEARCH": {
+        "HEADER": {
+            "EN": "Search",
+            "DE": "Suchen"
+        }
+    },
+    "DISCOVER": {
+        "HEADER": {
+            "EN": "Discover",
+            "DE": "Entdecken"
+        }
+    },
+    "WATCH_LATER": {
+        "HEADER": {
+            "EN": "Watch later",
+            "DE": "Später ansehen"
+        },
+        "WATCH_LATER_LIST": {
+            "EN": "Watch later List",
+            "DE": "Später ansehen Liste"
+        }
+    },
+    "LOGIN": {
+        "LOGIN": {
+            "EN": "➤ Login",
+            "DE": "➤ Einloggen"
+        },
+        "NOT_REG": {
+            "EN": "Not registered yet? Then click ",
+            "DE": "Noch nicht registriert? Dann klick "
+        },
+        "ALREADY_REG": {
+            "EN": "Already registered? Then click ",
+            "DE": "Bereits registriert? Dann klick "
+        },
+        "HERE": {
+            "EN": "here",
+            "DE": "hier"
+        },
+        "REGISTER": {
+            "EN": "➤ Register",
+            "DE": "➤ Registrieren"
+        },
+        "DELETE": {
+            "EN": "Delete",
+            "DE": "Löschen"
+        }
+    },
+    "PLACEHOLDER": {
+        "USERNAME": {
+            "EN": "Username",
+            "DE": "Benutzername"
+        },
+        "PASSWORD": {
+            "EN": "Password",
+            "DE": "Passwort"
+        }
+    },
+    "PROFILE": {
+        "HEADER": {
+            "EN": "My Profile",
+            "DE": "Mein Profil"
+        },
+        "USR_LANG": {
+            "EN": "EN",
+            "DE": "DE"
+        },
+        "USERNAME": {
+            "EN": "Username",
+            "DE": "Benutzername"
+        },
+        "NAME": {
+            "EN": "Name",
+            "DE": "Name"
+        },
+        "FIRST_NAME": {
+            "EN": "First Name",
+            "DE": "Vorname"
+        },
+        "LAST_NAME": {
+            "EN": "Last Name",
+            "DE": "Nachname"
+        },
+        "ADDRESS": {
+            "EN": "Address",
+            "DE": "Adresse"
+        },
+        "ZIP": {
+            "EN": "Zip Code",
+            "DE": "PLZ"
+        },
+        "CITY": {
+            "EN": "City",
+            "DE": "Ort"
+        },
+        "GENDER": {
+            "EN": "Gender",
+            "DE": "Geschlecht"
+        },
+        "GENDER_PICK": {
+            "EN": "Gender | Male, Female, Other",
+            "DE": "Geschlecht | Männlich, Weiblich, Diverse"
+        },
+        "MALE": {
+            "EN": "Male",
+            "DE": "Männlich"
+        },
+        "FEMALE": {
+            "EN": "Female",
+            "DE": "Weiblich"
+        },
+        "OTHER": {
+            "EN": "Other",
+            "DE": "Diverse"
+        },
+        "BIRTHDAY": {
+            "EN": "Date of Birth",
+            "DE": "Geburtstag"
+        },
+        "EMAIL": {
+            "EN": "E-Mail",
+            "DE": "E-Mail"
+        },
+        "PHONE": {
+            "EN": "Phone Number",
+            "DE": "Telefonnummer"
+        },
+        "INSTITUTION": {
+            "EN": "Institution",
+            "DE": "Institution"
+        },
+        "PASSWORD": {
+            "EN": "Password",
+            "DE": "Passwort"
+        },
+        "REPEAT_PASSWORD": {
+            "EN": "Repeat Password",
+            "DE": "Passwort wiederholen"
+        },
+        "PIC_PICK": {
+            "EN": "Pick Profile Picture",
+            "DE": "Profilbild auswählen"
+        },
+        "YOURPETS": {
+            "EN": "Your Pets",
+            "DE": "Deine Haustiere"
+        },
+        "PETS_OF": {
+            "EN": "Pets of ",
+            "DE": "Haustiere von "
+        },
+        "ADDPET": {
+            "EN": "Add Pet",
+            "DE": "Haustier hinzufügen"
+        },
+        "BACK_TO_PROFILE": {
+            "EN": "Back to your profile",
+            "DE": "Zurück zu deinem Profil"
+        }
+    },
+    "EDIT_PROFILE": {
+        "HEADER": {
+            "EN": "Edit Profile",
+            "DE": "Profil bearbeiten"
+        }
+    },
+    "PET": {
+        "HEADER": {
+            "EN": "Pet Profile",
+            "DE": "Tierprofil"
+        },
+        "NAME": {
+            "EN": "Nickname",
+            "DE": "Rufname"
+        },
+        "OWNER": {
+            "EN": "Owner",
+            "DE": "Besitzer"
+        },
+        "SPECIES": {
+            "EN": "Species",
+            "DE": "Art"
+        },
+        "BREED": {
+            "EN": "Breed",
+            "DE": "Rasse"
+        },
+        "GENDER": {
+            "EN": "Gender",
+            "DE": "Geschlecht"
+        },
+        "BIRTHDAY": {
+            "EN": "Date of Birth",
+            "DE": "Geburtstag"
+        },
+        "PREFERENCES": {
+            "EN": "Preferences",
+            "DE": "Präferenzen"
+        },
+        "DISTANCE": {
+            "EN": "Max. Distance",
+            "DE": "Max. Entfernung"
+        },
+        "AGE": {
+            "EN": "Age",
+            "DE": "Alter"
+        },
+        "DESCRIPTION": {
+            "EN": "Description",
+            "DE": "Beschreibung"
+        },
+        "FEATURES": {
+            "EN": "Special Features",
+            "DE": "Besondere Merkmale"
+        }
+    },
+    "EDIT_PET": {
+        "HEADER": {
+            "EN": "Edit Pet Profile",
+            "DE": "Tierprofil bearbeiten"
+        },
+        "CREATE_PET": {
+            "EN": "Create Pet",
+            "DE": "Haustier anlegen"
+        },
+        "DELETE": {
+            "EN": "Delete Pet",
+            "DE": "Haustier löschen"
+        },
+        "CONFRIM_DELETE": {
+            "EN": "Do you really want to delete this pet?",
+            "DE": "Wollen Sie dieses Haustier wirklich löschen?"
+        },
+        "SUCCESS_DELETE": {
+            "EN": "Pet was successfully deleted.",
+            "DE": "Haustier wurde erfolgreich gelöscht."
+        },
+        "NO_PREFS": {
+            "EN": "No preferences found!",
+            "DE": "Keine Präferenzen gefunden!"
+        }
+    },
+    "MATCHES": {
+        "HEADER": {
+            "EN": "Matches",
+            "DE": "Matches"
+        },
+        "NO_MATCHES": {
+            "EN": "No Matches",
+            "DE": "Keine Matches"
+        }
+    },
+    "FRIENDS": {
+        "HEADER": {
+            "EN": "Friends",
+            "DE": "Freunde"
+        },
+        "INCOMING_FRIEND": {
+            "EN": "Incoming Friend Request",
+            "DE": "Eingehende Freundschaftsanfragen"
+        },
+        "OUTGOING_FRIEND": {
+            "EN": "Outgoing Friend Request",
+            "DE": "Ausgehende Freundschaftsanfragen"
+        },
+        "NO_REQUESTS": {
+            "EN": "No Requests",
+            "DE": "Keine Anfragen"
+        },
+        "NO_FRIENDS": {
+            "EN": "No Friends",
+            "DE": "Keine Freunde"
+        }
+    },
+    "CHATS": {
+        "HEADER": {
+            "EN": "Chats",
+            "DE": "Chats"
+        },
+        "CHAT_WITH": {
+            "EN": "Chat with ",
+            "DE": "Chat mit "
+        },
+        "MESSAGE": {
+            "EN": "Message...",
+            "DE": "Nachricht..."
+        },
+        "LAST_MSG": {
+            "EN": "Last Message",
+            "DE": "Letzte Nachricht"
+        },
+        "NO_CHATS": {
+            "EN": "No Chats!",
+            "DE": "Keine Chats!"
+        }
+    },
+    "TOPTEN": {
+        "HEADER": {
+            "EN": "Top Ten",
+            "DE": "Top Zehn"
+        },
+        "NO_TOPTEN": {
+            "EN": "No pets were rated attractive yet",
+            "DE": "Es wurde noch kein Haustier als attraktiv bewertet"
+        }
+    },
+    "IMAGE_PICKER": {
+        "HEADER": {
+            "EN": "Image Picker",
+            "DE": "Foto Auswählen"
+        },
+        "NEED_PERM": {
+            "EN": "Sorry, we need camera roll permissions to make this work!",
+            "DE": "Tut uns Leid, ohne Zugriff auf die Galerie kann kein Bild ausgeählt werden!"
+        },
+        "PICK_IMAGE": {
+            "EN": "Pick an image from camera roll",
+            "DE": "Wähle ein Bild aus deiner Galerie aus"
+        }
+    },
+    "REPORT": {
+        "HEADER": {
+            "EN": "Report",
+            "DE": "Melden"
+        },
+        "REALLY_REPORT": {
+            "EN": "Do you really want to report ",
+            "DE": "Möchtest du "
+        },
+        "REALLY_REPORT2": {
+            "EN": "?",
+            "DE": " wirklich melden?"
+        },
+        "REASON": {
+            "EN": "Reason",
+            "DE": "Grund"
+        },
+        "SUCCESS_REPORTED": {
+            "EN": "User was reported!",
+            "DE": "Der Nutzer wurde gemeldet!"
+        },
+        "LIST": {
+            "EN": "Report List",
+            "DE": "Report Liste"
+        },
+        "NO_REPORTS": {
+            "EN": "No Reports!",
+            "DE": "Keine Meldungen!"
+        }
+    },
+    "ERROR": {
+        "LOGIN_ERR": {
+            "EN": "Error while logging in!",
+            "DE": "Fehler beim Einloggen!"
+        },
+        "REG_ERR": {
+            "EN": "Error while creating your profile!",
+            "DE": "Fehler beim Registrieren!"
+        },
+        "AUTH_ERR": {
+            "EN": "Error while authenticating!",
+            "DE": "Fehler beim Authentifizieren!"
+        },
+        "WRONG_PWD": {
+            "EN": "Wrong Password!",
+            "DE": "Falsches Passwort!"
+        },
+        "NO_MATCH": {
+            "EN": "Passwords do not match!",
+            "DE": "Passwörter stimmen nicht überein!"
+        },
+        "INV_EMAIL": {
+            "EN": "Invalid email address!",
+            "DE": "Ungültige Email-adresse!"
+        },
+        "INV_LANG": {
+            "EN": "Invalid language!",
+            "DE": "Ungültige Sprache!"
+        },
+        "INV_GENDER": {
+            "EN": "Invalid gender!",
+            "DE": "Ungültiges Geschlecht!"
+        },
+        "INV_BIRTHDATE": {
+            "EN": "Invalid date of birth!",
+            "DE": "Ungültiges Geburtsdatum!"
+        },
+        "INV_ZIP": {
+            "EN": "Invalid zip code!",
+            "DE": "Ungültige Postleitzahl!"
+        },
+        "INV_PHONE": {
+            "EN": "Invalid phone number!",
+            "DE": "Ungültige Telefonnummer!"
+        },
+        "INV_USERNAME": {
+            "EN": "Invalid username!",
+            "DE": "Ungültiger Benutzername!"
+        },
+        "NAME_SPECIES_BREED": {
+            "EN": "Your pet needs a name, species and breed!",
+            "DE": "Das Haustier braucht einen Namen, eine Art und eine Rasse!"
+        },
+        "IMG_TOO_BIG": {
+            "EN": "The selected image is too large!",
+            "DE": "Das ausgewählte Bild ist zu groß!"
+        },
+        "CREATE_PET_ERR": {
+            "EN": "Error while creating the pet!",
+            "DE": "Fehler beim Erstellen des Haustieres!"
+        },
+        "UPDATE_PREF_ERR": {
+            "EN": "Error while updating pet preferences!",
+            "DE": "Fehler beim aktualisieren der Präferenzen!"
+        },
+        "NEED_REASON": {
+            "EN": "Please enter a reason!",
+            "DE": "Bitte geben Sie einen Grund an!"
+        },
+        "REASON_TOO_LONG": {
+            "EN": "The reason can't be longer than 255 characters!",
+            "DE": "Der Grund darf nicht länger als 255 Zeichen sein!"
+        }
+    },
+    "SETTINGS": {
+        "HEADER": {
+            "EN": "Settings",
+            "DE": "Einstellungen"
+        },
+        "LOGOUT": {
+            "EN": "Log out",
+            "DE": "Abmelden"
+        },
+        "PAUSE": {
+            "EN": "Pause account",
+            "DE": "Mitgliedschaft pausieren"
+        },
+        "SUCCESS_PAUSE": {
+            "EN": "Your account was paused",
+            "DE": "Deine Mitgliedschaft wurde pausiert."
+        },
+        "QUIT": {
+            "EN": "Delete account",
+            "DE": "Mitgliedschaft löschen"
+        },
+        "SUCCESS_QUIT": {
+            "EN": "Your account was deleted",
+            "DE": "Deine Mitgliedschaft wurde gelöscht."
+        },
+        "SURE": {
+            "EN": "Are you sure?",
+            "DE": "Bist du sicher?"
+        },
+        "GIVE_REASON": {
+            "EN": "Please enter a reason.",
+            "DE": "Bitte gib einen Grund an."
+        },
+        "REASON": {
+            "EN": "Reason to Quit",
+            "DE": "Grund der Löschung"
+        }
+    }
+}
